@@ -8,41 +8,49 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _index = 0;
+  // int _index = 0;
 
-  final List<Widget> _pages = [const PostsPage(), const SearchPage(), const SettingsPage()];
+  final List<Widget> _pages = [
+    const PostsPage(),
+    const CariPage(),
+    const PengaturanPage()
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages.elementAt(_index),
+    return Consumer<PageProvider>(
+      builder: (context, pageProvider, child) {
+        return Scaffold(
+          body: _pages.elementAt(
+          pageProvider.currentIndex,
+        ),
 
-      // bottom navigation
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor:
-            Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: "Home",
+          // bottom navigation
+          bottomNavigationBar: BottomNavigationBar(
+            unselectedItemColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+            showUnselectedLabels: false,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_filled),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search_rounded),
+                label: "Cari",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: "Pengaturan",
+              ),
+            ],
+            currentIndex: pageProvider.currentIndex,
+            onTap: (i) {
+              pageProvider.changePage(i);
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-            label: "Cari",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Pengaturan",
-          ),
-        ],
-        currentIndex: _index,
-        onTap: (i) {
-          setState(() {
-            _index = i;
-          });
-        },
-      ),
+        );
+      }
     );
   }
 }

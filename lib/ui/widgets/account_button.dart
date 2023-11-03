@@ -1,25 +1,20 @@
 part of "widgets.dart";
 
-class AccountButton extends StatefulWidget {
+class AccountButton extends StatelessWidget {
   void Function()? onPressed;
   ImageProvider<Object> image;
   AccountButton({super.key, required this.onPressed, required this.image});
 
   @override
-  State<AccountButton> createState() => _AccountButtonState();
-}
-
-class _AccountButtonState extends State<AccountButton> {
-  @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: widget.onPressed,
+      onPressed: onPressed,
       icon: Container(
-        width: 50,
+        width: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            image: widget.image,
+            image: image,
             // fit: BoxFit.cover,
           ),
         ),

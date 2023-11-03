@@ -1,17 +1,15 @@
 part of "models.dart";
 
-class Post {
+class Komentar {
   int id;
-  DateTime tglDibuat;
   String konten;
-  ImageProvider<Object>? img;
+  int postId;
   int userId;
 
-  Post({
+  Komentar({
     required this.id,
-    required this.tglDibuat,
     required this.konten,
-    this.img,
+    required this.postId,
     required this.userId,
   });
 }

@@ -1,15 +1,10 @@
 part of "widgets.dart";
 
-class UserPost extends StatefulWidget {
+class PostWidget extends StatelessWidget {
   Post post;
   // ImageProvider<Object>? image;
-  UserPost({super.key, required this.post});
+  PostWidget({super.key, required this.post});
 
-  @override
-  State<UserPost> createState() => _UserPostState();
-}
-
-class _UserPostState extends State<UserPost> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,16 +12,14 @@ class _UserPostState extends State<UserPost> {
         ListTile(
           leading: AccountButton(
             onPressed: () {
-              setState(() {
-                Navigator.pushNamed(context, "/profile");
-              });
+              Navigator.pushNamed(context, "/profile");
             },
             image: NetworkImage(
                 "https://avatars.githubusercontent.com/azkina1123"),
           ),
           title: Text("Username"),
           subtitle: Text(
-            widget.post.createdAt.toString(),
+            post.tglDibuat.toString(),
             style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
                 fontSize: Theme.of(context).textTheme.bodySmall!.fontSize),
@@ -35,20 +28,24 @@ class _UserPostState extends State<UserPost> {
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.post.img != null
+              post.img != null
                   ? Container(
                       width: width(context),
                       height: 200,
                       margin: EdgeInsets.only(bottom: 15),
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: widget.post.img!, fit: BoxFit.cover),
+                            image: post.img!, fit: BoxFit.cover),
                       ),
                     )
                   : SizedBox(),
               Text(
-                 widget.post.content),
+                post.konten,
+              ),
+
+              // like dan komentar ----------------------------------------------------------
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
