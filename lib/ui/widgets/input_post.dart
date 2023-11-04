@@ -1,8 +1,7 @@
 part of "widgets.dart";
 
 class InputPost extends StatefulWidget {
-  PostProvider provider;
-  InputPost({super.key, required this.provider});
+  InputPost({super.key});
   @override
   State<InputPost> createState() => _InputPostState();
 }
@@ -34,7 +33,7 @@ class _InputPostState extends State<InputPost> {
           duration: Duration(milliseconds: 200),
           width: width(context),
           height: _focused ? 120 : 70,
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
           margin: EdgeInsets.only(top: 20),
 
           // isian postingan ---------------------------------------------------------
@@ -48,16 +47,15 @@ class _InputPostState extends State<InputPost> {
             child: TextField(
               focusNode: _focus,
               autofocus: img != null ? true : false,
-              decoration: textFieldDecoration(
-                context,
+              decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
-                  image: const NetworkImage(
-                    "https://avatars.githubusercontent.com/azkina1123",
-                  ),
-                  onPressed: () {},
+                  image: Provider.of<AuthProvider>(context, listen: false)
+                      .authUser.foto!,
+                  onPressed: null,
                 ),
               ),
+              style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 5,
               controller: _kontenCon,
               onChanged: (value) {
@@ -108,8 +106,8 @@ class _InputPostState extends State<InputPost> {
                                   1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              userId: 1,
-                              img: FileImage(img!),
+                              userId: Provider.of<AuthProvider>(context, listen: false).authUser.id,
+                              img: img != null ? FileImage(img!) : null,
                             ),
                           );
 

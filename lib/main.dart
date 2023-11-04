@@ -18,7 +18,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PageProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => PostProvider()),
+        ChangeNotifierProvider(create: (context) => KomentarProvider()),
+        ChangeNotifierProvider(create: (context) => LikeProvider()),
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(
@@ -44,18 +48,105 @@ class MyApp extends StatelessWidget {
               onSurface: colors["dark-jungle-green"],
             ),
             appBarTheme: AppBarTheme(
-              color: colors["milk-white"],
-              elevation: null,
-            ),
+                scrolledUnderElevation: 0,
+                color: colors["milk-white"],
+                elevation: null,
+                titleTextStyle: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: colors["sand"],
+                ),
+                iconTheme: IconThemeData(color: colors["sand"]!)),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors["sand"],
                 foregroundColor: colors["milk-white"],
               ),
             ),
-            iconTheme: IconThemeData(
-              color: colors["sand"]
-            )
+            iconTheme: IconThemeData(color: colors["sand"]),
+            iconButtonTheme: IconButtonThemeData(
+              style: IconButton.styleFrom(
+                backgroundColor: colors["milk-white"],
+                surfaceTintColor: colors["milk-white"],
+                shadowColor: Colors.transparent,
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: ButtonStyle(
+                side: MaterialStateProperty.all(
+                  BorderSide(
+                    color: colors["sand"]!,
+                  ),
+                ),
+              ),
+            ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                foregroundColor: MaterialStateProperty.all(
+                  colors["dark-jungle-green"],
+                ),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(
+                fontSize: 18,
+                color: colors["dark-jungle-green"],
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: colors["dark-jungle-green"],
+              ),
+              bodySmall: TextStyle(
+                fontSize: 14,
+                color: colors["dark-jungle-green"],
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18,
+                color: colors["sand"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16,
+                color: colors["dark-jungle-green"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleSmall: TextStyle(
+                fontSize: 14,
+                color: colors["dark-jungle-green"],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["dark-jungle-green"]!.withOpacity(0.5),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                left: 15,
+                right: 15,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["sand"]!,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusColor: colors["sand!"],
+              hintStyle: TextStyle(
+                color: colors["dark-jungle-green"]!.withOpacity(0.5),
+              ),
+            ),
           ),
 
           // dark mode ==============================================================
@@ -76,25 +167,142 @@ class MyApp extends StatelessWidget {
               onError: colors["milk-white"],
               onSurface: colors["milk-white"],
             ),
-            appBarTheme: AppBarTheme(color: colors["dark-jungle-green"]),
+            appBarTheme: AppBarTheme(
+                scrolledUnderElevation: 0,
+                color: colors["dark-jungle-green"],
+                elevation: null,
+                titleTextStyle: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: colors["sand"],
+                ),
+                iconTheme: IconThemeData(color: colors["sand"]!)),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors["sand"],
                 foregroundColor: colors["milk-white"],
               ),
             ),
-            iconTheme: IconThemeData(color: colors["sand"])
+            iconTheme: IconThemeData(color: colors["sand"]),
+            iconButtonTheme: IconButtonThemeData(
+              style: IconButton.styleFrom(
+                backgroundColor: colors["dark-jungle-green"],
+                surfaceTintColor: colors["dark-jungle-green"],
+                shadowColor: Colors.transparent,
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: ButtonStyle(
+                side: MaterialStateProperty.all(
+                  BorderSide(
+                    color: colors["sand"]!,
+                  ),
+                ),
+              ),
+            ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                foregroundColor: MaterialStateProperty.all(
+                  colors["dark-jungle-green"],
+                ),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(
+                fontSize: 18,
+                color: colors["milk-white"],
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: colors["milk-white"],
+              ),
+              bodySmall: TextStyle(
+                fontSize: 14,
+                color: colors["milk-white"],
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18,
+                color: colors["sand"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16,
+                color: colors["milk-white"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleSmall: TextStyle(
+                fontSize: 14,
+                color: colors["milk-white"],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["milk-white"]!.withOpacity(0.5),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                left: 15,
+                right: 15,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["sand"]!,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusColor: colors["sand!"],
+              hintStyle: TextStyle(
+                color: colors["milk-white"]!.withOpacity(0.5),
+              ),
+            ),
           ),
 
-          themeMode: ThemeMode.dark,
+          // theme yg digunakan ==============================================================
+          themeMode: ThemeMode.light,
 
           // home: MainPage(),
 
+          // routes ==============================================================
+          onGenerateRoute: (settings) {
+            if (settings.name == "/post") {
+              final args = settings.arguments as Post;
+
+              return MaterialPageRoute(
+                builder: ((ctx) {
+                  return PostPage(
+                    post: args,
+                  );
+                }),
+              );
+            } else if (settings.name == "/profile") {
+              final args = settings.arguments as User;
+
+              return MaterialPageRoute(
+                builder: ((ctx) {
+                  return ProfilePage(
+                    user: args,
+                  );
+                }),
+              );
+            }
+          },
           routes: {
             "/": (ctx) => const MainPage(),
+            // "/post": (ctx) => const PostPage(),
             // "/cari": (ctx) => const CariPage(),
             // "/pengaturan": (ctx) => const PengaturanPage(),
-            "/profile": (ctx) => const ProfilePage(),
           },
 
           initialRoute: "/",

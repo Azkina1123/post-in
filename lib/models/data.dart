@@ -4,8 +4,8 @@ Map<String, Color> colors = {
   "dark-jungle-green": Color.fromARGB(255, 33, 31, 33),
   "milk-white": Color.fromARGB(255, 251, 251, 255),
   "smoky-topaz": Color.fromARGB(255, 156, 51, 78),
-  "soft-pink": Color.fromARGB(255, 255, 176, 197),
-  "sand": Color.fromARGB(255, 244, 195, 135),
+  "soft-pink": Color.fromARGB(255, 223, 114, 143),
+  "sand": Color.fromARGB(255, 243, 189, 122),
   "languid-lavender": Color.fromARGB(255, 215, 199, 217)
 };
 

@@ -11,7 +11,7 @@ class _MainPageState extends State<MainPage> {
   // int _index = 0;
 
   final List<Widget> _pages = [
-    const PostsPage(),
+    const HomePage(),
     const CariPage(),
     const PengaturanPage()
   ];

@@ -2,12 +2,16 @@ part of "models.dart";
 
 class Like {
   int id;
-  int postId;
+  String type; // 1 -> post, 2 ->
+  int? postId;
+  int? komentarId;
   int userId;
 
   Like({
     required this.id,
-    required this.postId,
+    required this.type,
+    this.postId,
+    this.komentarId,
     required this.userId,
   });
 }

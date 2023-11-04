@@ -1,17 +1,17 @@
 part of "pages.dart";
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatelessWidget {
+  User user; // profile user yg sedang dilihat
 
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
+  ProfilePage({super.key, required this.user});
 
-class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        title: Text("Hmmm"),
+      ),
+      body: Center(child: Text(user.username)),
     );
   }
 }

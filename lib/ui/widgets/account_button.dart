@@ -11,11 +11,12 @@ class AccountButton extends StatelessWidget {
       onPressed: onPressed,
       icon: Container(
         width: 40,
+        height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
             image: image,
-            // fit: BoxFit.cover,
+            fit: BoxFit.cover,
           ),
         ),
       ),
