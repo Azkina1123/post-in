@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PostProvider()),
         ChangeNotifierProvider(create: (context) => KomentarProvider()),
         ChangeNotifierProvider(create: (context) => LikeProvider()),
+        ChangeNotifierProvider(create: (context) => FollowingProvider()),
+
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(
@@ -270,7 +272,7 @@ class MyApp extends StatelessWidget {
           ),
 
           // theme yg digunakan ==============================================================
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.dark,
 
           // home: MainPage(),
 

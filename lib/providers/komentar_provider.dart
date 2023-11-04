@@ -15,7 +15,7 @@ class KomentarProvider extends ChangeNotifier {
       tglDibuat: DateTime.utc(2023, 11, 2),
       konten:
           "Selamat ulang tahun! Semoga usiamu semakin berharga dan penuh dengan momen-momen indah. 🎂✨",
-      postId: 1,
+      postId: 2,
       userId: 1,
     ),
     Komentar(
@@ -30,14 +30,14 @@ class KomentarProvider extends ChangeNotifier {
       id: 4,
       tglDibuat: DateTime.utc(2023, 11, 3),
       konten: "Siapa itu gak ada kenal aku 😒😒🤔",
-      postId: 1,
+      postId: 2,
       userId: 1,
     ),
     Komentar(
       id: 5,
       tglDibuat: DateTime.utc(2023, 11, 4, 07, 11),
       konten: "💕💕💕💕💕",
-      postId: 1,
+      postId: 3,
       userId: 1,
     ),
   ];
@@ -53,9 +53,10 @@ class KomentarProvider extends ChangeNotifier {
   void addKomentar(Komentar komentar) {
     _komentars.add(komentar);
     notifyListeners();
+    sortKomentarbyDateDesc();
   }
 
-  void sortKomentarbyDate() {
+  void sortKomentarbyDateDesc() {
     _komentars.sort((a, b) {
       return b.tglDibuat.compareTo(a.tglDibuat);
     });
@@ -77,4 +78,22 @@ class KomentarProvider extends ChangeNotifier {
   int getKomentarsNumber({int? postId, int? userId}) {
     return getKomentars(postId: postId, userId: userId).length;
   }
+
+  int totalKomentar(int postId) {
+    return _komentars
+        .where(
+          ((komentar) => komentar.postId == postId),
+        )
+        .toList()
+        .length;
+  }
+
+  // void sortKomentarByDateDesc() {
+  //   _komentars.sort(
+  //     (a, b) {
+  //       return b.tglDibuat.compareTo(a.tglDibuat);
+  //     },
+  //   );
+  //   notifyListeners();
+  // }
 }

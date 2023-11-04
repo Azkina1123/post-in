@@ -1,20 +1,34 @@
 part of "pages.dart";
 
-class PostPage extends StatelessWidget {
+class PostPage extends StatefulWidget {
   Post post;
   PostPage({super.key, required this.post});
 
   @override
+  State<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends State<PostPage> {
+
+    @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // jalankan fungsi-fungsi setelah widget selesai dibangun
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // saat pertama kali running, urutkan dari yang terbaru
+      // karena defaultnya tab bar berada di tab post terbaru
+      Provider.of<KomentarProvider>(context, listen: false).sortKomentarbyDateDesc();      
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    // var komentars = Provider.of<KomentarProvider>(context, listen: false)
-    //     .komentars
-    //     .where((komentar) => komentar.postId == post.id)
-    //     .toList();
 
     return Consumer<KomentarProvider>(
         builder: (context, komentarProvider, child) {
-      komentarProvider.sortKomentarbyDate();
-      List<Komentar> komentars = komentarProvider.getKomentars(postId: post.id);
+      
+      List<Komentar> komentars = komentarProvider.getKomentars(postId: widget.post.id);
 
       return Scaffold(
         appBar: AppBar(
@@ -25,65 +39,53 @@ class PostPage extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
+          
         ),
-        body: ListView.builder(
-          // physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (_, i) {
-            return Column(
-              children: [
-                if (i == 0)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PostWidget(
-                        post: post,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, right: 20, top: 10, bottom: 10),
-                        child: Text(
-                          "Komentar (${komentars.length})",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                      InputKomentar(
-                        post: post,
-                      ),
-                    ],
-                  ),
 
-                if (komentars.isNotEmpty)
+        body: ListView(
+          children: [
+            PostWidget(
+              post: widget.post,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 10, bottom: 10),
+              child: Text(
+                "Komentar (${komentars.length})",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            InputKomentar(
+              post: widget.post,
+            ),
+
+            Column(
+              children: [
+                for (int i = 0; i < komentars.length; i++)
                   Column(
                     children: [
-                      Divider(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .tertiary
-                            .withOpacity(0.5),
-                        indent: 10,
-                        endIndent: 10,
-                      ),
                       KomentarWidget(
                         komentar: komentars[i],
                       ),
-
+                      if (i != komentars.length - 1)
+                        Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .tertiary
+                              .withOpacity(0.5),
+                          indent: 10,
+                          endIndent: 10,
+                        )
+                      // di post terakhir tidak perlu pembatas -------------------------
+                      else
+                        const SizedBox(
+                          height: 20,
+                        )
                     ],
-                  ),
-                  
-                  
-
-                if (i == komentars.length - 1)
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                // else
+                  )
               ],
-            );
-          },
-          itemCount: komentars.isEmpty
-              ? 1
-              : komentars.length,
+            )
+          ],
         ),
       );
     });

@@ -10,3 +10,4 @@ part 'komentar_provider.dart';
 part 'user_provider.dart';
 part 'auth_provider.dart';
 part 'like_provider.dart';
+part 'following_provider.dart';

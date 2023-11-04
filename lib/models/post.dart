@@ -5,6 +5,8 @@ class Post {
   DateTime tglDibuat;
   String konten;
   ImageProvider<Object>? img;
+  int totalLike;
+  int totalKomentar;
   int userId;
 
   Post({
@@ -12,6 +14,16 @@ class Post {
     required this.tglDibuat,
     required this.konten,
     this.img,
+    this.totalLike = 0,
+    this.totalKomentar = 0,
     required this.userId,
   });
+
+  void like() {
+    totalLike += 1;
+  }
+
+  void unlike() {
+    totalLike -= 1;
+  }
 }

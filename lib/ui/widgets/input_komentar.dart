@@ -9,7 +9,6 @@ class InputKomentar extends StatefulWidget {
 
 class _InputKomentarState extends State<InputKomentar> {
   TextEditingController _kontenCon = TextEditingController();
-  bool _focused = false;
   FocusNode _focus = FocusNode();
 
   @override
@@ -27,13 +26,18 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<PageProvider>(context).komentarFocused) {
+      _focus.requestFocus();
+    } else {
+      _focus.unfocus();
+    }
 
     return Column(
       children: [
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           width: width(context),
-          height: _focused ? 120 : 70,
+          height: _focus.hasFocus ? 120 : 70,
           padding: EdgeInsets.only(left: 15, right: 20, bottom: 10),
           margin: EdgeInsets.only(top: 20),
 
@@ -41,13 +45,8 @@ class _InputKomentarState extends State<InputKomentar> {
           child: Focus(
             // focusNode: _focus,
             onFocusChange: (hasFocus) {
-              setState(() {
-                
-                // Provider.of<PageProvider>(context).changeKomentarFocus(
-                //   !Provider.of<PageProvider>(context).komentarFocused,
-                // );
-                _focused = hasFocus;
-              });
+              Provider.of<PageProvider>(context, listen: false).changeKomentarFocus(_focus.hasFocus);
+              // setState(() {});
             },
             child: TextField(
               focusNode: _focus,
@@ -70,7 +69,7 @@ class _InputKomentarState extends State<InputKomentar> {
             ),
           ),
         ),
-        if (_focused)
+        if (_focus.hasFocus)
           Container(
             padding: EdgeInsets.only(left: 20, right: 20),
             // alignment: Alignment.centerRight,

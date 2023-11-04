@@ -71,24 +71,22 @@ class PostWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // IconButton(onPressed: (){}, icon: Icon(Icons.favorite_outline, ), ),
+                      // tombol like -------------------------------------------------------
                       TextButton.icon(
                         onPressed: () {
                           if (!likeProvider.isLiked(
                             authUserid,
-                            post.id,
+                            postId: post.id,
                           )) {
                             likeProvider.addlike(
                               Like(
-                                  id: Provider.of<LikeProvider>(
-                                        context,
-                                        listen: false,
-                                      ).likeCount +
-                                      1,
-                                  type: "post",
-                                  userId: authUserid,
-                                  postId: post.id),
+                                id: likeProvider.likesCount + 1,
+                                userId: authUserid,
+                                postId: post.id,
+                              ),
                             );
+                            Provider.of<PostProvider>(context, listen: false)
+                                .like(post);
                           } else {
                             likeProvider.deleteLike(
                               likeProvider.likes
@@ -97,17 +95,18 @@ class PostWidget extends StatelessWidget {
                                       like.postId == post.id)
                                   .toList()[0],
                             );
+                            Provider.of<PostProvider>(context, listen: false)
+                                .unlike(post);
                           }
                         },
                         icon: Icon(
-                          likeProvider.isLiked(authUserid, post.id)
+                          likeProvider.isLiked(authUserid, postId: post.id)
                               ? Icons.favorite_rounded
                               : Icons.favorite_outline,
                           color: likeProvider.isLiked(
-                                  Provider.of<AuthProvider>(context)
-                                      .authUser
-                                      .id,
-                                  post.id)
+                            authUserid,
+                            postId: post.id,
+                          )
                               ? colors["soft-pink"]
                               : Theme.of(context).colorScheme.primary,
                         ),
@@ -117,20 +116,38 @@ class PostWidget extends StatelessWidget {
                               .getLikesNumber(postId: post.id)
                               .toString(),
                           style: TextStyle(
-                              color: likeProvider.isLiked(authUserid, post.id)
-                                  ? colors["soft-pink"]
-                                  : Theme.of(context).colorScheme.primary),
+                            color: likeProvider.isLiked(
+                              authUserid,
+                              postId: post.id,
+                            )
+                                ? colors["soft-pink"]
+                                : Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ),
+
+                      // tombol komentar -------------------------------------------------------
+
                       TextButton.icon(
                         onPressed: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   "/post",
-                          //   arguments: post,
-                          // );
-                          // Provider.of<PageProvider>(context, listen: false)
-                          //     .changeKomentarFocus(true);
+                          print(ModalRoute.of(context)!.settings.name);
+                          // jika berada di halaman home,
+                          // jike tekan tombol komentar, maka akan dialihkan ke,
+                          // halaman post dan textfield komentar dalam mode focus,
+                          // if (ModalRoute.of(context)!.settings.name == "/" || ModalRoute.of(context)!.settings.name == "/profile") {
+                          if (ModalRoute.of(context)!.settings.name != null) {
+                            Provider.of<PageProvider>(context, listen: false)
+                                .changeRoute("/post");
+                            Navigator.pushNamed(
+                              context,
+                              "/post",
+                              arguments: post,
+                            );
+                          }
+
+                          // focus kan komentar
+                          Provider.of<PageProvider>(context, listen: false)
+                              .changeKomentarFocus(true);
                         },
                         icon: Icon(Icons.mode_comment_outlined),
                         style: Theme.of(context).textButtonTheme.style,

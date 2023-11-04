@@ -1,7 +1,8 @@
 part of "widgets.dart";
 
 class InputPost extends StatefulWidget {
-  InputPost({super.key});
+  int tabIndex;
+  InputPost({super.key, required this.tabIndex});
   @override
   State<InputPost> createState() => _InputPostState();
 }
@@ -11,12 +12,6 @@ class _InputPostState extends State<InputPost> {
   bool _focused = false;
   File? img;
   FocusNode _focus = FocusNode();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -51,7 +46,8 @@ class _InputPostState extends State<InputPost> {
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
                   image: Provider.of<AuthProvider>(context, listen: false)
-                      .authUser.foto!,
+                      .authUser
+                      .foto!,
                   onPressed: null,
                 ),
               ),
@@ -106,11 +102,20 @@ class _InputPostState extends State<InputPost> {
                                   1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              userId: Provider.of<AuthProvider>(context, listen: false).authUser.id,
+                              userId: Provider.of<AuthProvider>(context,
+                                      listen: false)
+                                  .authUser
+                                  .id,
                               img: img != null ? FileImage(img!) : null,
+                                    totalKomentar: 0,
+                              totalLike: 0,
                             ),
                           );
-
+                          
+                          if (widget.tabIndex == 0) {
+                            Provider.of<PostProvider>(context, listen: false)
+                                .sortByDateDesc();
+                          }
                           _focus.unfocus();
                           _kontenCon.clear();
                         }

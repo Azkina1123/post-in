@@ -1,0 +1,11 @@
+Halaman home & post target
+-. D post
+-. D like
+-. D komentar
+-. angka di like komentar
+-. Snackbar berhasil menambahkan post
+-. Snackbar berhasil menambahkan komentar
+-. Snackbar berhasil menambahkan like
+-. Posting dengan kamera
+-. Bug saat tekan icon komentar di halaman post page (!!)
+
