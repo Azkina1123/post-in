@@ -9,9 +9,22 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hmmm"),
+        title: Text("My profile"),
       ),
-      body: Center(child: Text(user.username)),
+      body: //Center(child: Text(user.username)),
+          ListView(
+        children: [
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                //backgroundImage: Image.file(user.foto).image,
+              ),
+              Text(user.username),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
