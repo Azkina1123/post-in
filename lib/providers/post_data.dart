@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class PostProvider extends ChangeNotifier {
+class PostData extends ChangeNotifier {
   final List<Post> _posts = [
     Post(
       id: 1,
@@ -59,13 +59,21 @@ class PostProvider extends ChangeNotifier {
     return _posts.length;
   }
 
+  // tambahkan post baru
   void addPost(Post post) {
     _posts.add(post);
     notifyListeners();
   }
 
+  // update post yg sudah ada
   void updatePost(Post post) {
     // post.tog
+    int index = _posts.indexWhere((postCari) => postCari.id == post.id);
+    if (index >= 0) {
+      _posts[index] = post;
+    } else {
+      print("Tidak ditemukan.");
+    }
     notifyListeners();
   }
 
@@ -93,12 +101,10 @@ class PostProvider extends ChangeNotifier {
 
   void sortByPopularityDesc() {
     _posts.sort((a, b) {
-
-      
-      return (b.totalLike+b.totalKomentar).compareTo(a.totalLike + a.totalKomentar);
+      return (b.totalLike + b.totalKomentar)
+          .compareTo(a.totalLike + a.totalKomentar);
     });
     notifyListeners();
-
   }
 
   final List<Post> _followedPosts = [];
@@ -115,8 +121,7 @@ class PostProvider extends ChangeNotifier {
         _posts.where((post) => post.userId == userIdFollowed).toList();
     for (Post post in followedPosts) {
       if (!_followedPosts.contains(post)) {
-      _followedPosts.add(post);
-
+        _followedPosts.add(post);
       }
     }
     notifyListeners();

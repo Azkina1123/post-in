@@ -5,6 +5,7 @@ class ProfilePage extends StatelessWidget {
 
   ProfilePage({super.key, required this.user});
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

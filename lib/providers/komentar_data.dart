@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class KomentarProvider extends ChangeNotifier {
+class KomentarData extends ChangeNotifier {
   final List<Komentar> _komentars = [
     Komentar(
       id: 1,

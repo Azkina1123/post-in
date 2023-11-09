@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class AuthProvider extends ChangeNotifier {
+class AuthData extends ChangeNotifier {
   User? _authUser = User(
     id: 1,
     username: "alu",

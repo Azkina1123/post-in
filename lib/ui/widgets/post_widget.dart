@@ -7,17 +7,17 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context, listen: false)
+    User user = Provider.of<UserData>(context, listen: false)
         .users
         .where((user) => user.id == post.userId)
         .toList()[0];
 
-    int authUserid = Provider.of<AuthProvider>(context).authUser.id;
+    int authUserid = Provider.of<AuthData>(context).authUser.id;
 
-    // bool isLiked = Provider.of<LikeProvider>(context)
+    // bool isLiked = Provider.of<LikeData>(context)
     //     .isLiked(authUserid, post.id);
 
-    return Consumer<LikeProvider>(builder: (context, likeProvider, child) {
+    return Consumer<LikeData>(builder: (context, likeProvider, child) {
       return Column(
         children: [
           ListTile(
@@ -85,7 +85,7 @@ class PostWidget extends StatelessWidget {
                                 postId: post.id,
                               ),
                             );
-                            Provider.of<PostProvider>(context, listen: false)
+                            Provider.of<PostData>(context, listen: false)
                                 .like(post);
                           } else {
                             likeProvider.deleteLike(
@@ -95,7 +95,7 @@ class PostWidget extends StatelessWidget {
                                       like.postId == post.id)
                                   .toList()[0],
                             );
-                            Provider.of<PostProvider>(context, listen: false)
+                            Provider.of<PostData>(context, listen: false)
                                 .unlike(post);
                           }
                         },
@@ -112,7 +112,7 @@ class PostWidget extends StatelessWidget {
                         ),
                         style: Theme.of(context).textButtonTheme.style,
                         label: Text(
-                          Provider.of<LikeProvider>(context, listen: false)
+                          Provider.of<LikeData>(context, listen: false)
                               .getLikesNumber(postId: post.id)
                               .toString(),
                           style: TextStyle(
@@ -136,7 +136,7 @@ class PostWidget extends StatelessWidget {
                           // halaman post dan textfield komentar dalam mode focus,
                           // if (ModalRoute.of(context)!.settings.name == "/" || ModalRoute.of(context)!.settings.name == "/profile") {
                           if (ModalRoute.of(context)!.settings.name != null) {
-                            Provider.of<PageProvider>(context, listen: false)
+                            Provider.of<PageData>(context, listen: false)
                                 .changeRoute("/post");
                             Navigator.pushNamed(
                               context,
@@ -146,13 +146,13 @@ class PostWidget extends StatelessWidget {
                           }
 
                           // focus kan komentar
-                          Provider.of<PageProvider>(context, listen: false)
+                          Provider.of<PageData>(context, listen: false)
                               .changeKomentarFocus(true);
                         },
                         icon: Icon(Icons.mode_comment_outlined),
                         style: Theme.of(context).textButtonTheme.style,
                         label: Text(
-                          Provider.of<KomentarProvider>(context, listen: false)
+                          Provider.of<KomentarData>(context, listen: false)
                               .getKomentarsNumber(postId: post.id)
                               .toString(),
                         ),

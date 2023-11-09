@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class UserProvider extends ChangeNotifier {
+class UserData extends ChangeNotifier {
   final List<User> _users = [
     User(
       id: 1,

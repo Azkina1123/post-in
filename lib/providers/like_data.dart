@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class LikeProvider extends ChangeNotifier {
+class LikeData extends ChangeNotifier {
   final List<Like> _likes = [
     Like(id: 1, userId: 2, postId: 4),
     Like(id: 2, userId: 4, postId: 5),

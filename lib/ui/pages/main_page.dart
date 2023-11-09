@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PageProvider>(
+    return Consumer<PageData>(
       builder: (context, pageProvider, child) {
         return Scaffold(
           body: _pages.elementAt(

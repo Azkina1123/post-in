@@ -12,20 +12,33 @@ class _PostPageState extends State<PostPage> {
 
     @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // saat pertama kali running, urutkan dari yang terbaru
       // karena defaultnya tab bar berada di tab post terbaru
-      Provider.of<KomentarProvider>(context, listen: false).sortKomentarbyDateDesc();      
+      Provider.of<KomentarData>(context, listen: false).sortKomentarbyDateDesc();      
     });
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //   if (_isIn)
+  // }
+
   @override
   Widget build(BuildContext context) {
 
-    return Consumer<KomentarProvider>(
+    return Consumer<KomentarData>(
         builder: (context, komentarProvider, child) {
       
       List<Komentar> komentars = komentarProvider.getKomentars(postId: widget.post.id);

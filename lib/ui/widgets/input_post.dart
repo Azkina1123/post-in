@@ -8,10 +8,10 @@ class InputPost extends StatefulWidget {
 }
 
 class _InputPostState extends State<InputPost> {
-  TextEditingController _kontenCon = TextEditingController();
+  final TextEditingController _kontenCon = TextEditingController();
+  final FocusNode _focus = FocusNode();
   bool _focused = false;
   File? img;
-  FocusNode _focus = FocusNode();
 
   @override
   void dispose() {
@@ -45,7 +45,7 @@ class _InputPostState extends State<InputPost> {
               decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
-                  image: Provider.of<AuthProvider>(context, listen: false)
+                  image: Provider.of<AuthData>(context, listen: false)
                       .authUser
                       .foto!,
                   onPressed: null,
@@ -93,16 +93,16 @@ class _InputPostState extends State<InputPost> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () {
-                          Provider.of<PostProvider>(context, listen: false)
+                          Provider.of<PostData>(context, listen: false)
                               .addPost(
                             Post(
-                              id: Provider.of<PostProvider>(context,
+                              id: Provider.of<PostData>(context,
                                           listen: false)
                                       .postCount +
                                   1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              userId: Provider.of<AuthProvider>(context,
+                              userId: Provider.of<AuthData>(context,
                                       listen: false)
                                   .authUser
                                   .id,
@@ -113,7 +113,7 @@ class _InputPostState extends State<InputPost> {
                           );
                           
                           if (widget.tabIndex == 0) {
-                            Provider.of<PostProvider>(context, listen: false)
+                            Provider.of<PostData>(context, listen: false)
                                 .sortByDateDesc();
                           }
                           _focus.unfocus();

@@ -6,14 +6,14 @@ class KomentarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context, listen: false)
+    User user = Provider.of<UserData>(context, listen: false)
         .users
         .where((user) => user.id == komentar.userId)
         .toList()[0];
 
-    int authUserid = Provider.of<AuthProvider>(context).authUser.id;
+    int authUserid = Provider.of<AuthData>(context).authUser.id;
 
-    return Consumer<LikeProvider>(builder: (context, likeProvider, child) {
+    return Consumer<LikeData>(builder: (context, likeProvider, child) {
       return Container(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(

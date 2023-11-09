@@ -1,6 +1,6 @@
 part of "providers.dart";
 
-class PageProvider extends ChangeNotifier {
+class PageData extends ChangeNotifier {
   int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 

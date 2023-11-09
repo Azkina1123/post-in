@@ -8,8 +8,8 @@ class InputKomentar extends StatefulWidget {
 }
 
 class _InputKomentarState extends State<InputKomentar> {
-  TextEditingController _kontenCon = TextEditingController();
-  FocusNode _focus = FocusNode();
+  final TextEditingController _kontenCon = TextEditingController();
+  final FocusNode _focus = FocusNode();
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<PageProvider>(context).komentarFocused) {
+    if (Provider.of<PageData>(context).komentarFocused) {
       _focus.requestFocus();
     } else {
       _focus.unfocus();
@@ -45,7 +45,7 @@ class _InputKomentarState extends State<InputKomentar> {
           child: Focus(
             // focusNode: _focus,
             onFocusChange: (hasFocus) {
-              Provider.of<PageProvider>(context, listen: false).changeKomentarFocus(_focus.hasFocus);
+              Provider.of<PageData>(context, listen: false).changeKomentarFocus(_focus.hasFocus);
               // setState(() {});
             },
             child: TextField(
@@ -54,7 +54,7 @@ class _InputKomentarState extends State<InputKomentar> {
               decoration: InputDecoration(
                 hintText: "Bagikan komentar Anda!",
                 icon: AccountButton(
-                  image: Provider.of<AuthProvider>(context, listen: false)
+                  image: Provider.of<AuthData>(context, listen: false)
                       .authUser
                       .foto!,
                   onPressed: null,
@@ -79,10 +79,10 @@ class _InputKomentarState extends State<InputKomentar> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () {
-                          Provider.of<KomentarProvider>(context, listen: false)
+                          Provider.of<KomentarData>(context, listen: false)
                               .addKomentar(
                             Komentar(
-                              id: Provider.of<KomentarProvider>(
+                              id: Provider.of<KomentarData>(
                                     context,
                                     listen: false,
                                   ).komentarCount +
@@ -90,7 +90,7 @@ class _InputKomentarState extends State<InputKomentar> {
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               postId: widget.post.id,
-                              userId: Provider.of<AuthProvider>(
+                              userId: Provider.of<AuthData>(
                                 context,
                                 listen: false,
                               ).authUser.id,

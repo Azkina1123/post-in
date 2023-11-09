@@ -17,11 +17,11 @@ class _HomePageState extends State<HomePage> {
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // kalau login sudah jadi, hapus
-      Provider.of<AuthProvider>(
+      Provider.of<AuthData>(
         context,
         listen: false,
       ).login(
-        Provider.of<UserProvider>(
+        Provider.of<UserData>(
           context,
           listen: false,
         ).users[0], // user yg sedang login adalah user di index 0
@@ -29,13 +29,13 @@ class _HomePageState extends State<HomePage> {
 
       // saat pertama kali running, urutkan dari yang terbaru
       // karena defaultnya tab bar berada di tab post terbaru
-      Provider.of<PostProvider>(context, listen: false).sortByDateDesc();
+      Provider.of<PostData>(context, listen: false).sortByDateDesc();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostProvider>(builder: (ctx, postProvider, child) {
+    return Consumer<PostData>(builder: (ctx, postProvider, child) {
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -61,21 +61,21 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushNamed(
                       ctx,
                       "/profile",
-                      arguments: Provider.of<AuthProvider>(ctx, listen: false)
+                      arguments: Provider.of<AuthData>(ctx, listen: false)
                           .authUser,
                     );
                   },
                   child: Row(
                     children: [
                       Text(
-                        Provider.of<AuthProvider>(ctx, listen: false)
+                        Provider.of<AuthData>(ctx, listen: false)
                             .authUser
                             .username,
                       ),
                       SizedBox(width: 10,),
                       AccountButton(
                         onPressed: null,
-                        image: Provider.of<AuthProvider>(ctx, listen: false)
+                        image: Provider.of<AuthData>(ctx, listen: false)
                             .authUser
                             .foto!,
                       ),
@@ -168,8 +168,8 @@ class _HomePageState extends State<HomePage> {
   void _getFollowedPost() {
     // List
     List<Following> followedUser =
-        Provider.of<FollowingProvider>(context, listen: false).getFollowed(
-      Provider.of<AuthProvider>(
+        Provider.of<FollowingData>(context, listen: false).getFollowed(
+      Provider.of<AuthData>(
         context,
         listen: false,
       ).authUser.id,
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
 
     // List<Post> followedPosts = [];
     for (int i = 0; i < followedUser.length; i++) {
-      Provider.of<PostProvider>(context, listen: false).addFollowedPosts(followedUser[i].userId1);
+      Provider.of<PostData>(context, listen: false).addFollowedPosts(followedUser[i].userId1);
     }
   }
 }

@@ -17,13 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PageProvider()),
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => PostProvider()),
-        ChangeNotifierProvider(create: (context) => KomentarProvider()),
-        ChangeNotifierProvider(create: (context) => LikeProvider()),
-        ChangeNotifierProvider(create: (context) => FollowingProvider()),
+        ChangeNotifierProvider(create: (context) => PageData()),
+        ChangeNotifierProvider(create: (context) => AuthData()),
+        ChangeNotifierProvider(create: (context) => UserData()),
+        ChangeNotifierProvider(create: (context) => PostData()),
+        ChangeNotifierProvider(create: (context) => KomentarData()),
+        ChangeNotifierProvider(create: (context) => LikeData()),
+        ChangeNotifierProvider(create: (context) => FollowingData()),
 
       ],
       child: Builder(builder: (ctx) {
