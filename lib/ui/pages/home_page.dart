@@ -29,13 +29,13 @@ class _HomePageState extends State<HomePage> {
 
       // saat pertama kali running, urutkan dari yang terbaru
       // karena defaultnya tab bar berada di tab post terbaru
-      Provider.of<PostData>(context, listen: false).sortByDateDesc();
+      // Provider.of<PostData>(context, listen: false).sortByDateDesc();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostData>(builder: (ctx, postProvider, child) {
+    return Consumer<PostData>(builder: (ctx, postData, child) {
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -61,8 +61,8 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushNamed(
                       ctx,
                       "/profile",
-                      arguments: Provider.of<AuthData>(ctx, listen: false)
-                          .authUser,
+                      arguments:
+                          Provider.of<AuthData>(ctx, listen: false).authUser,
                     );
                   },
                   child: Row(
@@ -72,7 +72,9 @@ class _HomePageState extends State<HomePage> {
                             .authUser
                             .username,
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       AccountButton(
                         onPressed: null,
                         image: Provider.of<AuthData>(ctx, listen: false)
@@ -102,11 +104,11 @@ class _HomePageState extends State<HomePage> {
               onTap: (i) {
                 _index = i;
                 if (i == 0) {
-                  postProvider.sortByDateDesc();
+                  // postData.sortByDateDesc();
                 } else if (i == 1) {
-                  postProvider.sortByPopularityDesc();
+                  // postData.sortByPopularityDesc();
                 } else if (i == 2) {
-                  print("masuk");
+                  // print("masuk");
                   _getFollowedPost();
                 }
               },
@@ -120,44 +122,66 @@ class _HomePageState extends State<HomePage> {
               InputPost(tabIndex: _index),
 
               // daftar postingan ----------------------------------------------------------
-              Column(
-                children: [
-                  for (int i = 0;
-                      i <
-                          (_index != 2
-                              ? postProvider.postCount
-                              : postProvider.followedPosts.length);
-                      i++)
-                    Column(
-                      children: [
-                        PostWidget(
-                            post: _index != 2
-                                ? postProvider.posts[i]
-                                : postProvider.followedPosts[i]),
+              StreamBuilder<QuerySnapshot>(
+                  stream: postData.posts.snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: width(context),
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasData) {
+                      final data = snapshot.data!.docs;
+                      return Column(
+                        children: [
+                          for (int i = 0;
+                              i <
+                                  (_index != 2
+                                      ? data.length
+                                      : postData.followedPosts.length);
+                              i++)
+                            Column(
+                              children: [
+                                PostWidget(
+                                  post: _index != 2
+                                      ? Post(
+                                          id: data[i].get("id"),
+                                          tglDibuat: data[i].get("tglDibuat").toDate(),
+                                          konten: data[i].get("konten"),
+                                          img: data[i].get("img"),
+                                          userId: data[i].get("userId"),
+                                        )
+                                      : postData.followedPosts[i],
+                                ),
 
-                        // kasih pembatas antar post --------------------------------------
-                        if (i !=
-                            (_index != 2
-                                    ? postProvider.postCount
-                                    : postProvider.followedPosts.length) -
-                                1)
-                          Divider(
-                            color: Theme.of(ctx)
-                                .colorScheme
-                                .tertiary
-                                .withOpacity(0.5),
-                            indent: 10,
-                            endIndent: 10,
-                          )
-                        // di post terakhir tidak perlu pembatas -------------------------
-                        else
-                          const SizedBox(
-                            height: 20,
-                          )
-                      ],
-                    )
-                ],
-              )
+                                // kasih pembatas antar post --------------------------------------
+                                if (i !=
+                                    (_index != 2
+                                            ? data.length
+                                            : postData.followedPosts.length) -
+                                        1)
+                                  Divider(
+                                    color: Theme.of(ctx)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.5),
+                                    indent: 10,
+                                    endIndent: 10,
+                                  )
+                                // di post terakhir tidak perlu pembatas -------------------------
+                                else
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                              ],
+                            )
+                        ],
+                      );
+                    }
+
+                    return const Text("Belum ada post yang ditambahkan.");
+                  })
             ],
           ),
         ),
@@ -175,9 +199,9 @@ class _HomePageState extends State<HomePage> {
       ).authUser.id,
     );
 
-    // List<Post> followedPosts = [];
-    for (int i = 0; i < followedUser.length; i++) {
-      Provider.of<PostData>(context, listen: false).addFollowedPosts(followedUser[i].userId1);
-    }
+    // // List<Post> followedPosts = [];
+    // for (int i = 0; i < followedUser.length; i++) {
+    //   Provider.of<PostData>(context, listen: false).addFollowedPosts(followedUser[i].userId2);
+    // }
   }
 }

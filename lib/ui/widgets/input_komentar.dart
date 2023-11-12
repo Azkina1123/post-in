@@ -35,11 +35,11 @@ class _InputKomentarState extends State<InputKomentar> {
     return Column(
       children: [
         AnimatedContainer(
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           width: width(context),
           height: _focus.hasFocus ? 120 : 70,
-          padding: EdgeInsets.only(left: 15, right: 20, bottom: 10),
-          margin: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(left: 15, right: 20, bottom: 10),
+          margin: const EdgeInsets.only(top: 20),
 
           // isian postingan ---------------------------------------------------------
           child: Focus(
@@ -71,7 +71,7 @@ class _InputKomentarState extends State<InputKomentar> {
         ),
         if (_focus.hasFocus)
           Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             // alignment: Alignment.centerRight,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -101,7 +101,7 @@ class _InputKomentarState extends State<InputKomentar> {
                         }
                       : null,
                   // style: ,
-                  child: Text("Kirim"),
+                  child: const Text("Kirim"),
                 ),
               ],
             ),

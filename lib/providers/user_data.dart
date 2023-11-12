@@ -4,15 +4,17 @@ class UserData extends ChangeNotifier {
   final List<User> _users = [
     User(
       id: 1,
+      tglDibuat: DateTime.now(),
       username: "alu",
       namaLengkap: "Muhammad Alucard",
       email: "alu.ml@gmail.com",
       password: "alufeed",
       foto: NetworkImage(
-          "https://static.wikia.nocookie.net/mobile-legends/images/a/a4/Hero051-portrait.png"),
+          "https://www.ligagame.tv/images/Nana-Hero-Mobile-Legends_4f22c.jpg"),
     ),
     User(
       id: 2,
+      tglDibuat: DateTime.now(),
       username: "azkina1123",
       namaLengkap: "Aziizah Oki",
       email: "azzz@gmail.com",
@@ -23,6 +25,7 @@ class UserData extends ChangeNotifier {
     ),
     User(
       id: 3,
+      tglDibuat: DateTime.now(),
       username: "Aliyairfani",
       namaLengkap: "Aliya Irfani",
       email: "aliyaff@gmail.com",
@@ -33,6 +36,7 @@ class UserData extends ChangeNotifier {
     ),
     User(
       id: 4,
+      tglDibuat: DateTime.now(),
       username: "Chintialiuw",
       namaLengkap: "Chintia Liu",
       email: "chinnnt@gmail.com",
@@ -43,6 +47,7 @@ class UserData extends ChangeNotifier {
     ),
     User(
       id: 5,
+      tglDibuat: DateTime.now(),
       username: "Venomz22",
       namaLengkap: "Dimas Arya",
       email: "dann@gmail.com",

@@ -11,7 +11,7 @@ class _InputPostState extends State<InputPost> {
   final TextEditingController _kontenCon = TextEditingController();
   final FocusNode _focus = FocusNode();
   bool _focused = false;
-  File? img;
+  String? imgPath;
 
   @override
   void dispose() {
@@ -41,7 +41,7 @@ class _InputPostState extends State<InputPost> {
             },
             child: TextField(
               focusNode: _focus,
-              autofocus: img != null ? true : false,
+              autofocus: imgPath != null ? true : false,
               decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
@@ -67,18 +67,23 @@ class _InputPostState extends State<InputPost> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (img != null)
+                if (imgPath != null)
                   GestureDetector(
                     onLongPress: () {
                       setState(() {
-                        img = null;
+                        imgPath = null;
                       });
                     },
                     child: Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                          image: DecorationImage(image: FileImage(img!))),
+                        image: DecorationImage(
+                          image: FileImage(
+                            File(imgPath!),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 IconButton(
@@ -93,29 +98,28 @@ class _InputPostState extends State<InputPost> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () {
-                          Provider.of<PostData>(context, listen: false)
-                              .addPost(
+                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                          Provider.of<PostData>(context, listen: false).addPost(
                             Post(
-                              id: Provider.of<PostData>(context,
-                                          listen: false)
+                              id: Provider.of<PostData>(context, listen: false)
                                       .postCount +
                                   1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              userId: Provider.of<AuthData>(context,
-                                      listen: false)
-                                  .authUser
-                                  .id,
-                              img: img != null ? FileImage(img!) : null,
-                                    totalKomentar: 0,
+                              userId:
+                                  Provider.of<AuthData>(context, listen: false)
+                                      .authUser
+                                      .id,
+                              img: imgPath,
+                              totalKomentar: 0,
                               totalLike: 0,
                             ),
                           );
-                          
-                          if (widget.tabIndex == 0) {
-                            Provider.of<PostData>(context, listen: false)
-                                .sortByDateDesc();
-                          }
+
+                          // if (widget.tabIndex == 0) {
+                          //   Provider.of<PostData>(context, listen: false)
+                          //       .sortByDateDesc();
+                          // }
                           _focus.unfocus();
                           _kontenCon.clear();
                         }
@@ -136,7 +140,7 @@ class _InputPostState extends State<InputPost> {
     );
 
     if (pickedFile != null) {
-      img = File(pickedFile.path);
+      imgPath = pickedFile.path;
       _focus.requestFocus();
     }
   }

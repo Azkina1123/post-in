@@ -59,7 +59,7 @@ class PostWidget extends StatelessWidget {
                           margin: EdgeInsets.only(bottom: 15),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: post.img!, fit: BoxFit.cover),
+                                image: NetworkImage(post.img!), fit: BoxFit.cover),
                           ),
                         )
                       : SizedBox(),
@@ -85,8 +85,8 @@ class PostWidget extends StatelessWidget {
                                 postId: post.id,
                               ),
                             );
-                            Provider.of<PostData>(context, listen: false)
-                                .like(post);
+                            // Provider.of<PostData>(context, listen: false)
+                            //     .like(post);
                           } else {
                             likeProvider.deleteLike(
                               likeProvider.likes
@@ -95,8 +95,8 @@ class PostWidget extends StatelessWidget {
                                       like.postId == post.id)
                                   .toList()[0],
                             );
-                            Provider.of<PostData>(context, listen: false)
-                                .unlike(post);
+                            // Provider.of<PostData>(context, listen: false)
+                            //     .unlike(post);
                           }
                         },
                         icon: Icon(
@@ -152,9 +152,10 @@ class PostWidget extends StatelessWidget {
                         icon: Icon(Icons.mode_comment_outlined),
                         style: Theme.of(context).textButtonTheme.style,
                         label: Text(
-                          Provider.of<KomentarData>(context, listen: false)
-                              .getKomentarsNumber(postId: post.id)
-                              .toString(),
+                          "999"
+                          // Provider.of<KomentarData>(context, listen: false)
+                          //     .getKomentarsNumber(postId: post.id)
+                          //     .toString(),
                         ),
                       ),
                     ],

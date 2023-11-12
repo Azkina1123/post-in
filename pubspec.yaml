@@ -45,6 +45,7 @@ dependencies:
   firebase_auth: ^4.13.0
   google_sign_in: ^6.1.6
   email_validator: ^2.1.17
+  firebase_storage: ^11.5.0
   
 
 dev_dependencies:

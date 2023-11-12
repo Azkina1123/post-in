@@ -13,9 +13,9 @@ class KomentarWidget extends StatelessWidget {
 
     int authUserid = Provider.of<AuthData>(context).authUser.id;
 
-    return Consumer<LikeData>(builder: (context, likeProvider, child) {
+    return Consumer<LikeData>(builder: (context, likeProvider, child,) {
       return Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
+        padding: const EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,7 +23,7 @@ class KomentarWidget extends StatelessWidget {
             Container(
               width: 80,
               alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(left: 15, right: 10),
+              padding: const EdgeInsets.only(left: 15, right: 10),
               child: Column(
                 children: [
                   AccountButton(
@@ -53,9 +53,8 @@ class KomentarWidget extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
-                        " • " +
-                            DateFormat('dd MMM yyyy HH.mm')
-                                .format(komentar.tglDibuat),
+                        " • ${DateFormat('dd MMM yyyy HH.mm')
+                                .format(komentar.tglDibuat)}",
                         style: TextStyle(
                             fontSize:
                                 Theme.of(context).textTheme.bodySmall!.fontSize,
@@ -76,7 +75,7 @@ class KomentarWidget extends StatelessWidget {
             ),
             Container(
               width: 50,
-              padding: EdgeInsets.only(left: 10, right: 20),
+              padding: const EdgeInsets.only(left: 10, right: 20),
               alignment: Alignment.topRight,
               child: IconButton(
                 onPressed: () {

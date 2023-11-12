@@ -4,7 +4,7 @@ class Post {
   int id;
   DateTime tglDibuat;
   String konten;
-  ImageProvider<Object>? img;
+  String? img;
   int totalLike;
   int totalKomentar;
   int userId;

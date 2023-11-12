@@ -2,8 +2,8 @@ part of "providers.dart";
 
 class FollowingData extends ChangeNotifier {
   final List<Following> _followings = [
-    Following(id: 1, userId1: 2, userId2: 1),
-    Following(id: 1, userId1: 3, userId2: 1),
+    Following(id: 1, userId2: 2, userId: 1),
+    Following(id: 1, userId2: 3, userId: 1),
   ];
 
   UnmodifiableListView get followings {
