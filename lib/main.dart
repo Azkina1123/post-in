@@ -3,9 +3,15 @@ import 'package:post_in/models/models.dart';
 import 'package:post_in/providers/providers.dart';
 import 'package:post_in/ui/pages/pages.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 // import 'package:post_in/ui/widgets/widgets.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -24,7 +30,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => KomentarData()),
         ChangeNotifierProvider(create: (context) => LikeData()),
         ChangeNotifierProvider(create: (context) => FollowingData()),
-
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "789224600730",
+    "project_id": "post-in-k4mobile",
+    "storage_bucket": "post-in-k4mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789224600730:android:ff814c6b5486f6e3ffdb23",
+        "android_client_info": {
+          "package_name": "com.example.post_in"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIrbHcBbREqt6o7l6MziBQKgDgEB60BuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

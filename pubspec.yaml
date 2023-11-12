@@ -40,6 +40,11 @@ dependencies:
   device_info_plus: ^9.1.0
   permission_handler: ^11.0.1
   intl: ^0.18.1
+  firebase_core: ^2.22.0
+  cloud_firestore: ^4.13.0
+  firebase_auth: ^4.13.0
+  google_sign_in: ^6.1.6
+  email_validator: ^2.1.17
   
 
 dev_dependencies:
