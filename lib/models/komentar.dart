@@ -2,6 +2,7 @@ part of "models.dart";
 
 class Komentar {
   int id;
+  String? idDoc;
   DateTime tglDibuat;
   String konten;
   int totalLike;
@@ -10,6 +11,7 @@ class Komentar {
 
   Komentar({
     required this.id,
+    this.idDoc,
     required this.tglDibuat,
     required this.konten,
     required this.totalLike,

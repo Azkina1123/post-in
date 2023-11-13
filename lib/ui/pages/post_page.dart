@@ -73,6 +73,7 @@ class PostPage extends StatelessWidget {
                               KomentarWidget(
                                 komentar: Komentar(
                                   id: data.docs[i].get("id"),
+                                  idDoc: data.docs[i].id,
                                   tglDibuat:
                                       data.docs[i].get("tglDibuat").toDate(),
                                   konten: data.docs[i].get("konten"),

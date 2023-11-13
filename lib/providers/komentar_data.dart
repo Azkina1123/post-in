@@ -48,18 +48,12 @@ class KomentarData extends ChangeNotifier {
     return _komentarsRef;
   }
 
-
-  // Future<int> get komentarCount async {
-  //   QuerySnapshot querySnapshot = await _komentars.get();
-  //   return querySnapshot.size;
-  // }
   Future<int> get komentarCount async {
     QuerySnapshot querySnapshot = await _komentarsRef.get();
     return querySnapshot.size;
   }
 
   void addKomentar(Komentar komentar) async {
-
     int max = 99999999;
     int min = 10000000;
     int randomNumber = Random().nextInt(max - min + 1) + min;
@@ -77,6 +71,12 @@ class KomentarData extends ChangeNotifier {
     // sortKomentarbyDateDesc();
   }
 
+  void updateTotalLikeKomentar(String id, int totalLike) {
+    _komentarsRef.doc(id).update({
+      "totalLike": totalLike,
+    });
+    // notifyListeners();
+  }
   // void sortKomentarbyDateDesc() {
   //   _komentars.sort((a, b) {
   //     return b.tglDibuat.compareTo(a.tglDibuat);

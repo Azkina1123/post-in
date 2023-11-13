@@ -15,64 +15,64 @@ class PostWidget extends StatelessWidget {
         builder: (context, likeData, komentarData, child) {
       return Container(
         width: width(context),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, "/post", arguments: post);
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StreamBuilder<QuerySnapshot>(
-                  stream: Provider.of<UserData>(context, listen: false)
-                      .usersRef
-                      .where("id", isEqualTo: post.userId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      QuerySnapshot data = snapshot.data!;
-                      user = User(
-                        id: data.docs[0].get("id"),
-                        idDoc: data.docs[0].id,
-                        tglDibuat: data.docs[0].get("tglDibuat").toDate(),
-                        username: data.docs[0].get("username"),
-                        namaLengkap: data.docs[0].get("namaLengkap"),
-                        email: data.docs[0].get("email"),
-                        password: data.docs[0].get("password"),
-                        foto: data.docs[0].get("foto"),
-                      );
-                      return ListTile(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/profile",
-                            arguments: user,
-                          );
-                        },
-                        splashColor: Colors.transparent,
-                        leading: AccountButton(
-                          onPressed: null,
-                          image: NetworkImage(user!.foto),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StreamBuilder<QuerySnapshot>(
+                stream: Provider.of<UserData>(context, listen: false)
+                    .usersRef
+                    .where("id", isEqualTo: post.userId)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    QuerySnapshot data = snapshot.data!;
+                    user = User(
+                      id: data.docs[0].get("id"),
+                      idDoc: data.docs[0].id,
+                      tglDibuat: data.docs[0].get("tglDibuat").toDate(),
+                      username: data.docs[0].get("username"),
+                      namaLengkap: data.docs[0].get("namaLengkap"),
+                      email: data.docs[0].get("email"),
+                      password: data.docs[0].get("password"),
+                      foto: data.docs[0].get("foto"),
+                    );
+                    return ListTile(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          "/profile",
+                          arguments: user,
+                        );
+                      },
+                      splashColor: Colors.transparent,
+                      leading: AccountButton(
+                        onPressed: null,
+                        image: NetworkImage(user!.foto),
+                      ),
+                      title: Text(user!.username,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      subtitle: Text(
+                        DateFormat('dd MMM yyyy HH.mm')
+                            .format(post.tglDibuat),
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.5),
+                          fontSize:
+                              Theme.of(context).textTheme.bodySmall!.fontSize,
                         ),
-                        title: Text(user!.username,
-                            style: Theme.of(context).textTheme.titleMedium),
-                        subtitle: Text(
-                          DateFormat('dd MMM yyyy HH.mm')
-                              .format(post.tglDibuat),
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondary
-                                .withOpacity(0.5),
-                            fontSize:
-                                Theme.of(context).textTheme.bodySmall!.fontSize,
-                          ),
-                        ),
-                      );
-                    }
+                      ),
+                    );
+                  }
 
-                    return const Text("");
-                  }),
-              Padding(
+                  return const Text("");
+                }),
+            GestureDetector(
+              onTap: (){
+                Navigator.pushNamed(context, "/post", arguments: post);
+              },
+              child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,13 +89,13 @@ class PostWidget extends StatelessWidget {
                             ),
                           )
                         : SizedBox(),
-
+            
                     Text(
                       post.konten,
                     ),
-
+            
                     // like dan komentar ----------------------------------------------------------
-
+            
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -116,7 +116,7 @@ class PostWidget extends StatelessWidget {
                                   );
                                 } else if (snapshot.hasData) {
                                   final likes = snapshot.data!;
-
+            
                                   bool isLiked = likes.docs
                                       .where(
                                         (like) =>
@@ -124,9 +124,9 @@ class PostWidget extends StatelessWidget {
                                             like.get("postId") == post.id,
                                       )
                                       .isNotEmpty;
-
+            
                                   int likeCount = likes.docs.length;
-
+            
                                   return TextButton.icon(
                                     onPressed: () async {
                                       if (!isLiked) {
@@ -137,7 +137,7 @@ class PostWidget extends StatelessWidget {
                                             postId: post.id,
                                           ),
                                         );
-
+            
                                         Provider.of<PostData>(context,
                                                 listen: false)
                                             .updateTotalLikePost(
@@ -184,7 +184,7 @@ class PostWidget extends StatelessWidget {
                                 return const Text("");
                               }),
                         ),
-
+            
                         // tombol komentar -------------------------------------------------------
                         SizedBox(
                           width: 70,
@@ -221,7 +221,7 @@ class PostWidget extends StatelessWidget {
                                           arguments: post,
                                         );
                                       }
-
+            
                                       // focus kan komentar
                                       Provider.of<PageData>(context,
                                               listen: false)
@@ -241,8 +241,8 @@ class PostWidget extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     });

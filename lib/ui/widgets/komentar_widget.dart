@@ -111,15 +111,28 @@ class KomentarWidget extends StatelessWidget {
                                         komentarId: komentar.id,
                                       ),
                                     );
+                                    Provider.of<KomentarData>(context,
+                                            listen: false)
+                                        .updateTotalLikeKomentar(
+                                      komentar.idDoc!,
+                                      komentar.totalLike + 1,
+                                    );
                                   } else {
-                                    for (QueryDocumentSnapshot document
-                                        in likes.docs) {
-                                      if (document.get("userId") ==
-                                          authUserid) {
-                                        await document.reference.delete();
-                                      }
-                                    }
+                                    likeData.deleteLike(likes.docs[0].id);
+                                    Provider.of<KomentarData>(context,
+                                            listen: false)
+                                        .updateTotalLikeKomentar(
+                                      komentar.idDoc!,
+                                      komentar.totalLike - 1,
+                                    );
                                   }
+
+                                  Provider.of<KomentarData>(context,
+                                          listen: false)
+                                      .updateTotalLikeKomentar(
+                                    komentar.idDoc!,
+                                    komentar.totalLike,
+                                  );
                                 },
                                 // icon: Icon(Icons.favorite_rounded),
                                 icon: Icon(
