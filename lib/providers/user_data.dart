@@ -58,21 +58,66 @@ class UserData extends ChangeNotifier {
   //   ),
 
   // ];
-  final CollectionReference _users =
+  final CollectionReference _usersRef =
       FirebaseFirestore.instance.collection("users");
 
-  CollectionReference get users {
-    return _users;
+  CollectionReference get usersRef {
+    return _usersRef;
   }
 
   Future<int> get userCount async {
-    QuerySnapshot querySnapshot = await _users.get();
+    QuerySnapshot querySnapshot = await _usersRef.get();
     return querySnapshot.size;
   }
 
+  // final List<User> _users = [];
+  // User? user;
+
+  // UnmodifiableListView get users {
+  //   return UnmodifiableListView(_users);
+  // }
+
+  Future<List<User>> getUsers() async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
+    var documents = querySnapshot.docs;
+    List<User> users = [];
+    for (int i = 0; i < documents.length; i++) {
+      users.add(User(
+        id: documents[i].get("id"),
+        idDoc: documents[i].id,
+        tglDibuat: documents[i].get("tglDibuat").toDate(),
+        username: documents[i].get("username"),
+        namaLengkap: documents[i].get("namaLengkap"),
+        email: documents[i].get("email"),
+        password: documents[i].get("password"),
+        foto: documents[i].get("foto"),
+      ));
+    }
+    return users;
+  }
+
+  Future<User> getUser({int? id, String? idDoc}) async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
+    var documents = querySnapshot.docs;
+    int i = documents
+        .indexWhere((user) => user.id == idDoc || user.get("id") == id);
+        
+    User user = User(
+      id: documents[i].get("id"),
+      // idDoc: documents[i].get("idDoc"),
+      tglDibuat: documents[i].get("tglDibuat").toDate(),
+      username: documents[i].get("username"),
+      namaLengkap: documents[i].get("namaLengkap"),
+      email: documents[i].get("email"),
+      password: documents[i].get("password"),
+      foto: documents[i].get("foto"),
+    );
+    return user;
+  }
+
   void addUser(User user) async {
-    _users.add({
-      "id" : await userCount + 1,
+    _usersRef.add({
+      "id": await userCount + 1,
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,

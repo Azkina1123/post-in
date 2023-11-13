@@ -175,15 +175,16 @@ class MyApp extends StatelessWidget {
               onSurface: colors["milk-white"],
             ),
             appBarTheme: AppBarTheme(
-                scrolledUnderElevation: 0,
-                color: colors["dark-jungle-green"],
-                elevation: null,
-                titleTextStyle: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: colors["sand"],
-                ),
-                iconTheme: IconThemeData(color: colors["sand"]!)),
+              scrolledUnderElevation: 0,
+              color: colors["dark-jungle-green"],
+              elevation: null,
+              titleTextStyle: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: colors["sand"],
+              ),
+              iconTheme: IconThemeData(color: colors["sand"]!),
+            ),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors["sand"],

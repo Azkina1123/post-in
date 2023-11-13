@@ -2,6 +2,7 @@ part of "models.dart";
 
 class Post {
   int id;
+  String? idDoc;
   DateTime tglDibuat;
   String konten;
   String? img;
@@ -11,6 +12,7 @@ class Post {
 
   Post({
     required this.id,
+    this.idDoc,
     required this.tglDibuat,
     required this.konten,
     this.img,

@@ -1,37 +1,46 @@
 part of "providers.dart";
 
 class FollowingData extends ChangeNotifier {
-  // final List<Following> _followings = [
-  //   Following(id: 1, userId2: 2, userId: 1),
-  //   Following(id: 1, userId2: 3, userId: 1),
-  // ];
 
-  final CollectionReference _followings =
+  final CollectionReference _followingsRef =
       FirebaseFirestore.instance.collection("followings");
 
-  CollectionReference get followings {
-    return _followings;
+  CollectionReference get followingsRef {
+    return _followingsRef;
   }
 
   // int followingCount = 0;
 
   Future<int> get followingCount async {
-    QuerySnapshot querySnapshot = await _followings.get();
+    QuerySnapshot querySnapshot = await _followingsRef.get();
     return querySnapshot.size;
   }
 
   void addfollowing(Following following) async {
-    // int id;
-    // int userId2; // diikuti
-    // int userId; // yang mengikuti
 
-    _followings.add({
-      "id": "${following.userId}${following.userId2}",
+    _followingsRef.add({
+      "id": await followingCount + 1,
       "userId2" : following.userId2,
       "userId": following.userId,
     });
 
-    notifyListeners();
+  }
+
+    Future<List<Following>> getFollowings() async {
+    QuerySnapshot querySnapshot = await _followingsRef.get();
+    var documents = querySnapshot.docs;
+    List<Following> followings = [];
+    for (int i = 0; i < documents.length; i++) {
+      followings.add(
+        Following(
+          id: documents[i].get("id"), 
+          idDoc: documents[i].id,
+          userId2: documents[i].get("userId2"), 
+          userId: documents[i].get("userId"),
+        )
+      );
+    }
+    return followings;
   }
 
   // void deletefollowing(Following following) {

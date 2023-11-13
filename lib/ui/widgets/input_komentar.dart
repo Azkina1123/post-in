@@ -69,7 +69,7 @@ class _InputKomentarState extends State<InputKomentar> {
             ),
           ),
         ),
-        if (_focus.hasFocus)
+        if (_kontenCon.text.isNotEmpty)
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             // alignment: Alignment.centerRight,
@@ -78,19 +78,25 @@ class _InputKomentarState extends State<InputKomentar> {
               children: [
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
-                      ? () {
+                      ? () async {
                           Provider.of<KomentarData>(context, listen: false)
                               .addKomentar(
                             Komentar(
                               id: 1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
+                              totalLike: 0,
                               postId: widget.post.id,
                               userId: Provider.of<AuthData>(
                                 context,
                                 listen: false,
                               ).authUser.id,
                             ),
+                          );
+                          Provider.of<PostData>(context, listen: false)
+                              .updateTotalKomentarPost(
+                            widget.post.idDoc!,
+                            widget.post.totalKomentar + 1,
                           );
                           _focus.unfocus();
                           _kontenCon.clear();

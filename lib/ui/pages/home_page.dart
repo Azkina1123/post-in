@@ -9,6 +9,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
+
+  List<int>? followedUserId;
   @override
   void initState() {
     // TODO: implement initState
@@ -16,6 +18,7 @@ class _HomePageState extends State<HomePage> {
 
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getFollowedUserId();
       // kalau login sudah jadi, hapus
       // Provider.of<AuthData>(
       //   context,
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
       // );
       //     Provider.of<UserData>(context, listen: false).addUser(
       //   User(
-      //     id: "1",
+      //     id: 1,
       //     tglDibuat: DateTime.now(),
       //     username: "alu",
       //     namaLengkap: "Muhammad Alucard",
@@ -47,8 +50,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<PostData>(context).getPosts();
 
     return Consumer<PostData>(builder: (ctx, postData, child) {
+      // ambil data posts dari firebase
+      // postData.getPosts();
+      // Provider.of<UserData>(context).getUsers();
+
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -90,9 +98,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       AccountButton(
                         onPressed: null,
-                        image: NetworkImage(Provider.of<AuthData>(ctx, listen: false)
-                            .authUser
-                            .foto!),
+                        image: NetworkImage(
+                          Provider.of<AuthData>(ctx, listen: false)
+                              .authUser
+                              .foto,
+                        ),
                       ),
                     ],
                   ),
@@ -121,13 +131,10 @@ class _HomePageState extends State<HomePage> {
                 } else if (i == 1) {
                   // postData.sortByPopularityDesc();
                 } else if (i == 2) {
-                  // print("masuk");
-                  _getFollowedPost();
+                  // _getFollowedUserId();
                 }
 
-                setState(() {
-                  
-                });
+                setState(() {});
               },
             ),
           ),
@@ -150,35 +157,24 @@ class _HomePageState extends State<HomePage> {
                       );
                     } else if (snapshot.hasData) {
                       final data = snapshot.data!.docs;
+
                       return Column(
                         children: [
-                          for (int i = 0;
-                              i <
-                                  (_index != 2
-                                      ? data.length
-                                      : postData.followedPosts.length);
-                              i++)
+                          for (int i = 0; i < data.length; i++)
                             Column(
                               children: [
                                 PostWidget(
-                                  post: _index != 2
-                                      ? Post(
-                                          id: data[i].get("id"),
-                                          tglDibuat:
-                                              data[i].get("tglDibuat").toDate(),
-                                          konten: data[i].get("konten"),
-                                          img: data[i].get("img"),
-                                          userId: data[i].get("userId"),
-                                        )
-                                      : postData.followedPosts[i],
-                                ),
+                                    post: Post(
+                                  id: data[i].get("id"),
+                                  idDoc: data[i].id,
+                                  tglDibuat: data[i].get("tglDibuat").toDate(),
+                                  konten: data[i].get("konten"),
+                                  img: data[i].get("img"),
+                                  userId: data[i].get("userId"),
+                                )),
 
                                 // kasih pembatas antar post --------------------------------------
-                                if (i !=
-                                    (_index != 2
-                                            ? data.length
-                                            : postData.followedPosts.length) -
-                                        1)
+                                if (i != data.length - 1)
                                   Divider(
                                     color: Theme.of(ctx)
                                         .colorScheme
@@ -211,37 +207,29 @@ class _HomePageState extends State<HomePage> {
     switch (_index) {
       case 0:
         return Provider.of<PostData>(context)
-            .posts
+            .postsRef
             .orderBy("tglDibuat", descending: true)
             .snapshots();
       case 1:
         return Provider.of<PostData>(context)
-            .posts
+            .postsRef
             .orderBy("totalLike", descending: true)
             .orderBy("totalKomentar", descending: true)
             .orderBy("tglDibuat", descending: true)
             .snapshots();
       default:
         return Provider.of<PostData>(context)
-            .posts
-            .orderBy("tglDibuat", descending: true)
+            .postsRef
+            .where("userId", isEqualTo: followedUserId![0])
             .snapshots();
     }
   }
 
-  void _getFollowedPost() {
-    // List
-    // List<Following> followedUser =
-    //     Provider.of<FollowingData>(context, listen: false).getFollowed(
-    //   Provider.of<AuthData>(
-    //     context,
-    //     listen: false,
-    //   ).authUser.id,
-    // );
+  void _getFollowedUserId() async {
+    List<Following> followings =
+        await Provider.of<FollowingData>(context, listen: false)
+            .getFollowings();
 
-    // // List<Post> followedPosts = [];
-    // for (int i = 0; i < followedUser.length; i++) {
-    //   Provider.of<PostData>(context, listen: false).addFollowedPosts(followedUser[i].userId2);
-    // }
+    followedUserId = followings.map((following) => following.userId2).toList();
   }
 }

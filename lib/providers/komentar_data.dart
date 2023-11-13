@@ -1,7 +1,7 @@
 part of "providers.dart";
 
 class KomentarData extends ChangeNotifier {
-  final CollectionReference _komentars = FirebaseFirestore.instance.collection("komentars");
+  final CollectionReference _komentarsRef = FirebaseFirestore.instance.collection("komentars");
   
   // final List<Komentar> _komentars = [
   //   Komentar(
@@ -44,8 +44,8 @@ class KomentarData extends ChangeNotifier {
   //   ),
   // ];
 
-  CollectionReference get komentars {
-    return _komentars;
+  CollectionReference get komentarsRef {
+    return _komentarsRef;
   }
 
 
@@ -54,7 +54,7 @@ class KomentarData extends ChangeNotifier {
   //   return querySnapshot.size;
   // }
   Future<int> get komentarCount async {
-    QuerySnapshot querySnapshot = await _komentars.get();
+    QuerySnapshot querySnapshot = await _komentarsRef.get();
     return querySnapshot.size;
   }
 
@@ -64,10 +64,11 @@ class KomentarData extends ChangeNotifier {
     int min = 10000000;
     int randomNumber = Random().nextInt(max - min + 1) + min;
 
-    _komentars.add({
-      "id": (await komentarCount + 1).toString(),
+    _komentarsRef.add({
+      "id": await komentarCount + 1,
       "tglDibuat": komentar.tglDibuat,
       "konten": komentar.konten,
+      "totalLike": komentar.totalLike,
       "postId": komentar.postId,
       "userId": komentar.userId
     });

@@ -1,10 +1,7 @@
 part of "providers.dart";
 
 class PostData extends ChangeNotifier {
-  final CollectionReference _posts =
-      FirebaseFirestore.instance.collection("posts");
-
-  // final List<Post> _posts = [
+  // final List<Post> _postsRef = [
   //   Post(
   //     id: 1,
   //     tglDibuat: DateTime.utc(2023, 5, 22, 7, 00),
@@ -53,17 +50,57 @@ class PostData extends ChangeNotifier {
   //     totalLike: 3,
   //   ),
   // ];
+  final CollectionReference _postsRef =
+      FirebaseFirestore.instance.collection("posts");
 
-  CollectionReference get posts {
-    return _posts;
+  CollectionReference get postsRef {
+    return _postsRef;
   }
+
+  // final List<Post> _posts = [];
+  // Post? post;
+
+  // UnmodifiableListView get posts {
+  //   return UnmodifiableListView(_posts);
+  // }
 
   // int postCount = 0;
   Future<int> get postCount async {
-    QuerySnapshot querySnapshot = await _posts.get();
+    QuerySnapshot querySnapshot = await _postsRef.get();
     return querySnapshot.size;
   }
-  
+
+  Future<List<Post>> getPosts() async {
+    QuerySnapshot querySnapshot = await _postsRef.get();
+    var documents = querySnapshot.docs;
+    List<Post> posts = [];
+    for (int i = 0; i < documents.length; i++) {
+      posts.add(
+        Post(
+          id: documents[i].get("id"),
+          tglDibuat: documents[i].get("tglDibuat").toDate(),
+          konten: documents[i].get("konten"),
+          userId: documents[i].get("userId"),
+        ),
+      );
+    }
+    return posts;
+  }
+
+  Future<Post> getPost({int? id, String? idDoc}) async {
+    QuerySnapshot querySnapshot = await _postsRef.get();
+    var documents = querySnapshot.docs;
+    int i = documents
+        .indexWhere((post) => post.id == idDoc || post.get("id") == id);
+
+    Post post = Post(
+      id: documents[i].get("id"),
+      tglDibuat: documents[i].get("tglDibuat").toDate(),
+      konten: documents[i].get("konten"),
+      userId: documents[i].get("userId"),
+    );
+    return post;
+  }
 
   // tambahkan post baru
   void addPost(Post post) async {
@@ -79,7 +116,7 @@ class PostData extends ChangeNotifier {
       url = await ref.getDownloadURL();
     }
 
-    _posts.add({
+    _postsRef.add({
       "id": await postCount + 1,
       "tglDibuat": post.tglDibuat,
       "konten": post.konten,
@@ -91,21 +128,25 @@ class PostData extends ChangeNotifier {
     // notifyListeners();
   }
 
-
-  
-  void updateLikePost(String id, int totalLike) {
-    _posts.doc(id).update({
+  void updateTotalLikePost(String id, int totalLike) {
+    _postsRef.doc(id).update({
       "totalLike": totalLike,
     });
     // notifyListeners();
   }
 
+  void updateTotalKomentarPost(String id, int totalKomentar) {
+    _postsRef.doc(id).update({
+      "totalKomentar": totalKomentar,
+    });
+    // notifyListeners();
+  }
   // // update post yg sudah ada
   // void updatePost(Post post) {
   //   // post.tog
-  //   int index = _posts.indexWhere((postCari) => postCari.id == post.id);
+  //   int index = _postsRef.indexWhere((postCari) => postCari.id == post.id);
   //   if (index >= 0) {
-  //     _posts[index] = post;
+  //     _postsRef[index] = post;
   //   } else {
   //     print("Tidak ditemukan.");
   //   }
@@ -113,7 +154,7 @@ class PostData extends ChangeNotifier {
   // }
 
   // void deletePost(Post post) {
-  //   _posts.remove(post);
+  //   _postsRef.remove(post);
   //   notifyListeners();
   // }
 
@@ -128,14 +169,14 @@ class PostData extends ChangeNotifier {
   // }
 
   // void sortByDateDesc() {
-  //   _posts.sort((a, b) {
+  //   _postsRef.sort((a, b) {
   //     return b.tglDibuat.compareTo(a.tglDibuat);
   //   });
   //   notifyListeners();
   // }
 
   // void sortByPopularityDesc() {
-  //   _posts.sort((a, b) {
+  //   _postsRef.sort((a, b) {
   //     return (b.totalLike + b.totalKomentar)
   //         .compareTo(a.totalLike + a.totalKomentar);
   //   });
@@ -153,7 +194,7 @@ class PostData extends ChangeNotifier {
 
   // void addFollowedPosts(int userIdFollowed) {
   //   List<Post> followedPosts =
-  //       _posts.where((post) => post.userId == userIdFollowed).toList();
+  //       _postsRef.where((post) => post.userId == userIdFollowed).toList();
   //   for (Post post in followedPosts) {
   //     if (!_followedPosts.contains(post)) {
   //       _followedPosts.add(post);
@@ -163,6 +204,6 @@ class PostData extends ChangeNotifier {
   // }
 
   // List<Post> getPostByUser(int userId) {
-  //   return _posts.where((post) => post.userId == userId).toList();
+  //   return _postsRef.where((post) => post.userId == userId).toList();
   // }
 }

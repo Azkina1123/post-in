@@ -60,7 +60,7 @@ class _InputPostState extends State<InputPost> {
             ),
           ),
         ),
-        if (_focused)
+        if (_kontenCon.text.isNotEmpty)
           Container(
             padding: EdgeInsets.only(left: 20, right: 20),
             // alignment: Alignment.centerRight,
@@ -112,11 +112,6 @@ class _InputPostState extends State<InputPost> {
                               totalLike: 0,
                             ),
                           );
-
-                          // if (widget.tabIndex == 0) {
-                          //   Provider.of<PostData>(context, listen: false)
-                          //       .sortByDateDesc();
-                          // }
                           _focus.unfocus();
                           _kontenCon.clear();
                         }

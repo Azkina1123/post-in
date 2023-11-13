@@ -1,43 +1,13 @@
 part of "pages.dart";
 
-class PostPage extends StatefulWidget {
+class PostPage extends StatelessWidget {
   Post post;
   PostPage({super.key, required this.post});
 
   @override
-  State<PostPage> createState() => _PostPageState();
-}
-
-class _PostPageState extends State<PostPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    // jalankan fungsi-fungsi setelah widget selesai dibangun
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // saat pertama kali running, urutkan dari yang terbaru
-      // karena defaultnya tab bar berada di tab post terbaru
-      // Provider.of<KomentarData>(context, listen: false).sortKomentarbyDateDesc();
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   if (_isIn)
-  // }
-
-  @override
   Widget build(BuildContext context) {
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
-      // List<Komentar> komentars = komentarData.getKomentars(postId: widget.post.id);
+      // List<Komentar> komentars = komentarData.getKomentars(postId: post.id);
 
       return Scaffold(
         appBar: AppBar(
@@ -53,12 +23,13 @@ class _PostPageState extends State<PostPage> {
           children: [
             // POST ============================================================================
             PostWidget(
-              post: widget.post,
+              post: post,
             ),
 
             StreamBuilder<QuerySnapshot>(
-                stream: komentarData.komentars
-                    .where("postId", isEqualTo: widget.post.id)
+                stream: komentarData.komentarsRef
+                    .where("postId", isEqualTo: post.id)
+                    .orderBy("totalLike", descending: true)
                     .orderBy("tglDibuat", descending: true)
                     // .orderBy("tglDibuat", descending: true)
                     .snapshots(),
@@ -91,7 +62,7 @@ class _PostPageState extends State<PostPage> {
                         // INPUT KOMENTAR =======================================================================
 
                         InputKomentar(
-                          post: widget.post,
+                          post: post,
                         ),
 
                         // DAFTAR KOMENTAR =======================================================================
@@ -105,9 +76,11 @@ class _PostPageState extends State<PostPage> {
                                   tglDibuat:
                                       data.docs[i].get("tglDibuat").toDate(),
                                   konten: data.docs[i].get("konten"),
+                                  totalLike: data.docs[i].get("totalLike"),
                                   postId: data.docs[i].get("postId"),
                                   userId: data.docs[i].get("userId"),
                                 ),
+                                postId: post.id,
                               ),
                               if (i != komentarCount - 1)
                                 Divider(
