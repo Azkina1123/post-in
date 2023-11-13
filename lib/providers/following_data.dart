@@ -1,34 +1,49 @@
 part of "providers.dart";
 
 class FollowingData extends ChangeNotifier {
-  final List<Following> _followings = [
-    Following(id: 1, userId2: 2, userId: 1),
-    Following(id: 1, userId2: 3, userId: 1),
-  ];
+  // final List<Following> _followings = [
+  //   Following(id: 1, userId2: 2, userId: 1),
+  //   Following(id: 1, userId2: 3, userId: 1),
+  // ];
 
-  UnmodifiableListView get followings {
-    return UnmodifiableListView(_followings);
+  final CollectionReference _followings =
+      FirebaseFirestore.instance.collection("followings");
+
+  CollectionReference get followings {
+    return _followings;
   }
 
-  int get followingsCount {
-    return _followings.length;
+  // int followingCount = 0;
+
+  Future<int> get followingCount async {
+    QuerySnapshot querySnapshot = await _followings.get();
+    return querySnapshot.size;
   }
 
-  void addfollowing(Following following) {
-    _followings.add(following);
+  void addfollowing(Following following) async {
+    // int id;
+    // int userId2; // diikuti
+    // int userId; // yang mengikuti
+
+    _followings.add({
+      "id": "${following.userId}${following.userId2}",
+      "userId2" : following.userId2,
+      "userId": following.userId,
+    });
+
     notifyListeners();
   }
 
-  void deletefollowing(Following following) {
-    _followings.remove(following);
-    notifyListeners();
-  }
+  // void deletefollowing(Following following) {
+  //   _followings.remove(following);
+  //   notifyListeners();
+  // }
 
-  List<Following> getFollowed(int userId) {
-    return _followings
-        .where((following) => following.userId2 == userId)
-        .toList();
-  }
+  // List<Following> getFollowed(int userId) {
+  //   return _followings
+  //       .where((following) => following.userId2 == userId)
+  //       .toList();
+  // }
 
   // int getfollowingsNumber({int? postId, int? komentarId}) {
   //   return _followings

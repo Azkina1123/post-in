@@ -54,9 +54,9 @@ class _InputKomentarState extends State<InputKomentar> {
               decoration: InputDecoration(
                 hintText: "Bagikan komentar Anda!",
                 icon: AccountButton(
-                  image: Provider.of<AuthData>(context, listen: false)
+                  image: NetworkImage(Provider.of<AuthData>(context, listen: false)
                       .authUser
-                      .foto!,
+                      .foto!),
                   onPressed: null,
                 ),
               ),
@@ -82,11 +82,7 @@ class _InputKomentarState extends State<InputKomentar> {
                           Provider.of<KomentarData>(context, listen: false)
                               .addKomentar(
                             Komentar(
-                              id: Provider.of<KomentarData>(
-                                    context,
-                                    listen: false,
-                                  ).komentarCount +
-                                  1,
+                              id: 1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               postId: widget.post.id,

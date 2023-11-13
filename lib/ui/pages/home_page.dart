@@ -17,15 +17,27 @@ class _HomePageState extends State<HomePage> {
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // kalau login sudah jadi, hapus
-      Provider.of<AuthData>(
-        context,
-        listen: false,
-      ).login(
-        Provider.of<UserData>(
-          context,
-          listen: false,
-        ).users[0], // user yg sedang login adalah user di index 0
-      );
+      // Provider.of<AuthData>(
+      //   context,
+      //   listen: false,
+      // ).login(
+      //   Provider.of<UserData>(
+      //     context,
+      //     listen: false,
+      //   ).users[0], // user yg sedang login adalah user di index 0
+      // );
+      //     Provider.of<UserData>(context, listen: false).addUser(
+      //   User(
+      //     id: "1",
+      //     tglDibuat: DateTime.now(),
+      //     username: "alu",
+      //     namaLengkap: "Muhammad Alucard",
+      //     email: "alu.ml@gmail.com",
+      //     password: "alufeed",
+      //     foto:
+      //         "https://www.ligagame.tv/images/Nana-Hero-Mobile-Legends_4f22c.jpg",
+      //   ),
+      // );
 
       // saat pertama kali running, urutkan dari yang terbaru
       // karena defaultnya tab bar berada di tab post terbaru
@@ -35,6 +47,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<PostData>(builder: (ctx, postData, child) {
       return DefaultTabController(
         length: 3,
@@ -77,9 +90,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       AccountButton(
                         onPressed: null,
-                        image: Provider.of<AuthData>(ctx, listen: false)
+                        image: NetworkImage(Provider.of<AuthData>(ctx, listen: false)
                             .authUser
-                            .foto!,
+                            .foto!),
                       ),
                     ],
                   ),
@@ -111,6 +124,10 @@ class _HomePageState extends State<HomePage> {
                   // print("masuk");
                   _getFollowedPost();
                 }
+
+                setState(() {
+                  
+                });
               },
             ),
           ),
@@ -123,7 +140,7 @@ class _HomePageState extends State<HomePage> {
 
               // daftar postingan ----------------------------------------------------------
               StreamBuilder<QuerySnapshot>(
-                  stream: postData.posts.snapshots(),
+                  stream: _getSnapshot(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -147,7 +164,8 @@ class _HomePageState extends State<HomePage> {
                                   post: _index != 2
                                       ? Post(
                                           id: data[i].get("id"),
-                                          tglDibuat: data[i].get("tglDibuat").toDate(),
+                                          tglDibuat:
+                                              data[i].get("tglDibuat").toDate(),
                                           konten: data[i].get("konten"),
                                           img: data[i].get("img"),
                                           userId: data[i].get("userId"),
@@ -189,15 +207,37 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Stream<QuerySnapshot<Object?>> _getSnapshot() {
+    switch (_index) {
+      case 0:
+        return Provider.of<PostData>(context)
+            .posts
+            .orderBy("tglDibuat", descending: true)
+            .snapshots();
+      case 1:
+        return Provider.of<PostData>(context)
+            .posts
+            .orderBy("totalLike", descending: true)
+            .orderBy("totalKomentar", descending: true)
+            .orderBy("tglDibuat", descending: true)
+            .snapshots();
+      default:
+        return Provider.of<PostData>(context)
+            .posts
+            .orderBy("tglDibuat", descending: true)
+            .snapshots();
+    }
+  }
+
   void _getFollowedPost() {
     // List
-    List<Following> followedUser =
-        Provider.of<FollowingData>(context, listen: false).getFollowed(
-      Provider.of<AuthData>(
-        context,
-        listen: false,
-      ).authUser.id,
-    );
+    // List<Following> followedUser =
+    //     Provider.of<FollowingData>(context, listen: false).getFollowed(
+    //   Provider.of<AuthData>(
+    //     context,
+    //     listen: false,
+    //   ).authUser.id,
+    // );
 
     // // List<Post> followedPosts = [];
     // for (int i = 0; i < followedUser.length; i++) {

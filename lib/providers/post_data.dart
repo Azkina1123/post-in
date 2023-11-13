@@ -58,10 +58,12 @@ class PostData extends ChangeNotifier {
     return _posts;
   }
 
-  int postCount = 0;
-  // int get postCount {
-  //   return _posts.length;
-  // }
+  // int postCount = 0;
+  Future<int> get postCount async {
+    QuerySnapshot querySnapshot = await _posts.get();
+    return querySnapshot.size;
+  }
+  
 
   // tambahkan post baru
   void addPost(Post post) async {
@@ -69,27 +71,16 @@ class PostData extends ChangeNotifier {
     int min = 10000000;
     int randomNumber = Random().nextInt(max - min + 1) + min;
 
-    // int id;
-    // DateTime tglDibuat;
-    // String konten;
-    // ImageProvider<Object>? img;
-    // int totalLike;
-    // int totalKomentar;
-    // int userId;
-
     String? url;
     if (post.img != null) {
-
-      Reference ref = FirebaseStorage.instance
-          .ref()
-          .child("posts/${randomNumber}.jpg");
+      Reference ref =
+          FirebaseStorage.instance.ref().child("posts/${randomNumber}.jpg");
       await ref.putFile(File(post.img!));
       url = await ref.getDownloadURL();
-
     }
 
     _posts.add({
-      "id": randomNumber,
+      "id": await postCount + 1,
       "tglDibuat": post.tglDibuat,
       "konten": post.konten,
       "img": url,
@@ -97,7 +88,16 @@ class PostData extends ChangeNotifier {
       "totalKomentar": post.totalKomentar,
       "userId": post.userId,
     });
-    notifyListeners();
+    // notifyListeners();
+  }
+
+
+  
+  void updateLikePost(String id, int totalLike) {
+    _posts.doc(id).update({
+      "totalLike": totalLike,
+    });
+    // notifyListeners();
   }
 
   // // update post yg sudah ada

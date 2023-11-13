@@ -56,27 +56,12 @@ class _PostPageState extends State<PostPage> {
               post: widget.post,
             ),
 
-            // KOMENTAR =======================================================================
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
-              child: Text(
-                // "Komentar (${komentars.length})",
-                "999",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-
-            // INPUT KOMENTAR =======================================================================
-
-            InputKomentar(
-              post: widget.post,
-            ),
-
-            // DAFTAR KOMENTAR =======================================================================
-
             StreamBuilder<QuerySnapshot>(
-                stream: komentarData.komentars.snapshots(),
+                stream: komentarData.komentars
+                    .where("postId", isEqualTo: widget.post.id)
+                    .orderBy("tglDibuat", descending: true)
+                    // .orderBy("tglDibuat", descending: true)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container(
@@ -85,42 +70,46 @@ class _PostPageState extends State<PostPage> {
                       child: const CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasData) {
-                    // return Column(
-                    //   children: snapshot.data!.docs.map((e) =>
-                    //     Column(
-                    //       children: [
-                    //         KomentarWidget(
-                    //           komentar: Komentar(
-                    //               id: e.get("id"),
-                    //               tglDibuat: e.get("tglDibuat"),
-                    //               konten: e.get("konten"),
-                    //               postId: e.get("postId"),
-                    //               userId: e.get("userId"),
-                    //               ),
-                    //         ),
 
-                    //       ],
-                    //     )
-                    //   ).toList(),
-                    // );
-
+                    final data = snapshot.data;
+                    int komentarCount = data!.docs.length;
+                  
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (int i = 0; i < snapshot.data!.docs.length; i++)
+                        // KOMENTAR =======================================================================
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 10, bottom: 10),
+                          child: Text(
+                            // "Komentar (${komentars.length})",
+                            "Komentar ($komentarCount)",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+
+                        // INPUT KOMENTAR =======================================================================
+
+                        InputKomentar(
+                          post: widget.post,
+                        ),
+
+                        // DAFTAR KOMENTAR =======================================================================
+
+                        for (int i = 0; i < komentarCount; i++)
                           Column(
                             children: [
                               KomentarWidget(
                                 komentar: Komentar(
-                                  id: snapshot.data!.docs[i].get("id"),
-                                  tglDibuat: snapshot.data!.docs[i]
-                                      .get("tglDibuat")
-                                      .toDate(),
-                                  konten: snapshot.data!.docs[i].get("konten"),
-                                  postId: snapshot.data!.docs[i].get("postId"),
-                                  userId: snapshot.data!.docs[i].get("userId"),
+                                  id: data.docs[i].get("id"),
+                                  tglDibuat:
+                                      data.docs[i].get("tglDibuat").toDate(),
+                                  konten: data.docs[i].get("konten"),
+                                  postId: data.docs[i].get("postId"),
+                                  userId: data.docs[i].get("userId"),
                                 ),
                               ),
-                              if (i != snapshot.data!.docs.length - 1)
+                              if (i != komentarCount - 1)
                                 Divider(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -138,34 +127,9 @@ class _PostPageState extends State<PostPage> {
                           )
                       ],
                     );
-                    // return Column(
-                    //   children: [
-                    //     for (int i = 0; i < komentars.length; i++)
-                    // Column(
-                    //   children: [
-                    //     KomentarWidget(
-                    //       komentar: komentars[i],
-                    //     ),
-                    //     if (i != komentars.length - 1)
-                    //       Divider(
-                    //         color: Theme.of(context)
-                    //             .colorScheme
-                    //             .tertiary
-                    //             .withOpacity(0.5),
-                    //         indent: 10,
-                    //         endIndent: 10,
-                    //       )
-                    //     // di post terakhir tidak perlu pembatas -------------------------
-                    //     else
-                    //       const SizedBox(
-                    //         height: 20,
-                    //       )
-                    //   ],
-                    // )
-                    //   ],
-                    // );
                   }
-                  return Text("Belum ada komentar yang ditambahkan.");
+
+                  return Text("Tidak dapat tersambung.", textAlign: TextAlign.center,);
                 })
           ],
         ),

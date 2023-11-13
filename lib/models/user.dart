@@ -7,7 +7,8 @@ class User {
   String namaLengkap;
   String email;
   String password;
-  ImageProvider<Object>? foto;
+  String foto;
+  
 
   User({
     required this.id,
@@ -16,6 +17,6 @@ class User {
     required this.namaLengkap,
     required this.email,
     required this.password,
-    this.foto,
+    required this.foto,
   });
 }

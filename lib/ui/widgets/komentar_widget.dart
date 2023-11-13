@@ -6,14 +6,15 @@ class KomentarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserData>(context, listen: false)
-        .users
-        .where((user) => user.id == komentar.userId)
-        .toList()[0];
+    User user = Provider.of<AuthData>(context).authUser;
 
     int authUserid = Provider.of<AuthData>(context).authUser.id;
 
-    return Consumer<LikeData>(builder: (context, likeProvider, child,) {
+    return Consumer<LikeData>(builder: (
+      context,
+      likeData,
+      child,
+    ) {
       return Container(
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
@@ -34,7 +35,7 @@ class KomentarWidget extends StatelessWidget {
                         arguments: user,
                       );
                     },
-                    image: user.foto!,
+                    image: NetworkImage(user.foto!),
                   ),
                 ],
               ),
@@ -53,8 +54,7 @@ class KomentarWidget extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
-                        " • ${DateFormat('dd MMM yyyy HH.mm')
-                                .format(komentar.tglDibuat)}",
+                        " • ${DateFormat('dd MMM yyyy HH.mm').format(komentar.tglDibuat)}",
                         style: TextStyle(
                             fontSize:
                                 Theme.of(context).textTheme.bodySmall!.fontSize,
@@ -77,46 +77,49 @@ class KomentarWidget extends StatelessWidget {
               width: 50,
               padding: const EdgeInsets.only(left: 10, right: 20),
               alignment: Alignment.topRight,
-              child: IconButton(
-                onPressed: () {
-                  if (!likeProvider.isLiked(
-                    authUserid,
-                    komentarId: komentar.id,
-                  )) {
-                    likeProvider.addlike(
-                      Like(
-                          id: likeProvider.likesCount + 1,
-                          userId: authUserid,
-                          komentarId: komentar.id),
-                    );
-                  } else {
-                    likeProvider.deleteLike(
-                      likeProvider.likes
-                          .where((like) =>
-                              like.userId == authUserid &&
-                              like.komentarId == komentar.id)
-                          .toList()[0],
-                    );
-                  }
-                },
-                icon: Icon(
-                  likeProvider.isLiked(
-                    authUserid,
-                    komentarId: komentar.id,
-                  )
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_outline,
-                  size: 20,
-                  color: likeProvider.isLiked(
-                    authUserid,
-                    komentarId: komentar.id,
-                  )
-                      ? colors["soft-pink"]
-                      : Theme.of(context).colorScheme.primary,
-                ),
-                padding: EdgeInsets.zero,
-              ),
-            )
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: likeData.likes
+                      .where("komentarId", isEqualTo: komentar.id)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final likes = snapshot.data!;
+                      bool isLiked = likes.docs.isNotEmpty;
+
+                      return IconButton(
+                        onPressed: () async {
+                          if (!isLiked) {
+                            likeData.addlike(
+                              Like(
+                                id: 1,
+                                userId: authUserid,
+                                komentarId: komentar.id,
+                              ),
+                            );
+                          } else {
+                            for (QueryDocumentSnapshot document in likes.docs) {
+                              if (document.get("userId") == authUserid) {
+                                await document.reference.delete();
+                              }
+                            }
+                          }
+                        },
+                        // icon: Icon(Icons.favorite_rounded),
+                        icon: Icon(
+                          isLiked
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_outline,
+                          size: 20,
+                          color: isLiked
+                              ? colors["soft-pink"]
+                              : Theme.of(context).colorScheme.primary,
+                        ),
+                        padding: EdgeInsets.zero,
+                      );
+                    }
+                    return const Text("");
+                  }),
+            ),
           ],
         ),
       );

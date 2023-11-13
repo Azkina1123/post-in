@@ -45,9 +45,9 @@ class _InputPostState extends State<InputPost> {
               decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
-                  image: Provider.of<AuthData>(context, listen: false)
+                  image: NetworkImage(Provider.of<AuthData>(context, listen: false)
                       .authUser
-                      .foto!,
+                      .foto!),
                   onPressed: null,
                 ),
               ),
@@ -98,12 +98,9 @@ class _InputPostState extends State<InputPost> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () {
-                        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                           Provider.of<PostData>(context, listen: false).addPost(
                             Post(
-                              id: Provider.of<PostData>(context, listen: false)
-                                      .postCount +
-                                  1,
+                              id: 1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               userId:

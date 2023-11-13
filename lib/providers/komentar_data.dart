@@ -48,28 +48,31 @@ class KomentarData extends ChangeNotifier {
     return _komentars;
   }
 
-  int komentarCount = 0;
 
   // Future<int> get komentarCount async {
   //   QuerySnapshot querySnapshot = await _komentars.get();
   //   return querySnapshot.size;
   // }
+  Future<int> get komentarCount async {
+    QuerySnapshot querySnapshot = await _komentars.get();
+    return querySnapshot.size;
+  }
 
-  void addKomentar(Komentar komentar) {
+  void addKomentar(Komentar komentar) async {
 
     int max = 99999999;
     int min = 10000000;
     int randomNumber = Random().nextInt(max - min + 1) + min;
 
     _komentars.add({
-      "id": randomNumber,
+      "id": (await komentarCount + 1).toString(),
       "tglDibuat": komentar.tglDibuat,
       "konten": komentar.konten,
       "postId": komentar.postId,
       "userId": komentar.userId
     });
     
-    notifyListeners();
+    // notifyListeners();
     // sortKomentarbyDateDesc();
   }
 
