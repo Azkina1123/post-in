@@ -1,20 +1,11 @@
 part of "providers.dart";
 
 class LikeData extends ChangeNotifier {
-  // final List<Like> _likes = [
-  //   Like(id: 1, userId: 2, postId: 4),
-  //   Like(id: 2, userId: 4, postId: 5),
-  //   Like(id: 3, userId: 1, postId: 5),
-  //   Like(id: 4, userId: 2, postId: 4),
-  //   Like(id: 5, userId: 3, postId: 4),
-  //   Like(id: 6, userId: 1, postId: 4),
-  //   Like(id: 7, userId: 4, postId: 5),
-  //   Like(id: 8, userId: 5, postId: 4),
-  // ];
+
   final CollectionReference _likesRef =
       FirebaseFirestore.instance.collection("likes");
 
-  CollectionReference get likes {
+  CollectionReference get likesRef {
     return _likesRef;
   }
 
@@ -25,13 +16,12 @@ class LikeData extends ChangeNotifier {
 
   void add(Like like) async {
     int id = await likeCount + 1;
-    _likesRef.doc(().toString()).set({
+    _likesRef.doc(id.toString()).set({
       "id": id,
       "postId": like.postId,
       "komentarId": like.komentarId,
       "userId": like.userId,
     });
-
     // notifyListeners();
   }
 
@@ -45,9 +35,10 @@ class LikeData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _likesRef.get();
 
     Like? like;
+
     querySnapshot.docs.forEach((doc) {
-      if (doc.get("userId") == userId && doc.get("postId") == postId ||
-          doc.get("userId") == userId && doc.get("komentarId") == komentarId) {
+      if (doc.get("userId") == userId && doc.get("postId") == postId && komentarId == null ||
+          doc.get("userId") == userId && doc.get("komentarId") == komentarId && postId == null) {
         like = Like(
           id: doc.get("id"),
           docId: doc.id,

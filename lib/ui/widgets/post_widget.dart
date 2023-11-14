@@ -94,7 +94,6 @@ class PostWidget extends StatelessWidget {
                     ),
 
                     // like dan komentar ----------------------------------------------------------
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -102,7 +101,7 @@ class PostWidget extends StatelessWidget {
                         SizedBox(
                           width: 70,
                           child: StreamBuilder<QuerySnapshot>(
-                              stream: likeData.likes
+                              stream: likeData.likesRef
                                   .where("postId", isEqualTo: post.id)
                                   .snapshots(),
                               builder: (context, snapshot) {
@@ -114,9 +113,9 @@ class PostWidget extends StatelessWidget {
                                     child: const CircularProgressIndicator(),
                                   );
                                 } else if (snapshot.hasData) {
-                                  final likes = snapshot.data!;
+                                  final likes = snapshot.data!.docs;
 
-                                  bool isLiked = likes.docs
+                                  bool isLiked = likes
                                       .where(
                                         (like) =>
                                             like.get("userId") == authUserid &&
@@ -124,7 +123,7 @@ class PostWidget extends StatelessWidget {
                                       )
                                       .isNotEmpty;
 
-                                  int likeCount = likes.docs.length;
+                                  int likeCount = likes.length;
 
                                   return TextButton.icon(
                                     onPressed: () async {
@@ -144,9 +143,7 @@ class PostWidget extends StatelessWidget {
                                           likeCount + 1,
                                         );
                                       } else {
-                                        String id = likes.docs
-                                            .map((e) => e.id)
-                                            .toList()[0];
+                                        String id = likes.firstWhere((like) => like.get("userId") == authUserid).id;
                                         likeData.delete(id);
                                         Provider.of<PostData>(context,
                                                 listen: false)

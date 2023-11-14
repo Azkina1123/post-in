@@ -20,15 +20,15 @@ class KomentarWidget extends StatelessWidget {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                QuerySnapshot data = snapshot.data!;
+                final data = snapshot.data!.docs;
                 user = User(
-                  id: data.docs[0].get("id"),
-                  tglDibuat: data.docs[0].get("tglDibuat").toDate(),
-                  username: data.docs[0].get("username"),
-                  namaLengkap: data.docs[0].get("namaLengkap"),
-                  email: data.docs[0].get("email"),
-                  password: data.docs[0].get("password"),
-                  foto: data.docs[0].get("foto"),
+                  id: data[0].get("id"),
+                  tglDibuat: data[0].get("tglDibuat").toDate(),
+                  username: data[0].get("username"),
+                  namaLengkap: data[0].get("namaLengkap"),
+                  email: data[0].get("email"),
+                  password: data[0].get("password"),
+                  foto: data[0].get("foto"),
                 );
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,67 +88,62 @@ class KomentarWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    FutureBuilder(
-                        future: likeData.getLike(
-                          authUserid,
-                          komentarId: komentar.id,
-                        ),
-                        builder: 
-                          (context, snapshot) {
-                            final isLiked = snapshot.hasData;
-                          return Container(
-                          width: 50,
-                          padding: const EdgeInsets.only(left: 10, right: 20),
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                                onPressed: () async {
-                                  if (!isLiked) {
-                                    likeData.add(
-                                      Like(
-                                        id: 1,
-                                        userId: authUserid,
-                                        komentarId: komentar.id,
-                                      ),
-                                    );
-                                    Provider.of<KomentarData>(context,
-                                            listen: false)
-                                        .updateTotalLike(
-                                      komentar.docId!,
-                                      komentar.totalLike + 1,
-                                    );
-                                  } else {
-                                    likeData.delete(snapshot.data!.docId!);
-                                    Provider.of<KomentarData>(context,
-                                            listen: false)
-                                        .updateTotalLike(
-                                      komentar.docId!,
-                                      komentar.totalLike - 1,
-                                    );
-                                  }
-
+                    Container(
+                      width: 50,
+                      padding: const EdgeInsets.only(left: 10, right: 20),
+                      alignment: Alignment.topRight,
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: likeData.likesRef
+                            .where("komentarId", isEqualTo: komentar.id)
+                            .where("userId", isEqualTo: authUserid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final data = snapshot.data!.docs;
+                            bool isLiked = data.isNotEmpty;
+                            return IconButton(
+                              onPressed: () async {
+                                if (!isLiked) {
+                                  likeData.add(
+                                    Like(
+                                      id: 1,
+                                      userId: authUserid,
+                                      komentarId: komentar.id,
+                                    ),
+                                  );
                                   Provider.of<KomentarData>(context,
                                           listen: false)
                                       .updateTotalLike(
                                     komentar.docId!,
-                                    komentar.totalLike,
+                                    komentar.totalLike + 1,
                                   );
-                                },
-                                // icon: Icon(Icons.favorite_rounded),
-                                icon: Icon(
-                                  isLiked
-                                      ? Icons.favorite_rounded
-                                      : Icons.favorite_outline,
-                                  size: 20,
-                                  color: isLiked
-                                      ? colors["soft-pink"]
-                                      : Theme.of(context).colorScheme.primary,
-                                ),
-                                padding: EdgeInsets.zero,
-                              )
-                          );
+                                } else {
+                                  likeData.delete(data[0].id);
+                                  Provider.of<KomentarData>(context,
+                                          listen: false)
+                                      .updateTotalLike(
+                                    komentar.docId!,
+                                    komentar.totalLike - 1,
+                                  );
+                                }
+                              },
+                              // icon: Icon(Icons.favorite_rounded),
+                              icon: Icon(
+                                isLiked
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_outline,
+                                size: 20,
+                                color: isLiked
+                                    ? colors["soft-pink"]
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                              padding: EdgeInsets.zero,
+                            );
+                          }
+                          return Text("");
                         },
                       ),
-                    
+                    )
                   ],
                 );
               }

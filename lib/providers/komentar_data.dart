@@ -64,7 +64,6 @@ class KomentarData extends ChangeNotifier {
       "postId": komentar.postId,
       "userId": komentar.userId
     });
-
     // notifyListeners();
   }
 
