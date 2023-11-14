@@ -2,13 +2,13 @@ part of "models.dart";
 
 class Following {
   int id;
-  String? idDoc;
+  String? docId;
   int userId2; // diikuti
   int userId; // yang mengikuti
 
   Following({
     required this.id,
-    this.idDoc,
+    this.docId,
     required this.userId2,
     required this.userId,
   });

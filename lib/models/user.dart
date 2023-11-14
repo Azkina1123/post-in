@@ -2,7 +2,7 @@ part of "models.dart";
 
 class User {
   int id;
-  String? idDoc;
+  String? docId;
   DateTime tglDibuat;
   String username;
   String namaLengkap;
@@ -12,7 +12,7 @@ class User {
 
   User({
     required this.id,
-    this.idDoc,
+    this.docId,
     required this.tglDibuat,
     required this.username,
     required this.namaLengkap,

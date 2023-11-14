@@ -11,27 +11,29 @@ class _HomePageState extends State<HomePage> {
   int _index = 0;
 
   List<int>? followedUserId;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     // jalankan fungsi-fungsi setelah widget selesai dibangun
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       _getFollowedUserId();
+
       // kalau login sudah jadi, hapus
       // Provider.of<AuthData>(
       //   context,
       //   listen: false,
       // ).login(
-      //   Provider.of<UserData>(
+      //   await Provider.of<UserData>(
       //     context,
       //     listen: false,
-      //   ).users[0], // user yg sedang login adalah user di index 0
+      //   ).getUser("1") // user yg sedang login adalah user dgn id 1
       // );
-      //     Provider.of<UserData>(context, listen: false).addUser(
+
+      //     Provider.of<UserData>(context, listen: false).add(
       //   User(
-      //     id: 1,
       //     tglDibuat: DateTime.now(),
       //     username: "alu",
       //     namaLengkap: "Muhammad Alucard",
@@ -50,12 +52,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<PostData>(context).getPosts();
 
     return Consumer<PostData>(builder: (ctx, postData, child) {
-      // ambil data posts dari firebase
-      // postData.getPosts();
-      // Provider.of<UserData>(context).getUsers();
 
       return DefaultTabController(
         length: 3,
@@ -166,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                                 PostWidget(
                                     post: Post(
                                   id: data[i].get("id"),
-                                  idDoc: data[i].id,
+                                  docId: data[i].id,
                                   tglDibuat: data[i].get("tglDibuat").toDate(),
                                   konten: data[i].get("konten"),
                                   img: data[i].get("img"),
@@ -232,4 +230,6 @@ class _HomePageState extends State<HomePage> {
 
     followedUserId = followings.map((following) => following.userId2).toList();
   }
+
+  
 }

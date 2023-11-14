@@ -9,7 +9,7 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int authUserid = Provider.of<AuthData>(context).authUser.id;
+    int authUserid = Provider.of<AuthData>(context).authUser.id!;
 
     return Consumer2<LikeData, KomentarData>(
         builder: (context, likeData, komentarData, child) {
@@ -25,16 +25,16 @@ class PostWidget extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    QuerySnapshot data = snapshot.data!;
+                    final data = snapshot.data!.docs;
                     user = User(
-                      id: data.docs[0].get("id"),
-                      idDoc: data.docs[0].id,
-                      tglDibuat: data.docs[0].get("tglDibuat").toDate(),
-                      username: data.docs[0].get("username"),
-                      namaLengkap: data.docs[0].get("namaLengkap"),
-                      email: data.docs[0].get("email"),
-                      password: data.docs[0].get("password"),
-                      foto: data.docs[0].get("foto"),
+                      id: data[0].get("id"),
+                      docId: data[0].id,
+                      tglDibuat: data[0].get("tglDibuat").toDate(),
+                      username: data[0].get("username"),
+                      namaLengkap: data[0].get("namaLengkap"),
+                      email: data[0].get("email"),
+                      password: data[0].get("password"),
+                      foto: data[0].get("foto"),
                     );
                     return ListTile(
                       onTap: () {
@@ -52,8 +52,7 @@ class PostWidget extends StatelessWidget {
                       title: Text(user!.username,
                           style: Theme.of(context).textTheme.titleMedium),
                       subtitle: Text(
-                        DateFormat('dd MMM yyyy HH.mm')
-                            .format(post.tglDibuat),
+                        DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
                         style: TextStyle(
                           color: Theme.of(context)
                               .colorScheme
@@ -69,7 +68,7 @@ class PostWidget extends StatelessWidget {
                   return const Text("");
                 }),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 Navigator.pushNamed(context, "/post", arguments: post);
               },
               child: Padding(
@@ -89,13 +88,13 @@ class PostWidget extends StatelessWidget {
                             ),
                           )
                         : SizedBox(),
-            
+
                     Text(
                       post.konten,
                     ),
-            
+
                     // like dan komentar ----------------------------------------------------------
-            
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -116,7 +115,7 @@ class PostWidget extends StatelessWidget {
                                   );
                                 } else if (snapshot.hasData) {
                                   final likes = snapshot.data!;
-            
+
                                   bool isLiked = likes.docs
                                       .where(
                                         (like) =>
@@ -124,35 +123,35 @@ class PostWidget extends StatelessWidget {
                                             like.get("postId") == post.id,
                                       )
                                       .isNotEmpty;
-            
+
                                   int likeCount = likes.docs.length;
-            
+
                                   return TextButton.icon(
                                     onPressed: () async {
                                       if (!isLiked) {
-                                        likeData.addlike(
+                                        likeData.add(
                                           Like(
                                             id: 1,
                                             userId: authUserid,
                                             postId: post.id,
                                           ),
                                         );
-            
+
                                         Provider.of<PostData>(context,
                                                 listen: false)
-                                            .updateTotalLikePost(
-                                          post.idDoc!,
+                                            .updateTotalLike(
+                                          post.docId!,
                                           likeCount + 1,
                                         );
                                       } else {
                                         String id = likes.docs
                                             .map((e) => e.id)
                                             .toList()[0];
-                                        likeData.deleteLike(id);
+                                        likeData.delete(id);
                                         Provider.of<PostData>(context,
                                                 listen: false)
-                                            .updateTotalLikePost(
-                                          post.idDoc!,
+                                            .updateTotalLike(
+                                          post.docId!,
                                           likeCount - 1,
                                         );
                                       }
@@ -184,7 +183,7 @@ class PostWidget extends StatelessWidget {
                                 return const Text("");
                               }),
                         ),
-            
+
                         // tombol komentar -------------------------------------------------------
                         SizedBox(
                           width: 70,
@@ -221,7 +220,7 @@ class PostWidget extends StatelessWidget {
                                           arguments: post,
                                         );
                                       }
-            
+
                                       // focus kan komentar
                                       Provider.of<PageData>(context,
                                               listen: false)
@@ -248,9 +247,8 @@ class PostWidget extends StatelessWidget {
     });
   }
 
-  void _getUser(BuildContext context) async {
-    user = await Provider.of<UserData>(context, listen: false)
-        .getUser(id: post.userId);
-    print("AAAAAAA ${user!.username} AAAAAAAA");
-  }
+  // void _getUser(BuildContext context) async {
+  //   user = await Provider.of<UserData>(context, listen: false)
+  //       .getUser(post.userId);
+  // }
 }

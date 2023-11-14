@@ -88,23 +88,22 @@ class KomentarWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                      width: 50,
-                      padding: const EdgeInsets.only(left: 10, right: 20),
-                      alignment: Alignment.topRight,
-                      child: StreamBuilder<QuerySnapshot>(
-                          stream: likeData.likes
-                              .where("komentarId", isEqualTo: komentar.id)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final likes = snapshot.data!;
-                              bool isLiked = likes.docs.isNotEmpty;
-
-                              return IconButton(
+                    FutureBuilder(
+                        future: likeData.getLike(
+                          authUserid,
+                          komentarId: komentar.id,
+                        ),
+                        builder: 
+                          (context, snapshot) {
+                            final isLiked = snapshot.hasData;
+                          return Container(
+                          width: 50,
+                          padding: const EdgeInsets.only(left: 10, right: 20),
+                          alignment: Alignment.topRight,
+                          child: IconButton(
                                 onPressed: () async {
                                   if (!isLiked) {
-                                    likeData.addlike(
+                                    likeData.add(
                                       Like(
                                         id: 1,
                                         userId: authUserid,
@@ -113,24 +112,24 @@ class KomentarWidget extends StatelessWidget {
                                     );
                                     Provider.of<KomentarData>(context,
                                             listen: false)
-                                        .updateTotalLikeKomentar(
-                                      komentar.idDoc!,
+                                        .updateTotalLike(
+                                      komentar.docId!,
                                       komentar.totalLike + 1,
                                     );
                                   } else {
-                                    likeData.deleteLike(likes.docs[0].id);
+                                    likeData.delete(snapshot.data!.docId!);
                                     Provider.of<KomentarData>(context,
                                             listen: false)
-                                        .updateTotalLikeKomentar(
-                                      komentar.idDoc!,
+                                        .updateTotalLike(
+                                      komentar.docId!,
                                       komentar.totalLike - 1,
                                     );
                                   }
 
                                   Provider.of<KomentarData>(context,
                                           listen: false)
-                                      .updateTotalLikeKomentar(
-                                    komentar.idDoc!,
+                                      .updateTotalLike(
+                                    komentar.docId!,
                                     komentar.totalLike,
                                   );
                                 },
@@ -145,11 +144,11 @@ class KomentarWidget extends StatelessWidget {
                                       : Theme.of(context).colorScheme.primary,
                                 ),
                                 padding: EdgeInsets.zero,
-                              );
-                            }
-                            return const Text("");
-                          }),
-                    ),
+                              )
+                          );
+                        },
+                      ),
+                    
                   ],
                 );
               }

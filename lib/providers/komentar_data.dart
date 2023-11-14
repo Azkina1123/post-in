@@ -1,8 +1,9 @@
 part of "providers.dart";
 
 class KomentarData extends ChangeNotifier {
-  final CollectionReference _komentarsRef = FirebaseFirestore.instance.collection("komentars");
-  
+  final CollectionReference _komentarsRef =
+      FirebaseFirestore.instance.collection("komentars");
+
   // final List<Komentar> _komentars = [
   //   Komentar(
   //     id: 1,
@@ -53,68 +54,64 @@ class KomentarData extends ChangeNotifier {
     return querySnapshot.size;
   }
 
-  void addKomentar(Komentar komentar) async {
-    int max = 99999999;
-    int min = 10000000;
-    int randomNumber = Random().nextInt(max - min + 1) + min;
-
-    _komentarsRef.add({
-      "id": await komentarCount + 1,
+  void add(Komentar komentar) async {
+    int id = await komentarCount + 1;
+    _komentarsRef.doc(id.toString()).set({
+      "id": id,
       "tglDibuat": komentar.tglDibuat,
       "konten": komentar.konten,
       "totalLike": komentar.totalLike,
       "postId": komentar.postId,
       "userId": komentar.userId
     });
-    
+
     // notifyListeners();
-    // sortKomentarbyDateDesc();
   }
 
-  void updateTotalLikeKomentar(String id, int totalLike) {
-    _komentarsRef.doc(id).update({
+  void updateTotalLike(String docId, int totalLike) {
+    _komentarsRef.doc(docId).update({
       "totalLike": totalLike,
     });
     // notifyListeners();
   }
-  // void sortKomentarbyDateDesc() {
-  //   _komentars.sort((a, b) {
-  //     return b.tglDibuat.compareTo(a.tglDibuat);
-  //   });
-  //   notifyListeners();
-  // }
 
-  // List<Komentar> getKomentars({int? postId, int? userId}) {
-  //   return _komentars.where(((komentar) {
-  //     if (userId == null) {
-  //       return komentar.postId == postId;
-  //     } else if (postId == null) {
-  //       return komentar.userId == userId;
-  //     } else {
-  //       return komentar.postId == postId && komentar.userId == userId;
-  //     }
-  //   })).toList();
-  // }
+  Future<List<Komentar>> getKomentars() async {
+    QuerySnapshot querySnapshot = await _komentarsRef.get();
+    List<Komentar> komentars = [];
+    querySnapshot.docs.forEach((doc) {
+      komentars.add(
+        Komentar(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat"),
+          konten: doc.get("konten"),
+          totalLike: doc.get("totalLike"),
+          postId: doc.get("postId"),
+          userId: doc.get("userId"),
+        ),
+      );
+    });
+    return komentars;
+  }
 
-  // int getKomentarsNumber({int? postId, int? userId}) {
-  //   return getKomentars(postId: postId, userId: userId).length;
-  // }
+  Future<Komentar> getkomentar(int id) async {
+    QuerySnapshot querySnapshot = await _komentarsRef.get();
 
-  // int totalKomentar(int postId) {
-  //   return _komentars
-  //       .where(
-  //         ((komentar) => komentar.postId == postId),
-  //       )
-  //       .toList()
-  //       .length;
-  // }
+    Komentar? komentar;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("id") == "id") {
+        Komentar(
+          id: doc.get("id"), 
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat"),
+          konten: doc.get("konten"),
+          totalLike: doc.get("totalLike"),
+          postId: doc.get("postId"),
+          userId: doc.get("userId"),
+        );
+      }
+    });
 
-  // void sortKomentarByDateDesc() {
-  //   _komentars.sort(
-  //     (a, b) {
-  //       return b.tglDibuat.compareTo(a.tglDibuat);
-  //     },
-  //   );
-  //   notifyListeners();
-  // }
+    return komentar!;
+  }
 }

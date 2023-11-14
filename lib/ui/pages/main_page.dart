@@ -17,40 +17,47 @@ class _MainPageState extends State<MainPage> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<PageData>(
-      builder: (context, pageProvider, child) {
-        return Scaffold(
-          body: _pages.elementAt(
+    
+    return Consumer<PageData>(builder: (context, pageProvider, child) {
+      return Scaffold(
+        body: _pages.elementAt(
           pageProvider.currentIndex,
         ),
 
-          // bottom navigation
-          bottomNavigationBar: BottomNavigationBar(
-            unselectedItemColor:
-                Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-            showUnselectedLabels: false,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.search_rounded),
-                label: "Cari",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: "Pengaturan",
-              ),
-            ],
-            currentIndex: pageProvider.currentIndex,
-            onTap: (i) {
-              pageProvider.changePage(i);
-            },
-          ),
-        );
-      }
-    );
+        // bottom navigation
+        bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor:
+              Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+          showUnselectedLabels: false,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_filled),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search_rounded),
+              label: "Cari",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: "Pengaturan",
+            ),
+          ],
+          currentIndex: pageProvider.currentIndex,
+          onTap: (i) {
+            pageProvider.changePage(i);
+          },
+        ),
+      );
+    });
   }
+
 }

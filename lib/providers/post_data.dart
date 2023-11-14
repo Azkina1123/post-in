@@ -50,6 +50,7 @@ class PostData extends ChangeNotifier {
   //     totalLike: 3,
   //   ),
   // ];
+
   final CollectionReference _postsRef =
       FirebaseFirestore.instance.collection("posts");
 
@@ -57,53 +58,13 @@ class PostData extends ChangeNotifier {
     return _postsRef;
   }
 
-  // final List<Post> _posts = [];
-  // Post? post;
-
-  // UnmodifiableListView get posts {
-  //   return UnmodifiableListView(_posts);
-  // }
-
-  // int postCount = 0;
   Future<int> get postCount async {
     QuerySnapshot querySnapshot = await _postsRef.get();
     return querySnapshot.size;
   }
 
-  Future<List<Post>> getPosts() async {
-    QuerySnapshot querySnapshot = await _postsRef.get();
-    var documents = querySnapshot.docs;
-    List<Post> posts = [];
-    for (int i = 0; i < documents.length; i++) {
-      posts.add(
-        Post(
-          id: documents[i].get("id"),
-          tglDibuat: documents[i].get("tglDibuat").toDate(),
-          konten: documents[i].get("konten"),
-          userId: documents[i].get("userId"),
-        ),
-      );
-    }
-    return posts;
-  }
-
-  Future<Post> getPost({int? id, String? idDoc}) async {
-    QuerySnapshot querySnapshot = await _postsRef.get();
-    var documents = querySnapshot.docs;
-    int i = documents
-        .indexWhere((post) => post.id == idDoc || post.get("id") == id);
-
-    Post post = Post(
-      id: documents[i].get("id"),
-      tglDibuat: documents[i].get("tglDibuat").toDate(),
-      konten: documents[i].get("konten"),
-      userId: documents[i].get("userId"),
-    );
-    return post;
-  }
-
   // tambahkan post baru
-  void addPost(Post post) async {
+  void add(Post post) async {
     int max = 99999999;
     int min = 10000000;
     int randomNumber = Random().nextInt(max - min + 1) + min;
@@ -116,8 +77,9 @@ class PostData extends ChangeNotifier {
       url = await ref.getDownloadURL();
     }
 
-    _postsRef.add({
-      "id": await postCount + 1,
+    int id = await postCount + 1;
+    _postsRef.doc(id.toString()).set({
+      "id": id,
       "tglDibuat": post.tglDibuat,
       "konten": post.konten,
       "img": url,
@@ -128,82 +90,52 @@ class PostData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void updateTotalLikePost(String id, int totalLike) {
-    _postsRef.doc(id).update({
+  void updateTotalLike(String docId, int totalLike) {
+    _postsRef.doc(docId).update({
       "totalLike": totalLike,
     });
     // notifyListeners();
   }
 
-  void updateTotalKomentarPost(String id, int totalKomentar) {
-    _postsRef.doc(id).update({
+  void updateTotalKomentar(String docId, int totalKomentar) {
+    _postsRef.doc(docId).update({
       "totalKomentar": totalKomentar,
     });
     // notifyListeners();
   }
-  // // update post yg sudah ada
-  // void updatePost(Post post) {
-  //   // post.tog
-  //   int index = _postsRef.indexWhere((postCari) => postCari.id == post.id);
-  //   if (index >= 0) {
-  //     _postsRef[index] = post;
-  //   } else {
-  //     print("Tidak ditemukan.");
-  //   }
-  //   notifyListeners();
-  // }
 
-  // void deletePost(Post post) {
-  //   _postsRef.remove(post);
-  //   notifyListeners();
-  // }
-
-  // void like(Post post) {
-  //   post.like();
-  //   notifyListeners();
-  // }
-
-  // void unlike(Post post) {
-  //   post.unlike();
-  //   notifyListeners();
-  // }
-
-  // void sortByDateDesc() {
-  //   _postsRef.sort((a, b) {
-  //     return b.tglDibuat.compareTo(a.tglDibuat);
-  //   });
-  //   notifyListeners();
-  // }
-
-  // void sortByPopularityDesc() {
-  //   _postsRef.sort((a, b) {
-  //     return (b.totalLike + b.totalKomentar)
-  //         .compareTo(a.totalLike + a.totalKomentar);
-  //   });
-  //   notifyListeners();
-  // }
-
-  final List<Post> _followedPosts = [];
-  UnmodifiableListView<Post> get followedPosts {
-    return UnmodifiableListView(_followedPosts);
+  Future<List<Post>> getPosts() async {
+    QuerySnapshot querySnapshot = await _postsRef.get();
+    List<Post> posts = [];
+    querySnapshot.docs.forEach((doc) {
+      posts.add(
+        Post(
+          id: doc.get("id"),
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          konten: doc.get("konten"),
+          userId: doc.get("userId"),
+        ),
+      );
+    });
+    return posts;
   }
 
-  int get followedPostsCount {
-    return _followedPosts.length;
+  Future<Post> getPost(int id) async {
+    QuerySnapshot querySnapshot = await _postsRef.get();
+    
+    Post? post;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("id") == id) {
+        post = Post(
+          id: doc.get("id"),
+      docId: doc.id,
+      tglDibuat: doc.get("tglDibuat").toDate(),
+      konten: doc.get("konten"),
+      userId: doc.get("userId"),
+    );
+      }
+    });
+
+    return post!;
   }
-
-  // void addFollowedPosts(int userIdFollowed) {
-  //   List<Post> followedPosts =
-  //       _postsRef.where((post) => post.userId == userIdFollowed).toList();
-  //   for (Post post in followedPosts) {
-  //     if (!_followedPosts.contains(post)) {
-  //       _followedPosts.add(post);
-  //     }
-  //   }
-  //   notifyListeners();
-  // }
-
-  // List<Post> getPostByUser(int userId) {
-  //   return _postsRef.where((post) => post.userId == userId).toList();
-  // }
 }

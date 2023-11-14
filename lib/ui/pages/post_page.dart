@@ -42,8 +42,8 @@ class PostPage extends StatelessWidget {
                     );
                   } else if (snapshot.hasData) {
 
-                    final data = snapshot.data;
-                    int komentarCount = data!.docs.length;
+                    final data = snapshot.data!.docs;
+                    int komentarCount = data.length;
                   
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,16 +72,16 @@ class PostPage extends StatelessWidget {
                             children: [
                               KomentarWidget(
                                 komentar: Komentar(
-                                  id: data.docs[i].get("id"),
-                                  idDoc: data.docs[i].id,
+                                  id: data[i].get("id"),
+                                  docId: data[i].id,                                  
                                   tglDibuat:
-                                      data.docs[i].get("tglDibuat").toDate(),
-                                  konten: data.docs[i].get("konten"),
-                                  totalLike: data.docs[i].get("totalLike"),
-                                  postId: data.docs[i].get("postId"),
-                                  userId: data.docs[i].get("userId"),
+                                      data[i].get("tglDibuat").toDate(),
+                                  konten: data[i].get("konten"),
+                                  totalLike: data[i].get("totalLike"),
+                                  postId: data[i].get("postId"),
+                                  userId: data[i].get("userId"),
                                 ),
-                                postId: post.id,
+                                postId: post.id!,
                               ),
                               if (i != komentarCount - 1)
                                 Divider(

@@ -13,7 +13,6 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -26,6 +25,8 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
+    int authUserId = Provider.of<AuthData>(context).authUser.id!;
+
     if (Provider.of<PageData>(context).komentarFocused) {
       _focus.requestFocus();
     } else {
@@ -45,7 +46,8 @@ class _InputKomentarState extends State<InputKomentar> {
           child: Focus(
             // focusNode: _focus,
             onFocusChange: (hasFocus) {
-              Provider.of<PageData>(context, listen: false).changeKomentarFocus(_focus.hasFocus);
+              Provider.of<PageData>(context, listen: false)
+                  .changeKomentarFocus(_focus.hasFocus);
               // setState(() {});
             },
             child: TextField(
@@ -54,9 +56,10 @@ class _InputKomentarState extends State<InputKomentar> {
               decoration: InputDecoration(
                 hintText: "Bagikan komentar Anda!",
                 icon: AccountButton(
-                  image: NetworkImage(Provider.of<AuthData>(context, listen: false)
-                      .authUser
-                      .foto!),
+                  image: NetworkImage(
+                      Provider.of<AuthData>(context, listen: false)
+                          .authUser
+                          .foto!),
                   onPressed: null,
                 ),
               ),
@@ -80,22 +83,19 @@ class _InputKomentarState extends State<InputKomentar> {
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () async {
                           Provider.of<KomentarData>(context, listen: false)
-                              .addKomentar(
+                              .add(
                             Komentar(
                               id: 1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               totalLike: 0,
-                              postId: widget.post.id,
-                              userId: Provider.of<AuthData>(
-                                context,
-                                listen: false,
-                              ).authUser.id,
+                              postId: widget.post.id!,
+                              userId: authUserId,
                             ),
                           );
                           Provider.of<PostData>(context, listen: false)
-                              .updateTotalKomentarPost(
-                            widget.post.idDoc!,
+                              .updateTotalKomentar(
+                            widget.post.docId!,
                             widget.post.totalKomentar + 1,
                           );
                           _focus.unfocus();

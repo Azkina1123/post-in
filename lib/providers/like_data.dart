@@ -11,23 +11,22 @@ class LikeData extends ChangeNotifier {
   //   Like(id: 7, userId: 4, postId: 5),
   //   Like(id: 8, userId: 5, postId: 4),
   // ];
-  final CollectionReference _likes =
+  final CollectionReference _likesRef =
       FirebaseFirestore.instance.collection("likes");
 
   CollectionReference get likes {
-    return _likes;
+    return _likesRef;
   }
 
-  // int likeCount = 0;
-
   Future<int> get likeCount async {
-    QuerySnapshot querySnapshot = await _likes.get();
+    QuerySnapshot querySnapshot = await _likesRef.get();
     return querySnapshot.size;
   }
 
-  void addlike(Like like) async {
-    _likes.add({
-      "id": await likeCount + 1,
+  void add(Like like) async {
+    int id = await likeCount + 1;
+    _likesRef.doc(().toString()).set({
+      "id": id,
       "postId": like.postId,
       "komentarId": like.komentarId,
       "userId": like.userId,
@@ -36,60 +35,29 @@ class LikeData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void deleteLike(String id) {
-    _likes.doc(id).delete();
+  void delete(String docId) {
+    _likesRef.doc(docId).delete();
     // notifyListeners();
   }
 
-  // int getLikesNumber({int? postId, int? komentarId}) {
-  //   return _likes
-  //       .where(((like) {
-  //         if (komentarId == null) {
-  //           return like.postId == postId;
-  //         } else if (postId == null) {
-  //           return like.userId == komentarId;
-  //         }
-  //         return false;
-  //       }))
-  //       .toList()
-  //       .length;
-  // }
+  Future<Like> getLike(int userId,
+      {int? postId, int? komentarId}) async {
+    QuerySnapshot querySnapshot = await _likesRef.get();
 
-  Future<bool> isLiked(int userId, {int? postId, int? komentarId}) async {
-    if (postId != null) {
-      return _likes
-              .where("userId", isEqualTo: userId)
-              .where("postId", isEqualTo: postId)
-              .snapshots().length != 0;
-    } else if (komentarId != null) {
-      return _likes
-              .where("userId", isEqualTo: userId)
-              .where("komentarId", isEqualTo: komentarId)
-              .snapshots().length != 0;
-    }
-    return false;
+    Like? like;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("userId") == userId && doc.get("postId") == postId ||
+          doc.get("userId") == userId && doc.get("komentarId") == komentarId) {
+        like = Like(
+          id: doc.get("id"),
+          docId: doc.id,
+          postId: doc.get("postId"),
+          userId: doc.get("userId"),
+          komentarId: doc.get("komentarId"),
+        );
+      }
+    });
 
-    // return _likes
-    //     .where(
-    //       ((like) {
-    // if (komentarId == null) {
-    //   return like.userId == userId && like.postId == postId;
-    // } else if (postId == null) {
-    //   return like.userId == userId && like.komentarId == komentarId;
-    // }
-    // return true;
-    //       }),
-    //     )
-    //     .toList()
-    //     .isNotEmpty;
+    return like!;
   }
-
-  // int totalLikes(int postId) {
-  //   return _likes
-  //       .where(
-  //         ((like) => like.postId == postId),
-  //       )
-  //       .toList()
-  //       .length;
-  // }
 }

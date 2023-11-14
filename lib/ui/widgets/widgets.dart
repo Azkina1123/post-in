@@ -11,7 +11,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
-// import 'package:';
 
 part 'functions.dart';
 part 'account_button.dart';

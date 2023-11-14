@@ -70,54 +70,8 @@ class UserData extends ChangeNotifier {
     return querySnapshot.size;
   }
 
-  // final List<User> _users = [];
-  // User? user;
-
-  // UnmodifiableListView get users {
-  //   return UnmodifiableListView(_users);
-  // }
-
-  Future<List<User>> getUsers() async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
-    var documents = querySnapshot.docs;
-    List<User> users = [];
-    for (int i = 0; i < documents.length; i++) {
-      users.add(User(
-        id: documents[i].get("id"),
-        idDoc: documents[i].id,
-        tglDibuat: documents[i].get("tglDibuat").toDate(),
-        username: documents[i].get("username"),
-        namaLengkap: documents[i].get("namaLengkap"),
-        email: documents[i].get("email"),
-        password: documents[i].get("password"),
-        foto: documents[i].get("foto"),
-      ));
-    }
-    return users;
-  }
-
-  Future<User> getUser({int? id, String? idDoc}) async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
-    var documents = querySnapshot.docs;
-    int i = documents
-        .indexWhere((user) => user.id == idDoc || user.get("id") == id);
-        
-    User user = User(
-      id: documents[i].get("id"),
-      // idDoc: documents[i].get("idDoc"),
-      tglDibuat: documents[i].get("tglDibuat").toDate(),
-      username: documents[i].get("username"),
-      namaLengkap: documents[i].get("namaLengkap"),
-      email: documents[i].get("email"),
-      password: documents[i].get("password"),
-      foto: documents[i].get("foto"),
-    );
-    return user;
-  }
-
-  void addUser(User user) async {
-    _usersRef.add({
-      "id": await userCount + 1,
+  void add(User user) async {
+    _usersRef.doc((await userCount + 1).toString()).set({
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,
@@ -126,5 +80,48 @@ class UserData extends ChangeNotifier {
       "foto": user.foto,
     });
     notifyListeners();
+  }
+
+  Future<List<User>> getUsers() async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
+    List<User> users = [];
+
+    querySnapshot.docs.forEach((doc) {
+      users.add(
+        User(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          username: doc.get("username"),
+          namaLengkap: doc.get("namaLengkap"),
+          email: doc.get("email"),
+          password: doc.get("password"),
+          foto: doc.get("foto"),
+        ),
+      );
+    });
+    return users;
+  }
+
+  Future<User> getUser(int id) async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
+
+    User? user;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("id") == id) {
+        user = User(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          username: doc.get("username"),
+          namaLengkap: doc.get("namaLengkap"),
+          email: doc.get("email"),
+          password: doc.get("password"),
+          foto: doc.get("foto"),
+        );
+      }
+    });
+
+    return user!;
   }
 }

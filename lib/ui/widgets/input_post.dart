@@ -22,6 +22,8 @@ class _InputPostState extends State<InputPost> {
 
   @override
   Widget build(BuildContext context) {
+    int authUserId = Provider.of<AuthData>(context).authUser.id!;
+
     return Column(
       children: [
         AnimatedContainer(
@@ -45,9 +47,10 @@ class _InputPostState extends State<InputPost> {
               decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
                 icon: AccountButton(
-                  image: NetworkImage(Provider.of<AuthData>(context, listen: false)
-                      .authUser
-                      .foto!),
+                  image: NetworkImage(
+                      Provider.of<AuthData>(context, listen: false)
+                          .authUser
+                          .foto!),
                   onPressed: null,
                 ),
               ),
@@ -98,15 +101,12 @@ class _InputPostState extends State<InputPost> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () {
-                          Provider.of<PostData>(context, listen: false).addPost(
+                          Provider.of<PostData>(context, listen: false).add(
                             Post(
                               id: 1,
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              userId:
-                                  Provider.of<AuthData>(context, listen: false)
-                                      .authUser
-                                      .id,
+                              userId: authUserId,
                               img: imgPath,
                               totalKomentar: 0,
                               totalLike: 0,
