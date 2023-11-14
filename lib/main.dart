@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
               onTertiary: colors["dark-jungle-green"],
               error: colors["smoky-topaz"],
               onError: colors["milk-white"],
+              surface: colors["milk-white"],
               onSurface: colors["dark-jungle-green"],
             ),
             appBarTheme: AppBarTheme(
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: colors["sand"]),
             iconButtonTheme: IconButtonThemeData(
               style: IconButton.styleFrom(
-                backgroundColor: colors["milk-white"],
+                // backgroundColor: colors["milk-white"],
                 surfaceTintColor: colors["milk-white"],
                 shadowColor: Colors.transparent,
                 foregroundColor: colors["sand"],
@@ -154,6 +155,9 @@ class MyApp extends StatelessWidget {
                 color: colors["dark-jungle-green"]!.withOpacity(0.5),
               ),
             ),
+            popupMenuTheme: PopupMenuThemeData(
+                surfaceTintColor: colors["milk-white"]!,
+              )
           ),
 
           // dark mode ==============================================================
@@ -172,6 +176,7 @@ class MyApp extends StatelessWidget {
               onTertiary: colors["dark-jungle-green"],
               error: colors["smoky-topaz"],
               onError: colors["milk-white"],
+              surface: colors["dark-jungle-green"],
               onSurface: colors["milk-white"],
             ),
             appBarTheme: AppBarTheme(
@@ -194,7 +199,7 @@ class MyApp extends StatelessWidget {
             iconTheme: IconThemeData(color: colors["sand"]),
             iconButtonTheme: IconButtonThemeData(
               style: IconButton.styleFrom(
-                backgroundColor: colors["dark-jungle-green"],
+                // backgroundColor: colors["dark-jungle-green"],
                 surfaceTintColor: colors["dark-jungle-green"],
                 shadowColor: Colors.transparent,
                 foregroundColor: colors["sand"],
@@ -275,6 +280,9 @@ class MyApp extends StatelessWidget {
                 color: colors["milk-white"]!.withOpacity(0.5),
               ),
             ),
+            popupMenuTheme: PopupMenuThemeData(
+              surfaceTintColor: colors["dark-jungle-green"]!,
+            )
           ),
 
           // theme yg digunakan ==============================================================

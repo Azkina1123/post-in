@@ -89,7 +89,7 @@ class _InputKomentarState extends State<InputKomentar> {
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               totalLike: 0,
-                              postId: widget.post.id!,
+                              postId: widget.post.id,
                               userId: authUserId,
                             ),
                           );

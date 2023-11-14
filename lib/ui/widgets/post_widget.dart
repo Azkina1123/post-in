@@ -62,6 +62,19 @@ class PostWidget extends StatelessWidget {
                               Theme.of(context).textTheme.bodySmall!.fontSize,
                         ),
                       ),
+                      trailing: PopupMenuButton(
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'delete',
+                              child: Text('Delete'),
+                              onTap: () {
+                                showDeleteDialog(context);
+                              },
+                            )
+                          ];
+                        },
+                      ),
                     );
                   }
 
@@ -143,7 +156,11 @@ class PostWidget extends StatelessWidget {
                                           likeCount + 1,
                                         );
                                       } else {
-                                        String id = likes.firstWhere((like) => like.get("userId") == authUserid).id;
+                                        String id = likes
+                                            .firstWhere((like) =>
+                                                like.get("userId") ==
+                                                authUserid)
+                                            .id;
                                         likeData.delete(id);
                                         Provider.of<PostData>(context,
                                                 listen: false)
@@ -244,6 +261,32 @@ class PostWidget extends StatelessWidget {
     });
   }
 
+  Future<dynamic> showDeleteDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Peringatan!"),
+            content: Text("Apakah Anda yakin ingin menghapus post ini?"),
+            actions: [
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Batalkan"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                   Provider.of<PostData>(context, listen: false)
+                      .delete(post.docId!);
+                  Navigator.of(context).pop();
+                },
+                child: Text("Ya"),
+              ),
+            ],
+          );
+        });
+  }
   // void _getUser(BuildContext context) async {
   //   user = await Provider.of<UserData>(context, listen: false)
   //       .getUser(post.userId);

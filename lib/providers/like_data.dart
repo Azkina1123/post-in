@@ -13,9 +13,18 @@ class LikeData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _likesRef.get();
     return querySnapshot.size;
   }
-
+  Future<int> get lastId async {
+    QuerySnapshot querySnapshot =
+        await _likesRef.orderBy("id", descending: true).get();
+    return querySnapshot.docs.first.get("id");
+  }
   void add(Like like) async {
-    int id = await likeCount + 1;
+        int id;
+    if (likeCount == 0) {
+      id = await likeCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
     _likesRef.doc(id.toString()).set({
       "id": id,
       "postId": like.postId,

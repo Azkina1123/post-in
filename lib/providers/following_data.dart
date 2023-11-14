@@ -13,8 +13,18 @@ class FollowingData extends ChangeNotifier {
     return querySnapshot.size;
   }
 
+  Future<int> get lastId async {
+    QuerySnapshot querySnapshot =
+        await _followingsRef.orderBy("id", descending: true).get();
+    return querySnapshot.docs.first.get("id");
+  }
   void add(Following following) async {
-    int id = await followingCount + 1;
+    int id;
+    if (followingCount == 0) {
+      id = await followingCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
     _followingsRef.doc(id.toString()).set({
       "id": id,
       "userId2": following.userId2,

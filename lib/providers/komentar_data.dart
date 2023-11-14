@@ -54,8 +54,20 @@ class KomentarData extends ChangeNotifier {
     return querySnapshot.size;
   }
 
+  Future<int> get lastId async {
+    QuerySnapshot querySnapshot =
+        await _komentarsRef.orderBy("id", descending: true).get();
+    return querySnapshot.docs.first.get("id");
+  }
+
   void add(Komentar komentar) async {
-    int id = await komentarCount + 1;
+    int id;
+    if (komentarCount == 0) {
+      id = await komentarCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
+
     _komentarsRef.doc(id.toString()).set({
       "id": id,
       "tglDibuat": komentar.tglDibuat,
@@ -67,6 +79,10 @@ class KomentarData extends ChangeNotifier {
     // notifyListeners();
   }
 
+  void delete(String docId) {
+    _komentarsRef.doc(docId).delete();
+  }
+
   void updateTotalLike(String docId, int totalLike) {
     _komentarsRef.doc(docId).update({
       "totalLike": totalLike,
@@ -74,15 +90,30 @@ class KomentarData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<List<Komentar>> getKomentars() async {
-    QuerySnapshot querySnapshot = await _komentarsRef.get();
+  Future<List<Komentar>> getKomentars(String orderBy1, String orderBy2,
+      {int? postId, int? userId}) async {
+    QuerySnapshot? querySnapshot;
+    if (postId != null) {
+      querySnapshot = await _komentarsRef
+          .where("postId", isEqualTo: postId)
+          .orderBy(orderBy1, descending: true)
+          .orderBy(orderBy2, descending: true)
+          .get();
+    } else if (userId != null) {
+      querySnapshot = await _komentarsRef
+          .where("userId", isEqualTo: userId)
+          .orderBy(orderBy1, descending: true)
+          .orderBy(orderBy2, descending: true)
+          .get();
+    }
+
     List<Komentar> komentars = [];
-    querySnapshot.docs.forEach((doc) {
+    querySnapshot!.docs.forEach((doc) {
       komentars.add(
         Komentar(
           id: doc.get("id"),
           docId: doc.id,
-          tglDibuat: doc.get("tglDibuat"),
+          tglDibuat: doc.get("tglDibuat").toDate(),
           konten: doc.get("konten"),
           totalLike: doc.get("totalLike"),
           postId: doc.get("postId"),
@@ -90,6 +121,7 @@ class KomentarData extends ChangeNotifier {
         ),
       );
     });
+
     return komentars;
   }
 
@@ -100,7 +132,7 @@ class KomentarData extends ChangeNotifier {
     querySnapshot.docs.forEach((doc) {
       if (doc.get("id") == "id") {
         Komentar(
-          id: doc.get("id"), 
+          id: doc.get("id"),
           docId: doc.id,
           tglDibuat: doc.get("tglDibuat"),
           konten: doc.get("konten"),

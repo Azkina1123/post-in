@@ -6,6 +6,8 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<List<Komentar>> komentarsFuture = Provider.of<KomentarData>(context)
+        .getKomentars("totalLike", "tglDibuat", postId: post.id);
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       // List<Komentar> komentars = komentarData.getKomentars(postId: post.id);
 
@@ -26,6 +28,7 @@ class PostPage extends StatelessWidget {
               post: post,
             ),
 
+
             StreamBuilder<QuerySnapshot>(
                 stream: komentarData.komentarsRef
                     .where("postId", isEqualTo: post.id)
@@ -41,10 +44,9 @@ class PostPage extends StatelessWidget {
                       child: const CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasData) {
-
                     final data = snapshot.data!.docs;
                     int komentarCount = data.length;
-                  
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -64,7 +66,6 @@ class PostPage extends StatelessWidget {
                         InputKomentar(
                           post: post,
                         ),
-
                         // DAFTAR KOMENTAR =======================================================================
 
                         for (int i = 0; i < komentarCount; i++)
@@ -73,9 +74,8 @@ class PostPage extends StatelessWidget {
                               KomentarWidget(
                                 komentar: Komentar(
                                   id: data[i].get("id"),
-                                  docId: data[i].id,                                  
-                                  tglDibuat:
-                                      data[i].get("tglDibuat").toDate(),
+                                  docId: data[i].id,
+                                  tglDibuat: data[i].get("tglDibuat").toDate(),
                                   konten: data[i].get("konten"),
                                   totalLike: data[i].get("totalLike"),
                                   postId: data[i].get("postId"),
@@ -103,8 +103,11 @@ class PostPage extends StatelessWidget {
                     );
                   }
 
-                  return Text("Tidak dapat tersambung.", textAlign: TextAlign.center,);
-                })
+              return Text(
+                "Tidak dapat tersambung.",
+                textAlign: TextAlign.center,
+              );
+            })
           ],
         ),
       );

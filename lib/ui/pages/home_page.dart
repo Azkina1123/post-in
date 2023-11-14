@@ -34,13 +34,14 @@ class _HomePageState extends State<HomePage> {
 
       //     Provider.of<UserData>(context, listen: false).add(
       //   User(
+      //     id: 1,
       //     tglDibuat: DateTime.now(),
-      //     username: "alu",
-      //     namaLengkap: "Muhammad Alucard",
-      //     email: "alu.ml@gmail.com",
-      //     password: "alufeed",
+      //     username: "bebek",
+      //     namaLengkap: "Bebek Geprek",
+      //     email: "bebeik.bakar@gmail.com",
+      //     password: "nyamnyam",
       //     foto:
-      //         "https://www.ligagame.tv/images/Nana-Hero-Mobile-Legends_4f22c.jpg",
+      //         "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2022/06/14024013/Tak-Hanya-Lezat-Ini-X-Manfaat-Bayam-bagi-Kesehatan-Tubuh-01.jpg",
       //   ),
       // );
 
@@ -162,13 +163,15 @@ class _HomePageState extends State<HomePage> {
                             Column(
                               children: [
                                 PostWidget(
-                                    post: Post(
+                                  post: Post(
                                   id: data[i].get("id"),
                                   docId: data[i].id,
                                   tglDibuat: data[i].get("tglDibuat").toDate(),
                                   konten: data[i].get("konten"),
                                   img: data[i].get("img"),
                                   userId: data[i].get("userId"),
+                                  totalKomentar: data[i].get("totalKomentar"),
+                                  totalLike: data[i].get("totalLike"),
                                 )),
 
                                 // kasih pembatas antar post --------------------------------------
@@ -218,7 +221,7 @@ class _HomePageState extends State<HomePage> {
       default:
         return Provider.of<PostData>(context)
             .postsRef
-            .where("userId", isEqualTo: followedUserId![0])
+            // .where("userId", isEqualTo: followedUserId![0])
             .snapshots();
     }
   }

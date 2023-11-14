@@ -69,9 +69,20 @@ class UserData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _usersRef.get();
     return querySnapshot.size;
   }
-
+  Future<int> get lastId async {
+    QuerySnapshot querySnapshot =
+        await _usersRef.orderBy("id", descending: true).get();
+    return querySnapshot.docs.first.get("id");
+  }
   void add(User user) async {
-    _usersRef.doc((await userCount + 1).toString()).set({
+    int id;
+    if (userCount == 0) {
+      id = await userCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
+    _usersRef.doc(id.toString()).set({
+      "id": id,
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,

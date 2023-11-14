@@ -62,7 +62,11 @@ class PostData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _postsRef.get();
     return querySnapshot.size;
   }
-
+  Future<int> get lastId async {
+    QuerySnapshot querySnapshot =
+        await _postsRef.orderBy("id", descending: true).get();
+    return querySnapshot.docs.first.get("id");
+  }
   // tambahkan post baru
   void add(Post post) async {
     int max = 99999999;
@@ -77,7 +81,12 @@ class PostData extends ChangeNotifier {
       url = await ref.getDownloadURL();
     }
 
-    int id = await postCount + 1;
+    int id;
+    if (postCount == 0) {
+      id = await postCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
     _postsRef.doc(id.toString()).set({
       "id": id,
       "tglDibuat": post.tglDibuat,
@@ -88,6 +97,10 @@ class PostData extends ChangeNotifier {
       "userId": post.userId,
     });
     // notifyListeners();
+  }
+
+  void delete(String docId) {
+    _postsRef.doc(docId).delete();
   }
 
   void updateTotalLike(String docId, int totalLike) {
@@ -122,17 +135,17 @@ class PostData extends ChangeNotifier {
 
   Future<Post> getPost(int id) async {
     QuerySnapshot querySnapshot = await _postsRef.get();
-    
+
     Post? post;
     querySnapshot.docs.forEach((doc) {
       if (doc.get("id") == id) {
         post = Post(
           id: doc.get("id"),
-      docId: doc.id,
-      tglDibuat: doc.get("tglDibuat").toDate(),
-      konten: doc.get("konten"),
-      userId: doc.get("userId"),
-    );
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          konten: doc.get("konten"),
+          userId: doc.get("userId"),
+        );
       }
     });
 
