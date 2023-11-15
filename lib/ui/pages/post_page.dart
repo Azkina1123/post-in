@@ -6,8 +6,7 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<Komentar>> komentarsFuture = Provider.of<KomentarData>(context)
-        .getKomentars("totalLike", "tglDibuat", postId: post.id);
+
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       // List<Komentar> komentars = komentarData.getKomentars(postId: post.id);
 

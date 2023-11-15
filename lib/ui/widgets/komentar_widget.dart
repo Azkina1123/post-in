@@ -12,52 +12,68 @@ class KomentarWidget extends StatefulWidget {
 
 class _KomentarWidgetState extends State<KomentarWidget> {
   User? _user;
-  bool selected = false;
+  bool _selected = false;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    int authUserid = Provider.of<AuthData>(context).authUser.id;
-
-    while(selected) {
-      
-    }
+    int authUserid = Provider.of<AuthData>(context, listen: false).authUser.id;
 
     return Consumer<LikeData>(builder: (context, likeData, child) {
-      return GestureDetector(
-        onLongPress: widget.komentar.userId == authUserid ? () {
-          setState(() {
-            selected = !selected;
-              
-              if (selected) {
-                final mySnackBar = SnackBar(
-                      content: Text("Hapus komentar ini?"),
-                      action: SnackBarAction(
-                        label: "Ya",
-                        onPressed: () async {
-                          Post post = await Provider.of<PostData>(context,
-                                  listen: false)
-                              .getPost(widget.postId);
-                          Provider.of<KomentarData>(context, listen: false)
-                              .delete(widget.komentar.docId!);
-                          Provider.of<PostData>(context, listen: false)
-                              .updateTotalKomentar(
-                            post.docId!,
-                            post.totalKomentar - 1,
-                          );
-                          selected = false;
-                        },
+      return InkWell(
+        onTap: widget.komentar.userId == authUserid
+            ? () {
+                setState(() {
+                  _selected = !_selected;
+
+                  // final pageData =
+                  //     Provider.of<PageData>(context, listen: false);
+                  // if (_selected) {
+                  //   pageData.openSnackBar();
+                  // } else {
+                  //   pageData.closeSnackBar();
+                  // }
+
+                  if (_selected) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Hapus komentar ini?"),
+                        action: SnackBarAction(
+                          label: "Ya",
+                          onPressed: () async {
+                            Post post = await Provider.of<PostData>(context,
+                                    listen: false)
+                                .getPost(widget.postId);
+                            Provider.of<KomentarData>(context, listen: false)
+                                .delete(widget.komentar.docId!);
+                            Provider.of<PostData>(context, listen: false)
+                                .updateTotalKomentar(
+                              post.docId!,
+                              post.totalKomentar - 1,
+                            );
+                            _selected = false;
+                          },
+                        ),
+                        duration: const Duration(days: 1),
+
                       ),
                     );
-              ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
-
+                  } else {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                  }
+                });
               }
-          });
-        } : null,
+            : null,
         child: Container(
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
-            color: selected
-                ? colors["sand"]!.withOpacity(0.1)
+            color: _selected
+                ? colors["sand"]!.withOpacity(0.3)
                 : Theme.of(context).colorScheme.surface,
           ),
           child: StreamBuilder<QuerySnapshot>(
@@ -70,12 +86,16 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                   final data = snapshot.data!.docs;
                   _user = User(
                     id: data[0].get("id"),
+                    docId: data[0].id,
                     tglDibuat: data[0].get("tglDibuat").toDate(),
                     username: data[0].get("username"),
                     namaLengkap: data[0].get("namaLengkap"),
                     email: data[0].get("email"),
+                    gender: data[0].get("gender"),
+                    noTelp: data[0].get("noTelp"),
                     password: data[0].get("password"),
                     foto: data[0].get("foto"),
+                    sampul: data[0].get("sampul"),
                   );
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,43 +170,55 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                             if (snapshot.hasData) {
                               final data = snapshot.data!.docs;
                               bool isLiked = data.isNotEmpty;
-                              return IconButton(
-                                onPressed: () async {
-                                  if (!isLiked) {
-                                    likeData.add(
-                                      Like(
-                                        id: 1,
-                                        userId: authUserid,
-                                        komentarId: widget.komentar.id,
-                                      ),
-                                    );
-                                    Provider.of<KomentarData>(context,
-                                            listen: false)
-                                        .updateTotalLike(
-                                      widget.komentar.docId!,
-                                      widget.komentar.totalLike + 1,
-                                    );
-                                  } else {
-                                    likeData.delete(data[0].id);
-                                    Provider.of<KomentarData>(context,
-                                            listen: false)
-                                        .updateTotalLike(
-                                      widget.komentar.docId!,
-                                      widget.komentar.totalLike - 1,
-                                    );
-                                  }
-                                },
-                                // icon: Icon(Icons.favorite_rounded),
-                                icon: Icon(
-                                  isLiked
-                                      ? Icons.favorite_rounded
-                                      : Icons.favorite_outline,
-                                  size: 20,
-                                  color: isLiked
-                                      ? colors["soft-pink"]
-                                      : Theme.of(context).colorScheme.primary,
-                                ),
-                                padding: EdgeInsets.zero,
+                              return Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      if (!isLiked) {
+                                        likeData.add(
+                                          Like(
+                                            id: 1,
+                                            userId: authUserid,
+                                            komentarId: widget.komentar.id,
+                                          ),
+                                        );
+                                        Provider.of<KomentarData>(context,
+                                                listen: false)
+                                            .updateTotalLike(
+                                          widget.komentar.docId!,
+                                          widget.komentar.totalLike + 1,
+                                        );
+                                      } else {
+                                        likeData.delete(data[0].id);
+                                        Provider.of<KomentarData>(context,
+                                                listen: false)
+                                            .updateTotalLike(
+                                          widget.komentar.docId!,
+                                          widget.komentar.totalLike - 1,
+                                        );
+                                      }
+                                    },
+                                    // icon: Icon(Icons.favorite_rounded),
+                                    icon: Icon(
+                                      isLiked
+                                          ? Icons.favorite_rounded
+                                          : Icons.favorite_outline,
+                                      size: 20,
+                                      color: isLiked
+                                          ? colors["soft-pink"]
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  Text(
+                                    widget.komentar.totalLike != 0
+                                        ? widget.komentar.totalLike.toString()
+                                        : "",
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
                               );
                             }
                             return Text("");

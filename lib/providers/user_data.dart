@@ -87,8 +87,11 @@ class UserData extends ChangeNotifier {
       "username": user.username,
       "namaLengkap": user.namaLengkap,
       "email": user.email,
+      "gender": user.gender,
+      "noTelp": user.noTelp,
       "password": user.password,
       "foto": user.foto,
+      "sampul": user.sampul,
     });
     notifyListeners();
   }
@@ -106,6 +109,9 @@ class UserData extends ChangeNotifier {
           username: doc.get("username"),
           namaLengkap: doc.get("namaLengkap"),
           email: doc.get("email"),
+          gender: doc.get("gender"),
+          noTelp: doc.get("noTelp"),
+          sampul: doc.get("sampul"),
           password: doc.get("password"),
           foto: doc.get("foto"),
         ),
@@ -127,6 +133,9 @@ class UserData extends ChangeNotifier {
           username: doc.get("username"),
           namaLengkap: doc.get("namaLengkap"),
           email: doc.get("email"),
+          gender: doc.get("gender"),
+          noTelp: doc.get("noTelp"),
+          sampul: doc.get("sampul"),
           password: doc.get("password"),
           foto: doc.get("foto"),
         );

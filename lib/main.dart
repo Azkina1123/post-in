@@ -282,11 +282,12 @@ class MyApp extends StatelessWidget {
             ),
             popupMenuTheme: PopupMenuThemeData(
               surfaceTintColor: colors["dark-jungle-green"]!,
-            )
+            ),
+            
           ),
 
           // theme yg digunakan ==============================================================
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
 
           // home: MainPage(),
 

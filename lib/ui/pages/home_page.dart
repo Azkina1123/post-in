@@ -17,8 +17,10 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
 
+
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      
       _getFollowedUserId();
 
       // kalau login sudah jadi, hapus
@@ -47,15 +49,17 @@ class _HomePageState extends State<HomePage> {
 
       // saat pertama kali running, urutkan dari yang terbaru
       // karena defaultnya tab bar berada di tab post terbaru
-      // Provider.of<PostData>(context, listen: false).sortByDateDesc();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
+    final pageData = Provider.of<PageData>(context, listen: false);
+    // if (pageData.onSnackBar) {
+    //   pageData.closeSnackBar();
+    //   ScaffoldMessenger.of(context).clearSnackBars();
+    // }
     return Consumer<PostData>(builder: (ctx, postData, child) {
-
       return DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -163,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                             Column(
                               children: [
                                 PostWidget(
-                                  post: Post(
+                                    post: Post(
                                   id: data[i].get("id"),
                                   docId: data[i].id,
                                   tglDibuat: data[i].get("tglDibuat").toDate(),
@@ -221,7 +225,7 @@ class _HomePageState extends State<HomePage> {
       default:
         return Provider.of<PostData>(context)
             .postsRef
-            // .where("userId", isEqualTo: followedUserId![0])
+            .where("userId", isEqualTo: followedUserId![0])
             .snapshots();
     }
   }
@@ -233,6 +237,4 @@ class _HomePageState extends State<HomePage> {
 
     followedUserId = followings.map((following) => following.userId2).toList();
   }
-
-  
 }
