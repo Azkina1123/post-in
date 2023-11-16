@@ -6,7 +6,9 @@ class ProfilePage extends StatelessWidget {
   ProfilePage({super.key, required this.user});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: Text("My profile"),
@@ -14,8 +16,6 @@ class ProfilePage extends StatelessWidget {
       body: ListView(
         children: [
           Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-
             children: [
               Container(
                 alignment: Alignment.topRight,
@@ -28,40 +28,66 @@ class ProfilePage extends StatelessWidget {
                       SizedBox(
                         width: 20,
                       ),
-                      Text(user.username),
+                      Text(user.namaLengkap),
                     ],
                   ),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: Image.network(user.foto).image,
+                  // SizedBox(
+                  //   width: 100,
+                  // ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: Image.network(user.foto).image,
+                    ),
                   ),
                 ]),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 20),
-              //   child: Text(
-              //     user.username,
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 20),
-              //   child: Text(user.namaLengkap),
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: Row(children: [
-                  Text(user.username + " Follower"),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(user.username + " Following"),
-                ]),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                          style: Theme.of(context).textButtonTheme.style,
+                          onPressed: () {},
+                          child: Text("10" + " Following")),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      TextButton(
+                          style: Theme.of(context).textButtonTheme.style,
+                          onPressed: () {},
+                          child: Text("10" + " Follower")),
+                    ]),
+              ),
+              DefaultTabController(
+                length: 2,
+                child: Column(
+                  children: [
+                    TabBar(
+                      tabs: const [
+                        Tab(text: "Postingan"),
+                        Tab(text: "Komentar")
+                      ],
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize:
+                            Theme.of(context).textTheme.titleMedium!.fontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      labelPadding: EdgeInsets.only(left: 10, right: 10),
+                      dividerColor: Theme.of(context)
+                          .colorScheme
+                          .tertiary
+                          .withOpacity(0.5),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
