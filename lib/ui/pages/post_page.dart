@@ -28,7 +28,6 @@ class PostPage extends StatelessWidget {
               post: post,
             ),
 
-
             StreamBuilder<QuerySnapshot>(
                 stream: komentarData.komentarsRef
                     .where("postId", isEqualTo: post.id)
@@ -103,11 +102,11 @@ class PostPage extends StatelessWidget {
                     );
                   }
 
-              return Text(
-                "Tidak dapat tersambung.",
-                textAlign: TextAlign.center,
-              );
-            })
+                  return Text(
+                    "Tidak dapat tersambung.",
+                    textAlign: TextAlign.center,
+                  );
+                })
           ],
         ),
       );
