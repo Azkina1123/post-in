@@ -278,13 +278,13 @@ class MyApp extends StatelessWidget {
                 hintStyle: TextStyle(
                   color: colors["milk-white"]!.withOpacity(0.5),
                 ),
-              ),
+              ), 
               popupMenuTheme: PopupMenuThemeData(
                 surfaceTintColor: colors["dark-jungle-green"]!,
               )),
 
           // theme yg digunakan ==============================================================
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system,
 
           // home: MainPage(),
 

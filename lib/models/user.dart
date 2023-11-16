@@ -7,8 +7,11 @@ class User {
   String username;
   String namaLengkap;
   String email;
+  String noTelp;
+  String gender;
   String password;
   String foto;
+  String sampul;
 
   User({
     required this.id,
@@ -17,7 +20,10 @@ class User {
     required this.username,
     required this.namaLengkap,
     required this.email,
+    required this.noTelp,
+    required this.gender,
     required this.password,
     required this.foto,
+    required this.sampul,
   });
 }

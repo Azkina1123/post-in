@@ -9,7 +9,7 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int authUserid = Provider.of<AuthData>(context).authUser.id!;
+    int authUserid = Provider.of<AuthData>(context).authUser.id;
 
     return Consumer2<LikeData, KomentarData>(
         builder: (context, likeData, komentarData, child) {
@@ -33,8 +33,11 @@ class PostWidget extends StatelessWidget {
                       username: data[0].get("username"),
                       namaLengkap: data[0].get("namaLengkap"),
                       email: data[0].get("email"),
+                      gender: data[0].get("gender"),
+                      noTelp: data[0].get("noTelp"),
                       password: data[0].get("password"),
                       foto: data[0].get("foto"),
+                      sampul: data[0].get("sampul"),
                     );
                     return ListTile(
                       onTap: () {
@@ -80,10 +83,12 @@ class PostWidget extends StatelessWidget {
 
                   return const Text("");
                 }),
-            GestureDetector(
-              onTap: () {
+            InkWell(
+              onTap: ModalRoute.of(context)!
+                                              .settings
+                                              .name == "/" ? () {
                 Navigator.pushNamed(context, "/post", arguments: post);
-              },
+              } : null,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
@@ -100,7 +105,7 @@ class PostWidget extends StatelessWidget {
                                   fit: BoxFit.cover),
                             ),
                           )
-                        : SizedBox(),
+                        : const Text(""),
 
                     Text(
                       post.konten,
@@ -276,9 +281,30 @@ class PostWidget extends StatelessWidget {
                 child: Text("Batalkan"),
               ),
               ElevatedButton(
-                onPressed: () {
-                   Provider.of<PostData>(context, listen: false)
+                onPressed: () async {
+                  int authUserId = Provider.of<AuthData>(context, listen: false).authUser.id;
+
+                  Provider.of<PostData>(context, listen: false)
                       .delete(post.docId!);
+
+                  // hapus like
+                  final likeData =
+                      Provider.of<LikeData>(context, listen: false);
+                  Like like = await likeData.getLike(
+                    authUserId,
+                    postId: post.id,
+                  );
+                  likeData.delete(like.docId!);
+
+                  // hapus komentar
+                  final komentarData =
+                      Provider.of<KomentarData>(context, listen: false);
+                  List<Komentar> komentars =
+                      await komentarData.getKomentars(postId: post.id);
+                  komentars.forEach((komentar) {
+                    komentarData.delete(komentar.docId!);
+                  });
+
                   Navigator.of(context).pop();
                 },
                 child: Text("Ya"),

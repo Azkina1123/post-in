@@ -24,4 +24,16 @@ class PageData extends ChangeNotifier {
     _komentarFocused = value;
     notifyListeners();
   }
+
+  // snackbar hapus komentar
+  bool _onSnackBar = false;
+  bool get onSnackBar => _onSnackBar;
+
+  void openSnackBar() {
+    _onSnackBar = true;
+  }
+
+  void closeSnackBar() {
+    _onSnackBar = false;
+  }
 }

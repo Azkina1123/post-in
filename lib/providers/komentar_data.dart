@@ -90,20 +90,19 @@ class KomentarData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  Future<List<Komentar>> getKomentars(String orderBy1, String orderBy2,
-      {int? postId, int? userId}) async {
-    QuerySnapshot? querySnapshot;
+  Future<List<Komentar>> getKomentars({int? postId, int? userId}) async {
+    QuerySnapshot? querySnapshot = await _komentarsRef.where("postId", isEqualTo: postId).get();
     if (postId != null) {
       querySnapshot = await _komentarsRef
           .where("postId", isEqualTo: postId)
-          .orderBy(orderBy1, descending: true)
-          .orderBy(orderBy2, descending: true)
+          .orderBy("totalLike", descending: true)
+          .orderBy("tglDibuat", descending: true)
           .get();
     } else if (userId != null) {
       querySnapshot = await _komentarsRef
           .where("userId", isEqualTo: userId)
-          .orderBy(orderBy1, descending: true)
-          .orderBy(orderBy2, descending: true)
+          .orderBy("totalLike", descending: true)
+          .orderBy("tglDibuat", descending: true)
           .get();
     }
 
