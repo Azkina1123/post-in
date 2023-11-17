@@ -70,7 +70,7 @@ class PostWidget extends StatelessWidget {
                           return [
                             PopupMenuItem(
                               value: 'delete',
-                              child: Text('Delete'),
+                              child: const Text('Delete'),
                               onTap: () {
                                 showDeleteDialog(context);
                               },
@@ -98,7 +98,7 @@ class PostWidget extends StatelessWidget {
                         ? Container(
                             width: width(context),
                             height: 200,
-                            margin: EdgeInsets.only(bottom: 15),
+                            margin: const EdgeInsets.only(bottom: 15),
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: NetworkImage(post.img!),
@@ -110,6 +110,7 @@ class PostWidget extends StatelessWidget {
                     Text(
                       post.konten,
                     ),
+                    const SizedBox(height: 10,),
 
                     // like dan komentar ----------------------------------------------------------
                     Row(
@@ -245,7 +246,7 @@ class PostWidget extends StatelessWidget {
                                               listen: false)
                                           .changeKomentarFocus(true);
                                     },
-                                    icon: Icon(Icons.mode_comment_outlined),
+                                    icon: const Icon(Icons.mode_comment_outlined),
                                     style:
                                         Theme.of(context).textButtonTheme.style,
                                     label: Text(komentarCount.toString()),
@@ -271,14 +272,14 @@ class PostWidget extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Peringatan!"),
-            content: Text("Apakah Anda yakin ingin menghapus post ini?"),
+            title: const Text("Peringatan!"),
+            content: const Text("Apakah Anda yakin ingin menghapus post ini?"),
             actions: [
               OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Batalkan"),
+                child: const Text("Batalkan"),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -307,7 +308,7 @@ class PostWidget extends StatelessWidget {
 
                   Navigator.of(context).pop();
                 },
-                child: Text("Ya"),
+                child: const Text("Ya"),
               ),
             ],
           );
