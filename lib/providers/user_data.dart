@@ -72,6 +72,9 @@ class UserData extends ChangeNotifier {
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
         await _usersRef.orderBy("id", descending: true).get();
+        if (querySnapshot.size == 0) {
+      return 0;
+    }
     return querySnapshot.docs.first.get("id");
   }
   void add(User user) async {

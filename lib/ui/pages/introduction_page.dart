@@ -23,7 +23,7 @@ class Introduction_Page extends StatelessWidget {
           body:
               "Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum",
           image: Image.asset(
-            'asset/landing(1).png',
+            'assets/landing(1).png',
             width: 480,
             height: 480,
             fit: BoxFit.cover,
@@ -34,7 +34,7 @@ class Introduction_Page extends StatelessWidget {
           body:
               "Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum",
           image: Image.asset(
-            'asset/landing(1).png',
+            'assets/landing(1).png',
             width: 480,
             height: 480,
             fit: BoxFit.cover,
@@ -45,7 +45,7 @@ class Introduction_Page extends StatelessWidget {
           body:
               "Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum Lorem ipsum lorem ipsum",
           image: Image.asset(
-            'asset/landing(1).png',
+            'assets/landing(1).png',
             width: 480,
             height: 480,
             fit: BoxFit.cover,

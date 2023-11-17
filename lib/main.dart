@@ -286,8 +286,6 @@ class MyApp extends StatelessWidget {
           // theme yg digunakan ==============================================================
           themeMode: ThemeMode.system,
 
-          // home: MainPage(),
-
           // routes ==============================================================
           onGenerateRoute: (settings) {
             if (settings.name == "/post") {
@@ -313,13 +311,13 @@ class MyApp extends StatelessWidget {
             }
           },
           routes: {
-            "/": (ctx) => const Introduction_Page(),
-            // "/post": (ctx) => const PostPage(),
-            // "/cari": (ctx) => const CariPage(),
-            // "/pengaturan": (ctx) => const PengaturanPage(),
+            "/": (ctx) => const MainPage(),
+            "/intro": (ctx) => const Introduction_Page(),
+            "/sign-in": (ctx) => const SignIn(),
+            "/sign-up": (ctx) => const SignUp(),
           },
 
-          initialRoute: "/",
+          initialRoute: "/intro",
         );
       }),
     );

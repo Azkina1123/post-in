@@ -62,11 +62,16 @@ class PostData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _postsRef.get();
     return querySnapshot.size;
   }
+
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
         await _postsRef.orderBy("id", descending: true).get();
+    if (querySnapshot.size == 0) {
+      return 0;
+    }
     return querySnapshot.docs.first.get("id");
   }
+
   // tambahkan post baru
   void add(Post post) async {
     int max = 99999999;
@@ -99,8 +104,31 @@ class PostData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void delete(String docId) {
-    _postsRef.doc(docId).delete();
+  void delete(int id) async {
+    Post post = await getPost(id);
+
+    // hapus post
+    _postsRef.doc(post.docId).delete();
+
+    CollectionReference likesRef =
+        FirebaseFirestore.instance.collection("likes");
+    QuerySnapshot likes = await likesRef.where("postId", isEqualTo: id).get();
+
+    // hapus semua like yang menyukai post
+    likes.docs.forEach((like) {
+      likesRef.doc(like.id).delete();
+    });
+
+    CollectionReference komentarsRef =
+        FirebaseFirestore.instance.collection("komentars");
+    QuerySnapshot komentars =
+        await komentarsRef.where("postId", isEqualTo: id).get();
+
+    // hapus semua komentar yang mengomentari post
+    komentars.docs.forEach((komentar) {
+      komentarsRef.doc(komentar.id).delete();
+    });
+
   }
 
   void updateTotalLike(String docId, int totalLike) {

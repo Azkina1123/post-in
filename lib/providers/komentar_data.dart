@@ -4,47 +4,6 @@ class KomentarData extends ChangeNotifier {
   final CollectionReference _komentarsRef =
       FirebaseFirestore.instance.collection("komentars");
 
-  // final List<Komentar> _komentars = [
-  //   Komentar(
-  //     id: 1,
-  //     tglDibuat: DateTime.utc(2023, 11, 1, 2, 55),
-  //     konten:
-  //         "Selamat ulang tahun, sahabat! Semoga semua hari-harimu penuh dengan cinta dan kebahagiaan. 🎂❤️",
-  //     postId: 1,
-  //     userId: 1,
-  //   ),
-  //   Komentar(
-  //     id: 2,
-  //     tglDibuat: DateTime.utc(2023, 11, 2),
-  //     konten:
-  //         "Selamat ulang tahun! Semoga usiamu semakin berharga dan penuh dengan momen-momen indah. 🎂✨",
-  //     postId: 2,
-  //     userId: 1,
-  //   ),
-  //   Komentar(
-  //     id: 3,
-  //     tglDibuat: DateTime.utc(2023, 11, 2),
-  //     konten:
-  //         "Selamat ulang tahun, teman! Semoga hidupmu dihiasi dengan senyuman dan cinta. 🎁🌟",
-  //     postId: 1,
-  //     userId: 1,
-  //   ),
-  //   Komentar(
-  //     id: 4,
-  //     tglDibuat: DateTime.utc(2023, 11, 3),
-  //     konten: "Siapa itu gak ada kenal aku 😒😒🤔",
-  //     postId: 2,
-  //     userId: 1,
-  //   ),
-  //   Komentar(
-  //     id: 5,
-  //     tglDibuat: DateTime.utc(2023, 11, 4, 07, 11),
-  //     konten: "💕💕💕💕💕",
-  //     postId: 3,
-  //     userId: 1,
-  //   ),
-  // ];
-
   CollectionReference get komentarsRef {
     return _komentarsRef;
   }
@@ -57,6 +16,9 @@ class KomentarData extends ChangeNotifier {
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
         await _komentarsRef.orderBy("id", descending: true).get();
+        if (querySnapshot.size == 0) {
+      return 0;
+    }
     return querySnapshot.docs.first.get("id");
   }
 
@@ -79,8 +41,21 @@ class KomentarData extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void delete(String docId) {
-    _komentarsRef.doc(docId).delete();
+  void delete(int id) async {
+    Komentar komentar = await getkomentar(id);
+
+    // hapus komentar
+    _komentarsRef.doc(komentar.docId).delete();
+
+    CollectionReference likesRef =
+        FirebaseFirestore.instance.collection("likes");
+    QuerySnapshot likes =
+        await likesRef.where("komentarId", isEqualTo: id).get();
+
+    // hapus semua like yang menyukai komentar
+    likes.docs.forEach((like) {
+      likesRef.doc(like.id).delete();
+    });
   }
 
   void updateTotalLike(String docId, int totalLike) {
@@ -91,7 +66,8 @@ class KomentarData extends ChangeNotifier {
   }
 
   Future<List<Komentar>> getKomentars({int? postId, int? userId}) async {
-    QuerySnapshot? querySnapshot = await _komentarsRef.where("postId", isEqualTo: postId).get();
+    QuerySnapshot? querySnapshot =
+        await _komentarsRef.where("postId", isEqualTo: postId).get();
     if (postId != null) {
       querySnapshot = await _komentarsRef
           .where("postId", isEqualTo: postId)
@@ -129,11 +105,11 @@ class KomentarData extends ChangeNotifier {
 
     Komentar? komentar;
     querySnapshot.docs.forEach((doc) {
-      if (doc.get("id") == "id") {
-        Komentar(
+      if (doc.get("id") == id) {
+        komentar = Komentar(
           id: doc.get("id"),
           docId: doc.id,
-          tglDibuat: doc.get("tglDibuat"),
+          tglDibuat: doc.get("tglDibuat").toDate(),
           konten: doc.get("konten"),
           totalLike: doc.get("totalLike"),
           postId: doc.get("postId"),
@@ -143,5 +119,11 @@ class KomentarData extends ChangeNotifier {
     });
 
     return komentar!;
+  }
+
+  Future<int> getKomentarCount(int postId) async {
+    QuerySnapshot? querySnapshot =
+        await _komentarsRef.where("postId", isEqualTo: postId).get();
+    return querySnapshot.docs.length;
   }
 }

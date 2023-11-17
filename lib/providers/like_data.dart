@@ -1,7 +1,6 @@
 part of "providers.dart";
 
 class LikeData extends ChangeNotifier {
-
   final CollectionReference _likesRef =
       FirebaseFirestore.instance.collection("likes");
 
@@ -13,13 +12,18 @@ class LikeData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _likesRef.get();
     return querySnapshot.size;
   }
+
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
         await _likesRef.orderBy("id", descending: true).get();
+    if (querySnapshot.size == 0) {
+      return 0;
+    }
     return querySnapshot.docs.first.get("id");
   }
+
   void add(Like like) async {
-        int id;
+    int id;
     if (likeCount == 0) {
       id = await likeCount + 1;
     } else {
@@ -31,23 +35,24 @@ class LikeData extends ChangeNotifier {
       "komentarId": like.komentarId,
       "userId": like.userId,
     });
-    // notifyListeners();
   }
 
   void delete(String docId) {
     _likesRef.doc(docId).delete();
-    // notifyListeners();
   }
 
-  Future<Like> getLike(int userId,
-      {int? postId, int? komentarId}) async {
+  Future<Like> getLike(int userId, {int? postId, int? komentarId}) async {
     QuerySnapshot querySnapshot = await _likesRef.get();
 
     Like? like;
 
     querySnapshot.docs.forEach((doc) {
-      if (doc.get("userId") == userId && doc.get("postId") == postId && komentarId == null ||
-          doc.get("userId") == userId && doc.get("komentarId") == komentarId && postId == null) {
+      if (doc.get("userId") == userId &&
+              doc.get("postId") == postId &&
+              komentarId == null ||
+          doc.get("userId") == userId &&
+              doc.get("komentarId") == komentarId &&
+              postId == null) {
         like = Like(
           id: doc.get("id"),
           docId: doc.id,

@@ -13,6 +13,9 @@ class _CariPageState extends State<CariPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: null,
+        scrolledUnderElevation: 0,
         title: SizedBox(
           height: 40,
           child: TextField(

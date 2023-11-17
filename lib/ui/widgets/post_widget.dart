@@ -4,7 +4,7 @@ class PostWidget extends StatelessWidget {
   Post post;
 
   User? user;
-  // String? postIdDoc;
+
   PostWidget({super.key, required this.post});
 
   @override
@@ -18,77 +18,65 @@ class PostWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StreamBuilder<QuerySnapshot>(
-                stream: Provider.of<UserData>(context, listen: false)
-                    .usersRef
-                    .where("id", isEqualTo: post.userId)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final data = snapshot.data!.docs;
-                    user = User(
-                      id: data[0].get("id"),
-                      docId: data[0].id,
-                      tglDibuat: data[0].get("tglDibuat").toDate(),
-                      username: data[0].get("username"),
-                      namaLengkap: data[0].get("namaLengkap"),
-                      email: data[0].get("email"),
-                      gender: data[0].get("gender"),
-                      noTelp: data[0].get("noTelp"),
-                      password: data[0].get("password"),
-                      foto: data[0].get("foto"),
-                      sampul: data[0].get("sampul"),
-                    );
-                    return ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          "/profile",
-                          arguments: user,
-                        );
+            FutureBuilder<User>(
+              future: Provider.of<UserData>(context).getUser(post.userId),
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  user = snapshot.data!;
+                  return ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/profile",
+                        arguments: user,
+                      );
+                    },
+                    splashColor: Colors.transparent,
+                    leading: AccountButton(
+                      onPressed: null,
+                      image: NetworkImage(user!.foto),
+                    ),
+                    title: Text(user!.username,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    subtitle: Text(
+                      DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.5),
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize,
+                      ),
+                    ),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: const Text('Delete'),
+                            onTap: () {
+                              showDeleteDialog(context);
+                            },
+                          )
+                        ];
                       },
-                      splashColor: Colors.transparent,
-                      leading: AccountButton(
-                        onPressed: null,
-                        image: NetworkImage(user!.foto),
-                      ),
-                      title: Text(user!.username,
-                          style: Theme.of(context).textTheme.titleMedium),
-                      subtitle: Text(
-                        DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withOpacity(0.5),
-                          fontSize:
-                              Theme.of(context).textTheme.bodySmall!.fontSize,
-                        ),
-                      ),
-                      trailing: PopupMenuButton(
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: const Text('Delete'),
-                              onTap: () {
-                                showDeleteDialog(context);
-                              },
-                            )
-                          ];
-                        },
-                      ),
-                    );
-                  }
-
-                  return const Text("");
-                }),
+                    ),
+                  );
+                }
+                return Container(
+                  width: width(context),
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                );
+              }),
+            ),
             InkWell(
-              onTap: ModalRoute.of(context)!
-                                              .settings
-                                              .name == "/" ? () {
-                Navigator.pushNamed(context, "/post", arguments: post);
-              } : null,
+              onTap: ModalRoute.of(context)!.settings.name == "/"
+                  ? () {
+                      Navigator.pushNamed(context, "/post", arguments: post);
+                    }
+                  : null,
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
@@ -110,7 +98,9 @@ class PostWidget extends StatelessWidget {
                     Text(
                       post.konten,
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
                     // like dan komentar ----------------------------------------------------------
                     Row(
@@ -246,7 +236,8 @@ class PostWidget extends StatelessWidget {
                                               listen: false)
                                           .changeKomentarFocus(true);
                                     },
-                                    icon: const Icon(Icons.mode_comment_outlined),
+                                    icon:
+                                        const Icon(Icons.mode_comment_outlined),
                                     style:
                                         Theme.of(context).textButtonTheme.style,
                                     label: Text(komentarCount.toString()),
@@ -283,30 +274,11 @@ class PostWidget extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  int authUserId = Provider.of<AuthData>(context, listen: false).authUser.id;
-
-                  Provider.of<PostData>(context, listen: false)
-                      .delete(post.docId!);
-
-                  // hapus like
-                  final likeData =
-                      Provider.of<LikeData>(context, listen: false);
-                  Like like = await likeData.getLike(
-                    authUserId,
-                    postId: post.id,
-                  );
-                  likeData.delete(like.docId!);
-
-                  // hapus komentar
-                  final komentarData =
-                      Provider.of<KomentarData>(context, listen: false);
-                  List<Komentar> komentars =
-                      await komentarData.getKomentars(postId: post.id);
-                  komentars.forEach((komentar) {
-                    komentarData.delete(komentar.docId!);
-                  });
+                  Provider.of<PostData>(context, listen: false).delete(post.id);
 
                   Navigator.of(context).pop();
+
+                  Navigator.popAndPushNamed(context, "/");
                 },
                 child: const Text("Ya"),
               ),
@@ -314,8 +286,4 @@ class PostWidget extends StatelessWidget {
           );
         });
   }
-  // void _getUser(BuildContext context) async {
-  //   user = await Provider.of<UserData>(context, listen: false)
-  //       .getUser(post.userId);
-  // }
 }

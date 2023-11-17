@@ -6,12 +6,18 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       // List<Komentar> komentars = komentarData.getKomentars(postId: post.id);
 
       return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              Navigator.of(context).pop();
+            },
+          ),
           title: Text(
             "Post",
             style: TextStyle(

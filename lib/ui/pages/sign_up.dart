@@ -1,7 +1,7 @@
 part of "pages.dart";
 
-class signUp extends StatelessWidget {
-  const signUp({Key? key}) : super(key: key);
+class SignUp extends StatelessWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   Widget buttonUpload(
     String label,
@@ -94,14 +94,15 @@ class signUp extends StatelessWidget {
                     children: [
                       Expanded(
                         child: inputFile(
-                            label: "Nomor Telp", textColor: Colors.white, ),
+                          label: "Nomor Telp",
+                          textColor: Colors.white,
+                        ),
                       ),
                       SizedBox(width: 20),
                       Expanded(
                         child: inputFile(
                             label: "Password",
                             obscureText: true,
-
                             textColor: Colors.white),
                       ),
                     ],
@@ -139,10 +140,7 @@ class signUp extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => signIn()),
-                      );
+                      Navigator.popAndPushNamed(context, "/sign-in");
                     },
                     color: Theme.of(context).colorScheme.primary,
                     elevation: 0,
@@ -171,10 +169,7 @@ class signUp extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => signIn()),
-                      );
+                      Navigator.popAndPushNamed(context, "/sign-in");
                     },
                     child: Text(
                       "Masuk",

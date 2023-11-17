@@ -12,6 +12,9 @@ class _PengaturanPageState extends State<PengaturanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+                    automaticallyImplyLeading: false,
+          leading: null,
+          scrolledUnderElevation: 0,
           title: Text(
             "Pengaturan",
             style: TextStyle(

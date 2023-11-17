@@ -22,45 +22,42 @@ class _KomentarWidgetState extends State<KomentarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int authUserid = Provider.of<AuthData>(context, listen: false).authUser.id;
+    int authUserId = Provider.of<AuthData>(context, listen: false).authUser.id;
 
     return Consumer<LikeData>(builder: (context, likeData, child) {
       return InkWell(
-        onTap: widget.komentar.userId == authUserid
+        // jika menekan komentar, muncul snackbar ===========================================================
+        onTap: widget.komentar.userId == authUserId
             ? () {
                 setState(() {
                   _selected = !_selected;
 
-                  // final pageData =
-                  //     Provider.of<PageData>(context, listen: false);
-                  // if (_selected) {
-                  //   pageData.openSnackBar();
-                  // } else {
-                  //   pageData.closeSnackBar();
-                  // }
-
                   if (_selected) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Hapus komentar ini?"),
+                        content: const Text("Hapus komentar ini?"),
                         action: SnackBarAction(
                           label: "Ya",
                           onPressed: () async {
-                            Post post = await Provider.of<PostData>(context,
-                                    listen: false)
-                                .getPost(widget.postId);
-                            Provider.of<KomentarData>(context, listen: false)
-                                .delete(widget.komentar.docId!);
-                            Provider.of<PostData>(context, listen: false)
-                                .updateTotalKomentar(
+                            final komentarData = Provider.of<KomentarData>(
+                                context,
+                                listen: false);
+                            final postData =
+                                Provider.of<PostData>(context, listen: false);
+
+                            Post post = await postData.getPost(widget.postId);
+
+                            komentarData.delete(widget.komentar.id);
+                            
+                            postData.updateTotalKomentar(
                               post.docId!,
-                              post.totalKomentar - 1,
+                              await komentarData.getKomentarCount(post.id),
                             );
+
                             _selected = false;
                           },
                         ),
                         duration: const Duration(days: 1),
-
                       ),
                     );
                   } else {
@@ -69,6 +66,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                 });
               }
             : null,
+
+        // tampilan komentar ===========================================================
         child: Container(
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
@@ -76,31 +75,18 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                 ? colors["sand"]!.withOpacity(0.3)
                 : Theme.of(context).colorScheme.surface,
           ),
-          child: StreamBuilder<QuerySnapshot>(
-              stream: Provider.of<UserData>(context)
-                  .usersRef
-                  .where("id", isEqualTo: widget.komentar.userId)
-                  .snapshots(),
+          child: FutureBuilder<User>(
+              future: Provider.of<UserData>(context, listen: false)
+                  .getUser(widget.komentar.userId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  final data = snapshot.data!.docs;
-                  _user = User(
-                    id: data[0].get("id"),
-                    docId: data[0].id,
-                    tglDibuat: data[0].get("tglDibuat").toDate(),
-                    username: data[0].get("username"),
-                    namaLengkap: data[0].get("namaLengkap"),
-                    email: data[0].get("email"),
-                    gender: data[0].get("gender"),
-                    noTelp: data[0].get("noTelp"),
-                    password: data[0].get("password"),
-                    foto: data[0].get("foto"),
-                    sampul: data[0].get("sampul"),
-                  );
+                  _user = snapshot.data!;
+
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // foto user ------------------------------------------------------
                       Container(
                         width: 80,
                         alignment: Alignment.topLeft,
@@ -120,12 +106,16 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           ],
                         ),
                       ),
-                      Container(
+
+                      // body komentar ------------------------------------------------------
+
+                      SizedBox(
                         width: width(context) - 80 - 60,
                         // padding: EdgeInsets.only(right: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // username & tanggal ------------------------------------------------------
                             Row(
                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -148,6 +138,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                 ),
                               ],
                             ),
+
+                            // isi komentar ------------------------------------------------------
                             Text(
                               widget.komentar.konten,
                               softWrap: true,
@@ -156,6 +148,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           ],
                         ),
                       ),
+
+                      // like komentar ------------------------------------------------------
                       Container(
                         width: 50,
                         padding: const EdgeInsets.only(left: 10, right: 20),
@@ -164,12 +158,11 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           stream: likeData.likesRef
                               .where("komentarId",
                                   isEqualTo: widget.komentar.id)
-                              .where("userId", isEqualTo: authUserid)
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final data = snapshot.data!.docs;
-                              bool isLiked = data.isNotEmpty;
+                              bool isLiked = data.where((like) => like.get("userId") == authUserId).isNotEmpty;
                               return Column(
                                 children: [
                                   IconButton(
@@ -178,7 +171,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                         likeData.add(
                                           Like(
                                             id: 1,
-                                            userId: authUserid,
+                                            userId: authUserId,
                                             komentarId: widget.komentar.id,
                                           ),
                                         );
@@ -198,7 +191,6 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                         );
                                       }
                                     },
-                                    // icon: Icon(Icons.favorite_rounded),
                                     icon: Icon(
                                       isLiked
                                           ? Icons.favorite_rounded
@@ -216,12 +208,12 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                     widget.komentar.totalLike != 0
                                         ? widget.komentar.totalLike.toString()
                                         : "",
-                                    style: TextStyle(fontSize: 12),
+                                    style: const TextStyle(fontSize: 12),
                                   )
                                 ],
                               );
                             }
-                            return Text("");
+                            return const Text("");
                           },
                         ),
                       )
@@ -229,7 +221,11 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                   );
                 }
 
-                return const Text("");
+                return Container(
+                  width: width(context),
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                );
               }),
         ),
       );

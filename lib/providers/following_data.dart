@@ -46,4 +46,14 @@ class FollowingData extends ChangeNotifier {
     return followings;
   }
 
+  Future<int> getFollowingCount(int userId) async {
+    QuerySnapshot querySnapshot = await _followingsRef.where("userId", isEqualTo: userId).get();
+    return querySnapshot.size;
+  }
+
+  Future<int> getFollowerCount(int userId2) async {
+    QuerySnapshot querySnapshot =
+        await _followingsRef.where("userId2", isEqualTo: userId2).get();
+    return querySnapshot.size;
+  }
 }

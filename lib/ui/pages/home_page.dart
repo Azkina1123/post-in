@@ -17,10 +17,8 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
 
-
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      
       _getFollowedUserId();
 
       // kalau login sudah jadi, hapus
@@ -54,97 +52,84 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final pageData = Provider.of<PageData>(context, listen: false);
-    // if (pageData.onSnackBar) {
-    //   pageData.closeSnackBar();
-    //   ScaffoldMessenger.of(context).clearSnackBars();
-    // }
     return Consumer<PostData>(builder: (ctx, postData, child) {
-      return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          // app bar ========================================================================
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
+      return Scaffold(
+        // app bar ========================================================================
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: null,
+          scrolledUnderElevation: 0,
 
-            // judul post.in ---------------------------------------------------------------
-            title: Text(
-              "Post.In",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(ctx).colorScheme.primary,
-              ),
-            ),
-
-            // username & foto profile -----------------------------------------------------
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      ctx,
-                      "/profile",
-                      arguments:
-                          Provider.of<AuthData>(ctx, listen: false).authUser,
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Text(
-                        Provider.of<AuthData>(ctx, listen: false)
-                            .authUser
-                            .username,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      AccountButton(
-                        onPressed: null,
-                        image: NetworkImage(
-                          Provider.of<AuthData>(ctx, listen: false)
-                              .authUser
-                              .foto,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-
-            // tab bar ---------------------------------------------------------------------
-            bottom: TabBar(
-              tabs: const [
-                Tab(text: "Post Terbaru"),
-                Tab(text: "Post Terpopuler"),
-                Tab(text: "Post Diikuti")
-              ],
-              labelStyle: TextStyle(
-                color: Theme.of(ctx).colorScheme.primary,
-                fontSize: Theme.of(ctx).textTheme.titleMedium!.fontSize,
-                fontWeight: FontWeight.bold,
-              ),
-              labelPadding: EdgeInsets.only(left: 10, right: 10),
-              dividerColor: Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
-              onTap: (i) {
-                _index = i;
-                if (i == 0) {
-                  // postData.sortByDateDesc();
-                } else if (i == 1) {
-                  // postData.sortByPopularityDesc();
-                } else if (i == 2) {
-                  // _getFollowedUserId();
-                }
-
-                setState(() {});
-              },
+          // judul post.in ---------------------------------------------------------------
+          title: Text(
+            "Post.In",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(ctx).colorScheme.primary,
             ),
           ),
 
-          // konten halaman ===============================================================
-          body: ListView(
+          // username & foto profile -----------------------------------------------------
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    ctx,
+                    "/profile",
+                    arguments:
+                        Provider.of<AuthData>(ctx, listen: false).authUser,
+                  );
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      Provider.of<AuthData>(ctx, listen: false)
+                          .authUser
+                          .username,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    AccountButton(
+                      onPressed: null,
+                      image: NetworkImage(
+                        Provider.of<AuthData>(ctx, listen: false).authUser.foto,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // konten halaman ===============================================================
+        body: DefaultTabController(
+          length: 3,
+          child: ListView(
             children: [
+              // tab bar ---------------------------------------------------------------------
+              TabBar(
+                tabs: const [
+                  Tab(text: "Post Terbaru"),
+                  Tab(text: "Post Terpopuler"),
+                  Tab(text: "Post Diikuti")
+                ],
+                labelStyle: TextStyle(
+                  color: Theme.of(ctx).colorScheme.primary,
+                  fontSize: Theme.of(ctx).textTheme.titleMedium!.fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+                labelPadding: EdgeInsets.only(left: 10, right: 10),
+                dividerColor:
+                    Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
+                onTap: (i) {
+                  _index = i;
+                  setState(() {});
+                },
+              ),
               // input postingan baru ------------------------------------------------------
               InputPost(tabIndex: _index),
 

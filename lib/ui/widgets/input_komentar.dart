@@ -82,8 +82,11 @@ class _InputKomentarState extends State<InputKomentar> {
                 ElevatedButton(
                   onPressed: _kontenCon.text.isNotEmpty
                       ? () async {
-                          Provider.of<KomentarData>(context, listen: false)
-                              .add(
+                          final komentarData =
+                              Provider.of<KomentarData>(context, listen: false);
+
+                          // tambahkan komentar
+                          komentarData.add(
                             Komentar(
                               id: 1,
                               tglDibuat: DateTime.now(),
@@ -93,11 +96,14 @@ class _InputKomentarState extends State<InputKomentar> {
                               userId: authUserId,
                             ),
                           );
+
                           Provider.of<PostData>(context, listen: false)
                               .updateTotalKomentar(
                             widget.post.docId!,
-                            widget.post.totalKomentar + 1,
+                            await komentarData
+                              .getKomentarCount(widget.post.id) + 1,
                           );
+
                           _focus.unfocus();
                           _kontenCon.clear();
                         }

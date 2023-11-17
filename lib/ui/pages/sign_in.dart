@@ -1,7 +1,7 @@
 part of "pages.dart";
 
-class signIn extends StatelessWidget {
-  const signIn({Key? key}) : super(key: key);
+class SignIn extends StatelessWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +72,7 @@ class signIn extends StatelessWidget {
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
+                          Navigator.pushNamed(context, "/");
                         },
                         color: Theme.of(context).colorScheme.primary,
                         elevation: 0,
@@ -95,10 +92,7 @@ class signIn extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => signUp()),
-                      );
+                      Navigator.popAndPushNamed(context, "/sign-up");
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,10 +105,7 @@ class signIn extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => signUp()),
-                            );
+                             Navigator.popAndPushNamed(context, "/sign-up");
                           },
                           child: Text(
                             "Daftar",
