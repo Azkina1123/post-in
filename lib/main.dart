@@ -38,253 +38,250 @@ class MyApp extends StatelessWidget {
 
           // light mode =============================================================
           theme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.light,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: colors["sand"]!,
-              background: colors["milk-white"],
-              onBackground: colors["dark-jungle-green"],
-              primary: colors["sand"],
-              onPrimary: colors["milk-white"],
-              secondary: colors["dark-jungle-green"],
-              onSecondary: colors["milk-white"],
-              tertiary: colors["languid-lavender"],
-              onTertiary: colors["dark-jungle-green"],
-              error: colors["smoky-topaz"],
-              onError: colors["milk-white"],
-              surface: colors["milk-white"],
-              onSurface: colors["dark-jungle-green"],
-            ),
-            appBarTheme: AppBarTheme(
+              useMaterial3: true,
+              brightness: Brightness.light,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: colors["sand"]!,
+                background: colors["milk-white"],
+                onBackground: colors["dark-jungle-green"],
+                primary: colors["sand"],
+                onPrimary: colors["milk-white"],
+                secondary: colors["dark-jungle-green"],
+                onSecondary: colors["milk-white"],
+                tertiary: colors["languid-lavender"],
+                onTertiary: colors["dark-jungle-green"],
+                error: colors["smoky-topaz"],
+                onError: colors["milk-white"],
+                surface: colors["milk-white"],
+                onSurface: colors["dark-jungle-green"],
+              ),
+              appBarTheme: AppBarTheme(
+                  scrolledUnderElevation: 0,
+                  color: colors["milk-white"],
+                  elevation: null,
+                  titleTextStyle: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: colors["sand"],
+                  ),
+                  iconTheme: IconThemeData(color: colors["sand"]!)),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors["sand"],
+                  foregroundColor: colors["milk-white"],
+                ),
+              ),
+              iconTheme: IconThemeData(color: colors["sand"]),
+              iconButtonTheme: IconButtonThemeData(
+                style: IconButton.styleFrom(
+                  // backgroundColor: colors["milk-white"],
+                  surfaceTintColor: colors["milk-white"],
+                  shadowColor: Colors.transparent,
+                  foregroundColor: colors["sand"],
+                ),
+              ),
+              outlinedButtonTheme: OutlinedButtonThemeData(
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all(
+                    BorderSide(
+                      color: colors["sand"]!,
+                    ),
+                  ),
+                ),
+              ),
+              filledButtonTheme: FilledButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                  foregroundColor: MaterialStateProperty.all(
+                    colors["dark-jungle-green"],
+                  ),
+                ),
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: colors["sand"],
+                ),
+              ),
+              textTheme: TextTheme(
+                bodyLarge: TextStyle(
+                  fontSize: 18,
+                  color: colors["dark-jungle-green"],
+                ),
+                bodyMedium: TextStyle(
+                  fontSize: 16,
+                  color: colors["dark-jungle-green"],
+                ),
+                bodySmall: TextStyle(
+                  fontSize: 14,
+                  color: colors["dark-jungle-green"],
+                ),
+                titleLarge: TextStyle(
+                  fontSize: 18,
+                  color: colors["sand"],
+                  fontWeight: FontWeight.bold,
+                ),
+                titleMedium: TextStyle(
+                  fontSize: 16,
+                  color: colors["dark-jungle-green"],
+                  fontWeight: FontWeight.bold,
+                ),
+                titleSmall: TextStyle(
+                  fontSize: 14,
+                  color: colors["dark-jungle-green"],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: colors["dark-jungle-green"]!.withOpacity(0.5),
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                  left: 15,
+                  right: 15,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: colors["sand"]!,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusColor: colors["sand!"],
+                hintStyle: TextStyle(
+                  color: colors["dark-jungle-green"]!.withOpacity(0.5),
+                ),
+              ),
+              popupMenuTheme: PopupMenuThemeData(
+                surfaceTintColor: colors["milk-white"]!,
+              )),
+
+          // dark mode ==============================================================
+          darkTheme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.light,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: colors["sand"]!,
+                background: colors["dark-jungle-green"],
+                onBackground: colors["milk-white"],
+                primary: colors["sand"],
+                onPrimary: colors["milk-white"],
+                secondary: colors["milk-white"],
+                onSecondary: colors["dark-jungle-green"],
+                tertiary: colors["languid-lavender"],
+                onTertiary: colors["dark-jungle-green"],
+                error: colors["smoky-topaz"],
+                onError: colors["milk-white"],
+                surface: colors["dark-jungle-green"],
+                onSurface: colors["milk-white"],
+              ),
+              appBarTheme: AppBarTheme(
                 scrolledUnderElevation: 0,
-                color: colors["milk-white"],
+                color: colors["dark-jungle-green"],
                 elevation: null,
                 titleTextStyle: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: colors["sand"],
                 ),
-                iconTheme: IconThemeData(color: colors["sand"]!)),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors["sand"],
-                foregroundColor: colors["milk-white"],
+                iconTheme: IconThemeData(color: colors["sand"]!),
               ),
-            ),
-            iconTheme: IconThemeData(color: colors["sand"]),
-            iconButtonTheme: IconButtonThemeData(
-              style: IconButton.styleFrom(
-                // backgroundColor: colors["milk-white"],
-                surfaceTintColor: colors["milk-white"],
-                shadowColor: Colors.transparent,
-                foregroundColor: colors["sand"],
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colors["sand"],
+                  foregroundColor: colors["milk-white"],
+                ),
               ),
-            ),
-            outlinedButtonTheme: OutlinedButtonThemeData(
-              style: ButtonStyle(
-                side: MaterialStateProperty.all(
-                  BorderSide(
-                    color: colors["sand"]!,
+              iconTheme: IconThemeData(color: colors["sand"]),
+              iconButtonTheme: IconButtonThemeData(
+                style: IconButton.styleFrom(
+                  // backgroundColor: colors["dark-jungle-green"],
+                  surfaceTintColor: colors["dark-jungle-green"],
+                  shadowColor: Colors.transparent,
+                  foregroundColor: colors["sand"],
+                ),
+              ),
+              outlinedButtonTheme: OutlinedButtonThemeData(
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all(
+                    BorderSide(
+                      color: colors["sand"]!,
+                    ),
                   ),
                 ),
               ),
-            ),
-            filledButtonTheme: FilledButtonThemeData(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(colors["sand"]),
-                foregroundColor: MaterialStateProperty.all(
-                  colors["dark-jungle-green"],
-                ),
-              ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: colors["sand"],
-              ),
-            ),
-            textTheme: TextTheme(
-              bodyLarge: TextStyle(
-                fontSize: 18,
-                color: colors["dark-jungle-green"],
-              ),
-              bodyMedium: TextStyle(
-                fontSize: 16,
-                color: colors["dark-jungle-green"],
-              ),
-              bodySmall: TextStyle(
-                fontSize: 14,
-                color: colors["dark-jungle-green"],
-              ),
-              titleLarge: TextStyle(
-                fontSize: 18,
-                color: colors["sand"],
-                fontWeight: FontWeight.bold,
-              ),
-              titleMedium: TextStyle(
-                fontSize: 16,
-                color: colors["dark-jungle-green"],
-                fontWeight: FontWeight.bold,
-              ),
-              titleSmall: TextStyle(
-                fontSize: 14,
-                color: colors["dark-jungle-green"],
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: colors["dark-jungle-green"]!.withOpacity(0.5),
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-                left: 15,
-                right: 15,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: colors["sand"]!,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusColor: colors["sand!"],
-              hintStyle: TextStyle(
-                color: colors["dark-jungle-green"]!.withOpacity(0.5),
-              ),
-            ),
-            popupMenuTheme: PopupMenuThemeData(
-                surfaceTintColor: colors["milk-white"]!,
-              )
-          ),
-
-          // dark mode ==============================================================
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.light,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: colors["sand"]!,
-              background: colors["dark-jungle-green"],
-              onBackground: colors["milk-white"],
-              primary: colors["sand"],
-              onPrimary: colors["milk-white"],
-              secondary: colors["milk-white"],
-              onSecondary: colors["dark-jungle-green"],
-              tertiary: colors["languid-lavender"],
-              onTertiary: colors["dark-jungle-green"],
-              error: colors["smoky-topaz"],
-              onError: colors["milk-white"],
-              surface: colors["dark-jungle-green"],
-              onSurface: colors["milk-white"],
-            ),
-            appBarTheme: AppBarTheme(
-              scrolledUnderElevation: 0,
-              color: colors["dark-jungle-green"],
-              elevation: null,
-              titleTextStyle: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: colors["sand"],
-              ),
-              iconTheme: IconThemeData(color: colors["sand"]!),
-            ),
-            elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors["sand"],
-                foregroundColor: colors["milk-white"],
-              ),
-            ),
-            iconTheme: IconThemeData(color: colors["sand"]),
-            iconButtonTheme: IconButtonThemeData(
-              style: IconButton.styleFrom(
-                // backgroundColor: colors["dark-jungle-green"],
-                surfaceTintColor: colors["dark-jungle-green"],
-                shadowColor: Colors.transparent,
-                foregroundColor: colors["sand"],
-              ),
-            ),
-            outlinedButtonTheme: OutlinedButtonThemeData(
-              style: ButtonStyle(
-                side: MaterialStateProperty.all(
-                  BorderSide(
-                    color: colors["sand"]!,
+              filledButtonTheme: FilledButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                  foregroundColor: MaterialStateProperty.all(
+                    colors["dark-jungle-green"],
                   ),
                 ),
               ),
-            ),
-            filledButtonTheme: FilledButtonThemeData(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(colors["sand"]),
-                foregroundColor: MaterialStateProperty.all(
-                  colors["dark-jungle-green"],
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: colors["sand"],
                 ),
               ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: colors["sand"],
+              textTheme: TextTheme(
+                bodyLarge: TextStyle(
+                  fontSize: 18,
+                  color: colors["milk-white"],
+                ),
+                bodyMedium: TextStyle(
+                  fontSize: 16,
+                  color: colors["milk-white"],
+                ),
+                bodySmall: TextStyle(
+                  fontSize: 14,
+                  color: colors["milk-white"],
+                ),
+                titleLarge: TextStyle(
+                  fontSize: 18,
+                  color: colors["sand"],
+                  fontWeight: FontWeight.bold,
+                ),
+                titleMedium: TextStyle(
+                  fontSize: 16,
+                  color: colors["milk-white"],
+                  fontWeight: FontWeight.bold,
+                ),
+                titleSmall: TextStyle(
+                  fontSize: 14,
+                  color: colors["milk-white"],
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            textTheme: TextTheme(
-              bodyLarge: TextStyle(
-                fontSize: 18,
-                color: colors["milk-white"],
-              ),
-              bodyMedium: TextStyle(
-                fontSize: 16,
-                color: colors["milk-white"],
-              ),
-              bodySmall: TextStyle(
-                fontSize: 14,
-                color: colors["milk-white"],
-              ),
-              titleLarge: TextStyle(
-                fontSize: 18,
-                color: colors["sand"],
-                fontWeight: FontWeight.bold,
-              ),
-              titleMedium: TextStyle(
-                fontSize: 16,
-                color: colors["milk-white"],
-                fontWeight: FontWeight.bold,
-              ),
-              titleSmall: TextStyle(
-                fontSize: 14,
-                color: colors["milk-white"],
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
+              inputDecorationTheme: InputDecorationTheme(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: colors["milk-white"]!.withOpacity(0.5),
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding: const EdgeInsets.only(
+                  top: 10,
+                  bottom: 10,
+                  left: 15,
+                  right: 15,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: colors["sand"]!,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusColor: colors["sand!"],
+                hintStyle: TextStyle(
                   color: colors["milk-white"]!.withOpacity(0.5),
                 ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              contentPadding: const EdgeInsets.only(
-                top: 10,
-                bottom: 10,
-                left: 15,
-                right: 15,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: colors["sand"]!,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusColor: colors["sand!"],
-              hintStyle: TextStyle(
-                color: colors["milk-white"]!.withOpacity(0.5),
-              ),
-            ),
-            popupMenuTheme: PopupMenuThemeData(
-              surfaceTintColor: colors["dark-jungle-green"]!,
-            ),
-            
-          ),
+              ), 
+              popupMenuTheme: PopupMenuThemeData(
+                surfaceTintColor: colors["dark-jungle-green"]!,
+              )),
 
           // theme yg digunakan ==============================================================
           themeMode: ThemeMode.system,
@@ -316,7 +313,7 @@ class MyApp extends StatelessWidget {
             }
           },
           routes: {
-            "/": (ctx) => const MainPage(),
+            "/": (ctx) => const Introduction_Page(),
             // "/post": (ctx) => const PostPage(),
             // "/cari": (ctx) => const CariPage(),
             // "/pengaturan": (ctx) => const PengaturanPage(),
