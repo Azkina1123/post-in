@@ -1,15 +1,11 @@
 part of "pages.dart";
 
-class PengaturanPage extends StatefulWidget {
+class PengaturanPage extends StatelessWidget {
   const PengaturanPage({super.key});
 
   @override
-  State<PengaturanPage> createState() => _PengaturanPageState();
-}
-
-class _PengaturanPageState extends State<PengaturanPage> {
-  @override
   Widget build(BuildContext context) {
+    final themeModeData = Provider.of<ThemeModeData>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -71,8 +67,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 "TAMPILAN",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
                 ),
               ),
               Divider(
@@ -81,87 +76,128 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 color: Theme.of(context).colorScheme.secondary,
               ),
               SizedBox(height: 10),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.orange,
+              // Column(
+              //   children: [
+              //     Row(
+              //       children: [
+              //         Container(
+              //           width: 50,
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: Colors.orange,
+              //           ),
+              //           child: Icon(Icons.phone_android_rounded,
+              //               color: Colors.white, size: 30),
+              //         ),
+              //         SizedBox(width: 10),
+              //         Text(
+              //           "Default System",
+              //           style: TextStyle(
+              //             color: Theme.of(context).colorScheme.secondary,
+              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(height: 10),
+              //     Row(
+              //       children: [
+              //         Container(
+              //           width: 50,
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: Colors.orange,
+              //           ),
+              //           child: Icon(Icons.sunny, color: Colors.white, size: 30),
+              //         ),
+              //         SizedBox(width: 10),
+              //         Text(
+              //           "Light Mode",
+              //           style: TextStyle(
+              //             color: Theme.of(context).colorScheme.secondary,
+              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(height: 10),
+              //     Row(
+              //       children: [
+              //         Container(
+              //           width: 50,
+              //           height: 50,
+              //           decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: Colors.orange,
+              //           ),
+              //           child: Icon(Icons.nightlight_round,
+              //               color: Colors.white, size: 30),
+              //         ),
+              //         SizedBox(width: 10),
+              //         Text(
+              //           "Dark Mode",
+              //           style: TextStyle(
+              //             color: Theme.of(context).colorScheme.secondary,
+              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // ),
+              RadioListTile<ThemeMode>(
+                          title: Text(
+                            "Default System",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          value: ThemeMode.system,
+                          groupValue: themeModeData.themeMode,
+                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
+                          onChanged: (ThemeMode? value) {
+                            if (value != null) {
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                  .changeTheme(value);
+                            }
+                          },
                         ),
-                        child: Icon(Icons.phone_android_rounded,
-                            color: Colors.white, size: 30),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Default System",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                        RadioListTile<ThemeMode>(
+                          title: Text(
+                            "Light Mode",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          value: ThemeMode.light,
+                          groupValue: themeModeData.themeMode,
+                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
+                          onChanged: (ThemeMode? value) {
+                            if (value != null) {
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                  .changeTheme(value);
+                            }
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.orange,
+                        RadioListTile<ThemeMode>(
+                          title: Text(
+                            "Dark Mode",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          value: ThemeMode.dark,
+                          groupValue: themeModeData.themeMode,
+                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
+                          onChanged: (ThemeMode? value) {
+                            if (value != null) {
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                  .changeTheme(value);
+                            }
+                          },
                         ),
-                        child: Icon(Icons.sunny, color: Colors.white, size: 30),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Light Mode",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.orange,
-                        ),
-                        child: Icon(Icons.nightlight_round,
-                            color: Colors.white, size: 30),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Dark Mode",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               SizedBox(height: 20),
               Text(
                 "AKUN",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: Theme.of(context).textTheme.titleSmall!.fontSize,
                 ),
               ),
               Divider(
@@ -172,6 +208,29 @@ class _PengaturanPageState extends State<PengaturanPage> {
               SizedBox(height: 10),
               Column(
                 children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.lock,
+                            color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Ubah Password",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -189,8 +248,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         "Keluar Akun",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],
@@ -213,8 +271,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         "Hapus Akun",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],
