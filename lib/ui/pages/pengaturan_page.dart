@@ -11,11 +11,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-                    automaticallyImplyLeading: false,
-          leading: null,
-          scrolledUnderElevation: 0,
-          title: Text(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text(
             "Pengaturan",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -23,135 +22,209 @@ class _PengaturanPageState extends State<PengaturanPage> {
             ),
           ),
         ),
-        body: Container(
-          padding: EdgeInsets.all(10.0),
-          child: ListView(
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.person,
-                  color: Theme.of(context).colorScheme.secondary,),
-                  SizedBox(width: 10),
-                  Text(
-                    "Akun",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  )
-                ],
-              ),
-              Divider(
-                height: 20,
-                thickness: 1,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Ubah Password",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(100),
                   ),
-                  Icon(Icons.navigate_next,
-                  color: Theme.of(context).colorScheme.secondary),
-                  SizedBox(height: 10),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Edit Profile",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Username"),
+                      Text("Email"),
+                    ],
                   ),
-                  Icon(Icons.navigate_next,
-                  color: Theme.of(context).colorScheme.secondary),
-                  SizedBox(height: 10),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Keluar Akun",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 95, top: 40),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.navigate_next_rounded,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ],
                   ),
-                  Icon(Icons.navigate_next,
-                  color: Theme.of(context).colorScheme.error),
-                ],
-              ),
-              SizedBox(height: 25),
-              Row(
-                children: [
-                  Icon(Icons.sunny,
-                  color: Theme.of(context).colorScheme.secondary,),
-                  SizedBox(width: 10),
-                  Text(
-                    "Tampilan",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  )
-                ],
-              ),
-              Divider(
-                height: 20,
-                thickness: 1,
-              ),
-              // RadioListTile<ThemeMode>(
-              //     title: Text(
-              //       "Default System",
-              //       style: Theme.of(context).textTheme.bodyMedium,
-              //     ),
-              //     value: ThemeMode.system,
-              //     groupValue: themeModeData.themeMode,
-              //     activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-              //     onChanged: (ThemeMode? value) {
-              //       if (value != null) {
-              //         Provider.of<ThemeModeData>(context, listen: false)
-              //             .changeTheme(value);
-              //       }
-              //     },
-              //   ),
-              //   RadioListTile<ThemeMode>(
-              //     title: Text(
-              //       "Light Mode",
-              //       style: Theme.of(context).textTheme.bodyMedium,
-              //     ),
-              //     value: ThemeMode.light,
-              //     groupValue: themeModeData.themeMode,
-              //     activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-              //     onChanged: (ThemeMode? value) {
-              //       if (value != null) {
-              //         Provider.of<ThemeModeData>(context, listen: false)
-              //             .changeTheme(value);
-              //       }
-              //     },
-              //   ),
-              //   RadioListTile<ThemeMode>(
-              //     title: Text(
-              //       "Dark Mode",
-              //       style: Theme.of(context).textTheme.bodyMedium,
-              //     ),
-              //     value: ThemeMode.dark,
-              //     groupValue: themeModeData.themeMode,
-              //     activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-              //     onChanged: (ThemeMode? value) {
-              //       if (value != null) {
-              //         Provider.of<ThemeModeData>(context, listen: false)
-              //             .changeTheme(value);
-              //       }
-              //     },
-              //   ),
-            ],
+                ),
+              ],
+            ),
           ),
-        ));
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                "TAMPILAN",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              Divider(
+                height: 20,
+                thickness: 1,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              SizedBox(height: 10),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.phone_android_rounded,
+                            color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Default System",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.sunny, color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Light Mode",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.nightlight_round,
+                            color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Dark Mode",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Text(
+                "AKUN",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              Divider(
+                height: 20,
+                thickness: 1,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              SizedBox(height: 10),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.logout_rounded,
+                            color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Keluar Akun",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.orange,
+                        ),
+                        child: Icon(Icons.delete,
+                            color: Colors.white, size: 30),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Hapus Akun",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ]),
+          )
+        ],
+      ),
+    );
   }
 }
