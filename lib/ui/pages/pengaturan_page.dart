@@ -1,8 +1,13 @@
 part of "pages.dart";
 
-class PengaturanPage extends StatelessWidget {
+class PengaturanPage extends StatefulWidget {
   const PengaturanPage({super.key});
 
+  @override
+  State<PengaturanPage> createState() => _PengaturanPageState();
+}
+
+class _PengaturanPageState extends State<PengaturanPage> {
   @override
   Widget build(BuildContext context) {
     final themeModeData = Provider.of<ThemeModeData>(context);
@@ -76,122 +81,105 @@ class PengaturanPage extends StatelessWidget {
                 color: Theme.of(context).colorScheme.secondary,
               ),
               SizedBox(height: 10),
-              // Column(
-              //   children: [
-              //     Row(
-              //       children: [
-              //         Container(
-              //           width: 50,
-              //           height: 50,
-              //           decoration: BoxDecoration(
-              //             shape: BoxShape.circle,
-              //             color: Colors.orange,
-              //           ),
-              //           child: Icon(Icons.phone_android_rounded,
-              //               color: Colors.white, size: 30),
-              //         ),
-              //         SizedBox(width: 10),
-              //         Text(
-              //           "Default System",
-              //           style: TextStyle(
-              //             color: Theme.of(context).colorScheme.secondary,
-              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(height: 10),
-              //     Row(
-              //       children: [
-              //         Container(
-              //           width: 50,
-              //           height: 50,
-              //           decoration: BoxDecoration(
-              //             shape: BoxShape.circle,
-              //             color: Colors.orange,
-              //           ),
-              //           child: Icon(Icons.sunny, color: Colors.white, size: 30),
-              //         ),
-              //         SizedBox(width: 10),
-              //         Text(
-              //           "Light Mode",
-              //           style: TextStyle(
-              //             color: Theme.of(context).colorScheme.secondary,
-              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(height: 10),
-              //     Row(
-              //       children: [
-              //         Container(
-              //           width: 50,
-              //           height: 50,
-              //           decoration: BoxDecoration(
-              //             shape: BoxShape.circle,
-              //             color: Colors.orange,
-              //           ),
-              //           child: Icon(Icons.nightlight_round,
-              //               color: Colors.white, size: 30),
-              //         ),
-              //         SizedBox(width: 10),
-              //         Text(
-              //           "Dark Mode",
-              //           style: TextStyle(
-              //             color: Theme.of(context).colorScheme.secondary,
-              //             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-              RadioListTile<ThemeMode>(
-                          title: Text(
-                            "Default System",
-                            style: Theme.of(context).textTheme.bodyMedium,
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ThemeModeData>(context, listen: false)
+                          .changeTheme(ThemeMode.system);
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.orange,
                           ),
-                          value: ThemeMode.system,
-                          groupValue: themeModeData.themeMode,
-                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-                          onChanged: (ThemeMode? value) {
-                            if (value != null) {
-                              Provider.of<ThemeModeData>(context, listen: false)
-                                  .changeTheme(value);
-                            }
-                          },
+                          child: Icon(Icons.phone_android_rounded,
+                              color: Colors.white, size: 30),
                         ),
-                        RadioListTile<ThemeMode>(
-                          title: Text(
-                            "Light Mode",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                        SizedBox(width: 10),
+                        Text(
+                          "Default System",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
                           ),
-                          value: ThemeMode.light,
-                          groupValue: themeModeData.themeMode,
-                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-                          onChanged: (ThemeMode? value) {
-                            if (value != null) {
-                              Provider.of<ThemeModeData>(context, listen: false)
-                                  .changeTheme(value);
-                            }
-                          },
                         ),
-                        RadioListTile<ThemeMode>(
-                          title: Text(
-                            "Dark Mode",
-                            style: Theme.of(context).textTheme.bodyMedium,
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ThemeModeData>(context, listen: false)
+                          .changeTheme(ThemeMode.light);
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.orange,
                           ),
-                          value: ThemeMode.dark,
-                          groupValue: themeModeData.themeMode,
-                          //activeColor: Provider.of<ThemeModeData>(context).buttonColor,
-                          onChanged: (ThemeMode? value) {
-                            if (value != null) {
-                              Provider.of<ThemeModeData>(context, listen: false)
-                                  .changeTheme(value);
-                            }
-                          },
+                          child:
+                              Icon(Icons.sunny, color: Colors.white, size: 30),
                         ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Light Mode",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ThemeModeData>(context, listen: false)
+                          .changeTheme(ThemeMode.dark);
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.orange,
+                          ),
+                          child: Icon(Icons.nightlight_round,
+                              color: Colors.white, size: 30),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Dark Mode",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 20),
               Text(
                 "AKUN",
@@ -217,15 +205,15 @@ class PengaturanPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Colors.orange,
                         ),
-                        child: Icon(Icons.lock,
-                            color: Colors.white, size: 30),
+                        child: Icon(Icons.lock, color: Colors.white, size: 30),
                       ),
                       SizedBox(width: 10),
                       Text(
                         "Ubah Password",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],
@@ -248,7 +236,8 @@ class PengaturanPage extends StatelessWidget {
                         "Keluar Akun",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],
@@ -263,15 +252,16 @@ class PengaturanPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Colors.orange,
                         ),
-                        child: Icon(Icons.delete,
-                            color: Colors.white, size: 30),
+                        child:
+                            Icon(Icons.delete, color: Colors.white, size: 30),
                       ),
                       SizedBox(width: 10),
                       Text(
                         "Hapus Akun",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
-                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          fontSize:
+                              Theme.of(context).textTheme.bodyMedium!.fontSize,
                         ),
                       ),
                     ],
