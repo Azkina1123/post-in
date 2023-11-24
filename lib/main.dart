@@ -12,7 +12,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeModeData(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => KomentarData()),
         ChangeNotifierProvider(create: (context) => LikeData()),
         ChangeNotifierProvider(create: (context) => FollowingData()),
+        
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(
@@ -284,7 +290,8 @@ class MyApp extends StatelessWidget {
               )),
 
           // theme yg digunakan ==============================================================
-          themeMode: ThemeMode.system,
+          themeMode: Provider.of<ThemeModeData>(context).themeMode,
+          //themeMode: ThemeMode.system,
 
           // routes ==============================================================
           onGenerateRoute: (settings) {
