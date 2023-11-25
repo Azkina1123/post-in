@@ -83,25 +83,31 @@ class _PengaturanPageState extends State<PengaturanPage> {
               SizedBox(height: 10),
               Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Provider.of<ThemeModeData>(context, listen: false)
-                          .changeTheme(ThemeMode.system);
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.orange,
-                          ),
-                          child: Icon(Icons.phone_android_rounded,
-                              color: Colors.white, size: 30),
+                            color: Theme.of(context).colorScheme.outline),
+                        child: IconButton(
+                          icon: Icon(Icons.phone_android_rounded,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                          onPressed: () {
+                            Provider.of<ThemeModeData>(context, listen: false)
+                                .changeTheme(ThemeMode.system);
+                          },
                         ),
-                        SizedBox(width: 10),
-                        Text(
+                      ),
+                      SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<ThemeModeData>(context, listen: false)
+                              .changeTheme(ThemeMode.system);
+                        },
+                        child: Text(
                           "Default System",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
@@ -111,29 +117,36 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                 .fontSize,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      Provider.of<ThemeModeData>(context, listen: false)
-                          .changeTheme(ThemeMode.light);
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.orange,
-                          ),
-                          child:
-                              Icon(Icons.sunny, color: Colors.white, size: 30),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
-                        SizedBox(width: 10),
-                        Text(
+                        child: IconButton(
+                          icon: Icon(Icons.sunny,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                          onPressed: () {
+                            Provider.of<ThemeModeData>(context, listen: false)
+                                .changeTheme(ThemeMode.light);
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<ThemeModeData>(context, listen: false)
+                              .changeTheme(ThemeMode.light);
+                        },
+                        child: Text(
                           "Light Mode",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
@@ -143,29 +156,36 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                 .fontSize,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      Provider.of<ThemeModeData>(context, listen: false)
-                          .changeTheme(ThemeMode.dark);
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.orange,
-                          ),
-                          child: Icon(Icons.nightlight_round,
-                              color: Colors.white, size: 30),
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
-                        SizedBox(width: 10),
-                        Text(
+                        child: IconButton(
+                          icon: Icon(Icons.nightlight_round,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                          onPressed: () {
+                            Provider.of<ThemeModeData>(context, listen: false)
+                                .changeTheme(ThemeMode.dark);
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<ThemeModeData>(context, listen: false)
+                              .changeTheme(ThemeMode.dark);
+                        },
+                        child: Text(
                           "Dark Mode",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
@@ -175,8 +195,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                 .fontSize,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -203,17 +223,27 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.orange,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
-                        child: Icon(Icons.lock, color: Colors.white, size: 30),
+                        child: IconButton(
+                          icon: Icon(Icons.lock,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                          onPressed: () {},
+                        ),
                       ),
                       SizedBox(width: 10),
-                      Text(
-                        "Ubah Password",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize:
-                              Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Ubah Password",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
                         ),
                       ),
                     ],
@@ -226,18 +256,55 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.orange,
+                          color: Theme.of(context).colorScheme.error,
                         ),
-                        child: Icon(Icons.logout_rounded,
-                            color: Colors.white, size: 30),
+                        child: IconButton(
+                          icon: Icon(Icons.logout_rounded,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                              onPressed: (){
+                                
+                              },
+                          // onPressed: () async {
+                          //   try {
+                          //     await FirebaseAuth.instance.signOut();
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return SignIn();
+                          //         },
+                          //       ),
+                          //     );
+                          //   } catch (e) {
+                          //     print("Error during sign out: $e");
+
+                          //     final mySnackBar = SnackBar(
+                          //       content:
+                          //           Text("Mohon Maaf, Proses Logout Gagal !"),
+                          //       duration: Duration(seconds: 3),
+                          //       padding: EdgeInsets.all(10),
+                          //       backgroundColor:
+                          //           Theme.of(context).colorScheme.primary,
+                          //     );
+                          //     ScaffoldMessenger.of(context)
+                          //         .showSnackBar(mySnackBar);
+                          //   }
+                          // },
+                        ),
                       ),
                       SizedBox(width: 10),
-                      Text(
-                        "Keluar Akun",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize:
-                              Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Keluar Akun",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
                         ),
                       ),
                     ],
@@ -250,22 +317,31 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.orange,
+                          color: Theme.of(context).colorScheme.error,
                         ),
-                        child:
-                            Icon(Icons.delete, color: Colors.white, size: 30),
+                        child: IconButton(
+                          icon: Icon(Icons.delete,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              size: 30),
+                          onPressed: () {},
+                        ),
                       ),
                       SizedBox(width: 10),
-                      Text(
-                        "Hapus Akun",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize:
-                              Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Hapus Akun",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .fontSize,
+                          ),
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ]),
