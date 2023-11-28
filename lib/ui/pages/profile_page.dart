@@ -15,10 +15,20 @@ class ProfilePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          Container(
+            width: 500,
+            height: 150,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: Image.network(user.sampul).image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           Column(
             children: [
               Container(
-                alignment: Alignment.topRight,
+                // alignment: Alignment.topRight,
                 padding: EdgeInsets.only(left: 20),
                 child: Row(children: [
                   Column(
@@ -31,14 +41,11 @@ class ProfilePage extends StatelessWidget {
                       Text(user.namaLengkap),
                     ],
                   ),
-                  // SizedBox(
-                  //   width: 100,
-                  // ),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: CircleAvatar(
-                      radius: 50,
+                      radius: 30,
                       backgroundImage: Image.network(user.foto).image,
                     ),
                   ),
@@ -54,7 +61,9 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       TextButton(
                           style: Theme.of(context).textButtonTheme.style,
-                          onPressed: () {},
+                          onPressed: () {
+                            //  Navigator.pushNamed(context, '/follow');
+                          },
                           child: Text("10" + " Following")),
                       SizedBox(
                         width: 20,
