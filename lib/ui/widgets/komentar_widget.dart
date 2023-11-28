@@ -11,14 +11,12 @@ class KomentarWidget extends StatefulWidget {
 }
 
 class _KomentarWidgetState extends State<KomentarWidget> {
-  User? _user;
+  Userdata? _user;
   bool _selected = false;
 
   @override
   Widget build(BuildContext context) {
-    String authUserId =
-        Provider.of<AuthData>(context, listen: false).authUser.id;
-    bool isLiked = widget.komentar.likes.contains(authUserId);
+    int authUserId = Provider.of<AuthData>(context, listen: false).authUser.id;
 
     return InkWell(
       // jika menekan komentar, muncul snackbar ===========================================================
@@ -31,66 +29,80 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                 komentarData.toggleSelectKomentar(widget.komentar.id);
               });
 
-              if (komentarData.selectedKomentar.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text("Hapus komentar ini?"),
-                    action: SnackBarAction(
-                      label: "Ya",
-                      onPressed: () {
-                        komentarData.delete();
-                        _selected = false;
-                        print(komentarData.selectedKomentar.toString());
-                      },
-                    ),
-                    duration: const Duration(days: 1),
-                  ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).clearSnackBars();
-              }
-            }
-          : null,
-
-      // tampilan komentar ===========================================================
-      child: Container(
-        padding: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: _selected!
-              ? colors["sand"]!.withOpacity(0.3)
-              : Theme.of(context).colorScheme.surface,
-        ),
-        child: FutureBuilder<User>(
-            future: Provider.of<UserData>(context, listen: false)
-                .getUser(widget.komentar.userId),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                _user = snapshot.data!;
-
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // foto user ------------------------------------------------------
-                    Container(
-                      width: 80,
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.only(left: 15, right: 10),
-                      child: Column(
-                        children: [
-                          AccountButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
+                  if (_selected) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text("Hapus komentar ini?"),
+                        action: SnackBarAction(
+                          label: "Ya",
+                          onPressed: () async {
+                            final komentarData = Provider.of<KomentarData>(
                                 context,
-                                "/profile",
-                                arguments: _user,
-                              );
-                            },
-                            image: NetworkImage(_user!.foto),
-                          ),
-                        ],
+                                listen: false);
+                            final postData =
+                                Provider.of<PostData>(context, listen: false);
+
+                            Post post = await postData.getPost(widget.postId);
+
+                            komentarData.delete(widget.komentar.id);
+                            
+                            postData.updateTotalKomentar(
+                              post.docId!,
+                              await komentarData.getKomentarCount(post.id),
+                            );
+
+                            _selected = false;
+                          },
+                        ),
+                        duration: const Duration(days: 1),
                       ),
-                    ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                  }
+                });
+              }
+            : null,
+
+        // tampilan komentar ===========================================================
+        child: Container(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: _selected
+                ? colors["sand"]!.withOpacity(0.3)
+                : Theme.of(context).colorScheme.surface,
+          ),
+          child: FutureBuilder<User>(
+              future: Provider.of<UserData>(context, listen: false)
+                  .getUser(widget.komentar.userId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  _user = snapshot.data!;
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // foto user ------------------------------------------------------
+                      Container(
+                        width: 80,
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.only(left: 15, right: 10),
+                        child: Column(
+                          children: [
+                            AccountButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  "/profile",
+                                  arguments: _user,
+                                );
+                              },
+                              image: NetworkImage(_user!.foto),
+                            ),
+                          ],
+                        ),
+                      ),
 
                     // body komentar ------------------------------------------------------
 
@@ -133,35 +145,77 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       ),
                     ),
 
-                    // like komentar ------------------------------------------------------
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            widget.komentar.toggleLike(context);
+                      // like komentar ------------------------------------------------------
+                      Container(
+                        width: 50,
+                        padding: const EdgeInsets.only(left: 10, right: 20),
+                        alignment: Alignment.topRight,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: likeData.likesRef
+                              .where("komentarId",
+                                  isEqualTo: widget.komentar.id)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final data = snapshot.data!.docs;
+                              bool isLiked = data.where((like) => like.get("userId") == authUserId).isNotEmpty;
+                              return Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      if (!isLiked) {
+                                        likeData.add(
+                                          Like(
+                                            id: 1,
+                                            userId: authUserId,
+                                            komentarId: widget.komentar.id,
+                                          ),
+                                        );
+                                        Provider.of<KomentarData>(context,
+                                                listen: false)
+                                            .updateTotalLike(
+                                          widget.komentar.docId!,
+                                          widget.komentar.totalLike + 1,
+                                        );
+                                      } else {
+                                        likeData.delete(data[0].id);
+                                        Provider.of<KomentarData>(context,
+                                                listen: false)
+                                            .updateTotalLike(
+                                          widget.komentar.docId!,
+                                          widget.komentar.totalLike - 1,
+                                        );
+                                      }
+                                    },
+                                    icon: Icon(
+                                      isLiked
+                                          ? Icons.favorite_rounded
+                                          : Icons.favorite_outline,
+                                      size: 20,
+                                      color: isLiked
+                                          ? colors["soft-pink"]
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  Text(
+                                    widget.komentar.totalLike != 0
+                                        ? widget.komentar.totalLike.toString()
+                                        : "",
+                                    style: const TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              );
+                            }
+                            return const Text("");
                           },
-                          icon: Icon(
-                            isLiked
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_outline,
-                            size: 20,
-                            color: isLiked
-                                ? colors["soft-pink"]
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                          padding: EdgeInsets.zero,
                         ),
-                        Text(
-                          widget.komentar.likes.isNotEmpty
-                              ? widget.komentar.likes.length.toString()
-                              : "",
-                          style: const TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                  ],
-                );
-              }
+                      )
+                    ],
+                  );
+                }
 
               return Container(
                 width: width(context),

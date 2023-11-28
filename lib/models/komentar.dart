@@ -4,10 +4,9 @@ class Komentar {
   String id;
   DateTime tglDibuat;
   String konten;
-  String postId;
-  String userId;
-
-  List<String> likes = [];
+  int totalLike;
+  int postId;
+  int userId;
 
   Komentar({
     required this.id,
@@ -60,8 +59,7 @@ class Komentar {
             .where("id", isEqualTo: id)
             .get();
 
-    List<String> likes =
-        List<String>.from(querySnapshot.docs[0].get("likes"));
+    List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
 
     return likes
         .contains(Provider.of<AuthData>(context, listen: false).authUser.id);

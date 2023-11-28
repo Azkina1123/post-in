@@ -2,95 +2,98 @@ part of "widgets.dart";
 
 class PostWidget extends StatelessWidget {
   Post post;
+
   User? user;
 
   PostWidget({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
-    String authUserid = Provider.of<AuthData>(context).authUser.id;
-    // bool isLiked = post.likes.contains(authUserid);
+    int authUserid = Provider.of<AuthData>(context).authUser.id;
 
-    return Container(
-      width: width(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FutureBuilder<User>(
-            future: Provider.of<UserData>(context, listen: false).getUser(post.userId),
-            builder: ((context, snapshot) {
-              if (snapshot.hasData) {
-                user = snapshot.data!;
-                return ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      "/profile",
-                      arguments: user,
-                    );
-                  },
-                  splashColor: Colors.transparent,
-                  leading: AccountButton(
-                    onPressed: null,
-                    image: NetworkImage(user!.foto),
-                  ),
-                  title: Text(user!.username,
-                      style: Theme.of(context).textTheme.titleMedium),
-                  subtitle: Text(
-                    DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
-                    style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .secondary
-                          .withOpacity(0.5),
-                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-                    ),
-                  ),
-                  trailing: PopupMenuButton(
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 'delete',
-                          child: const Text('Delete'),
-                          onTap: () {
-                            showDeleteDialog(context);
-                          },
-                        )
-                      ];
+    return Consumer2<LikeData, KomentarData>(
+        builder: (context, likeData, komentarData, child) {
+      return Container(
+        width: width(context),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FutureBuilder<User>(
+              future: Provider.of<UserData>(context).getUser(post.userId),
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  user = snapshot.data!;
+                  return ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/profile",
+                        arguments: user,
+                      );
                     },
-                  ),
+                    splashColor: Colors.transparent,
+                    leading: AccountButton(
+                      onPressed: null,
+                      image: NetworkImage(user!.foto),
+                    ),
+                    title: Text(user!.username,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    subtitle: Text(
+                      DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.5),
+                        fontSize:
+                            Theme.of(context).textTheme.bodySmall!.fontSize,
+                      ),
+                    ),
+                    trailing: PopupMenuButton(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: const Text('Delete'),
+                            onTap: () {
+                              showDeleteDialog(context);
+                            },
+                          )
+                        ];
+                      },
+                    ),
+                  );
+                }
+                return Container(
+                  width: width(context),
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
                 );
-              }
-              return Container(
-                width: width(context),
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
-            }),
-          ),
-          InkWell(
-            onTap: ModalRoute.of(context)!.settings.name == "/"
-                ? () {
-                    Navigator.pushNamed(context, "/post", arguments: post);
-                  }
-                : null,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  post.img != null
-                      ? Container(
-                          width: width(context),
-                          height: 200,
-                          margin: const EdgeInsets.only(bottom: 15),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(post.img!),
-                                fit: BoxFit.cover),
-                          ),
-                        )
-                      : const Text(""),
+              }),
+            ),
+            InkWell(
+              onTap: ModalRoute.of(context)!.settings.name == "/"
+                  ? () {
+                      Navigator.pushNamed(context, "/post", arguments: post);
+                    }
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    post.img != null
+                        ? Container(
+                            width: width(context),
+                            height: 200,
+                            margin: const EdgeInsets.only(bottom: 15),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(post.img!),
+                                  fit: BoxFit.cover),
+                            ),
+                          )
+                        : const Text(""),
 
                   Text(
                     post.konten,

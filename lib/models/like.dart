@@ -1,11 +1,11 @@
 part of "models.dart";
 
-// class Like {
-//   int id;
-//   String? docId;
-//   int? postId;
-//   int? komentarId;
-//   int userId;
+class Like {
+  int id;
+  String? docId;
+  int? postId;
+  int? komentarId;
+  int userId;
 
 //   Like({
 //     required this.id,

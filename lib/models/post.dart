@@ -5,10 +5,9 @@ class Post {
   DateTime tglDibuat;
   String konten;
   String? img;
-  String userId;
-
-  List<String> likes = [];
-  List<String> komentars = [];
+  int totalLike;
+  int totalKomentar;
+  int userId;
 
   Post({
     required this.id,

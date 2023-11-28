@@ -1,7 +1,13 @@
 part of "models.dart";
 
+<<<<<<< HEAD
+class Userdata {
+  // int id;
+  String? docId;
+=======
 class User {
   String id;
+>>>>>>> 2b419a6060db0d4032fc8d2e598e46631d0bfd37
   DateTime tglDibuat;
   String username;
   String namaLengkap;
@@ -9,13 +15,19 @@ class User {
   String noTelp;
   String gender;
   String password;
-  String foto;
-  String sampul;
+  String? foto;
+  String? sampul;
 
+<<<<<<< HEAD
+  Userdata({
+    // required this.id,
+    this.docId,
+=======
   List<String> followings = [];
 
   User({
     required this.id,
+>>>>>>> 2b419a6060db0d4032fc8d2e598e46631d0bfd37
     required this.tglDibuat,
     required this.username,
     required this.namaLengkap,
@@ -23,8 +35,8 @@ class User {
     required this.noTelp,
     required this.gender,
     required this.password,
-    required this.foto,
-    required this.sampul,
+    this.foto,
+    this.sampul,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

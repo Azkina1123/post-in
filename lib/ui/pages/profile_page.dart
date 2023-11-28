@@ -1,7 +1,7 @@
 part of "pages.dart";
 
 class ProfilePage extends StatelessWidget {
-
+  User user; // profile user yg sedang dilihat
 
   const ProfilePage({super.key});
 
@@ -9,7 +9,8 @@ class ProfilePage extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-      User user = ModalRoute.of(context)!.settings.arguments as User; // profile user yg sedang dilihat
+    User user = ModalRoute.of(context)!.settings.arguments
+        as User; // profile user yg sedang dilihat
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,7 @@ class ProfilePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: CircleAvatar(
-                      radius: 30,
+                      radius: 50,
                       backgroundImage: Image.network(user.foto).image,
                     ),
                   ),

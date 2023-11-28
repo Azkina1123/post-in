@@ -72,7 +72,7 @@ class UserData extends ChangeNotifier {
 
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
-        await _usersCollection.orderBy("id", descending: true).get();
+        await _usersRef.orderBy("id", descending: true).get();
     if (querySnapshot.size == 0) {
       return 0;
     }
@@ -86,9 +86,8 @@ class UserData extends ChangeNotifier {
     } else {
       id = await lastId + 1;
     }
-
-    _usersCollection.doc(id.toString()).set({
-      "id": id.toString(),
+    _usersRef.doc(id.toString()).set({
+      "id": id,
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,
@@ -98,30 +97,56 @@ class UserData extends ChangeNotifier {
       "password": user.password,
       "foto": user.foto,
       "sampul": user.sampul,
-      "followings": user.followings
     });
     notifyListeners();
   }
 
   Future<List<User>> getUsers() async {
-    QuerySnapshot querySnapshot = await _usersCollection.get();
+    QuerySnapshot querySnapshot = await _usersRef.get();
     List<User> users = [];
 
     querySnapshot.docs.forEach((doc) {
-      User user = User.fromJson(doc.data() as Map<String, dynamic>);
-      users.add(user);
+      users.add(
+        User(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          username: doc.get("username"),
+          namaLengkap: doc.get("namaLengkap"),
+          email: doc.get("email"),
+          gender: doc.get("gender"),
+          noTelp: doc.get("noTelp"),
+          sampul: doc.get("sampul"),
+          password: doc.get("password"),
+          foto: doc.get("foto"),
+        ),
+      );
     });
     return users;
   }
 
-  Future<User> getUser(String id) async {
-    QuerySnapshot querySnapshot =
-        await _usersCollection.where("id", isEqualTo: id).get();
+  Future<User> getUser(int id) async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
 
-    final users = querySnapshot.docs;
-    // print(users.length);
-    User? user = User.fromJson(users[0].data() as Map<String, dynamic>);
+    User? user;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("id") == id) {
+        user = User(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          username: doc.get("username"),
+          namaLengkap: doc.get("namaLengkap"),
+          email: doc.get("email"),
+          gender: doc.get("gender"),
+          noTelp: doc.get("noTelp"),
+          sampul: doc.get("sampul"),
+          password: doc.get("password"),
+          foto: doc.get("foto"),
+        );
+      }
+    });
 
-    return user;
+    return user!;
   }
 }
