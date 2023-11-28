@@ -40,7 +40,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       onPressed: () {
                         komentarData.delete();
                         _selected = false;
-                        print(komentarData.selectedKomentar.length);
+                        print(komentarData.selectedKomentar.toString());
                       },
                     ),
                     duration: const Duration(days: 1),

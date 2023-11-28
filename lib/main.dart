@@ -294,29 +294,6 @@ class MyApp extends StatelessWidget {
           //themeMode: ThemeMode.system,
 
           // routes ==============================================================
-          // onGenerateRoute: (settings) {
-          //   if (settings.name == "/post") {
-          //     final args = settings.arguments as Post;
-
-          //     return MaterialPageRoute(
-          //       builder: ((ctx) {
-          //         return PostPage(
-          //           post: args,
-          //         );
-          //       }),
-          //     );
-          //   } else if (settings.name == "/profile") {
-          //     final args = settings.arguments as User;
-
-          //     return MaterialPageRoute(
-          //       builder: ((ctx) {
-          //         return ProfilePage(
-          //           user: args,
-          //         );
-          //       }),
-          //     );
-          //   }
-          // },
           routes: {
             "/": (ctx) => const MainPage(),
             "/intro": (ctx) => const Introduction_Page(),

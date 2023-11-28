@@ -14,6 +14,7 @@ class PostPage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
+              komentarData.resetSelectedKomentar();
               ScaffoldMessenger.of(context).clearSnackBars();
               Navigator.of(context).pop();
             },
@@ -89,8 +90,8 @@ class PostPage extends StatelessWidget {
                           Column(
                             children: [
                               KomentarWidget(
-                                komentar: Komentar.fromJson(komentars[i]
-                                    .data() as Map<String, dynamic>),
+                                komentar: Komentar.fromJson(komentars[i].data()
+                                    as Map<String, dynamic>),
                                 postId: post.id!,
                                 // selected: komentarData.selectedKomentar
                                 //         .contains(komentars[i].id)
