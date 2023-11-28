@@ -25,7 +25,7 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
-    String? authUserId = Provider.of<Auth>(context).id_now;
+    int authUserId = Provider.of<AuthData>(context).authUser.id!;
 
     if (Provider.of<PageData>(context).komentarFocused) {
       _focus.requestFocus();
@@ -88,10 +88,9 @@ class _InputKomentarState extends State<InputKomentar> {
                           // tambahkan komentar
                           komentarData.add(
                             Komentar(
-                              id: 1,
+                              id: "",
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
-                              totalLike: 0,
                               postId: widget.post.id,
                               userId: authUserId,
                             ),

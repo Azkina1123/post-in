@@ -58,15 +58,15 @@ class UserData extends ChangeNotifier {
   //   ),
 
   // ];
-  final CollectionReference _usersRef =
+  final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection("users");
 
-  CollectionReference get usersRef {
-    return _usersRef;
+  CollectionReference get usersCollection {
+    return _usersCollection;
   }
 
   Future<int> get userCount async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
+    QuerySnapshot querySnapshot = await _usersCollection.get();
     return querySnapshot.size;
   }
 
@@ -79,17 +79,15 @@ class UserData extends ChangeNotifier {
     return querySnapshot.docs.first.get("id");
   }
 
-  void add(Userdata user) async {
-    // int id;
-    // if (userCount == 0) {
-    //   id = await userCount + 1;
-    // } else {
-    //   id = await lastId + 1;
-    // }
-
-    // final id =
-    _usersRef.doc(user.docId).set({
-      "id": user.docId,
+  void add(User user) async {
+    int id;
+    if (userCount == 0) {
+      id = await userCount + 1;
+    } else {
+      id = await lastId + 1;
+    }
+    _usersRef.doc(id.toString()).set({
+      "id": id,
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,
@@ -97,44 +95,20 @@ class UserData extends ChangeNotifier {
       "gender": user.gender,
       "noTelp": user.noTelp,
       "password": user.password,
-      // "foto": user.foto,
-      // "sampul": user.sampul,
+      "foto": user.foto,
+      "sampul": user.sampul,
     });
     notifyListeners();
   }
 
-  Future<List<Userdata>> getUsers() async {
+  Future<List<User>> getUsers() async {
     QuerySnapshot querySnapshot = await _usersRef.get();
-    List<Userdata> users = [];
+    List<User> users = [];
 
     querySnapshot.docs.forEach((doc) {
       users.add(
-        Userdata(
-          // id: doc.get("id"),
-          docId: doc.get("id"),
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          username: doc.get("username"),
-          namaLengkap: doc.get("namaLengkap"),
-          email: doc.get("email"),
-          gender: doc.get("gender"),
-          noTelp: doc.get("noTelp"),
-          // sampul: doc.get("sampul"),
-          password: doc.get("password"),
-          // foto: doc.get("foto"),
-        ),
-      );
-    });
-    return users;
-  }
-
-  Future<Userdata> getUser(String? id) async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
-
-    Userdata? user;
-    querySnapshot.docs.forEach((doc) {
-      if (doc.get("id") == id) {
-        user = Userdata(
-          // id: doc.get("id"),
+        User(
+          id: doc.get("id"),
           docId: doc.id,
           tglDibuat: doc.get("tglDibuat").toDate(),
           username: doc.get("username"),
@@ -142,12 +116,37 @@ class UserData extends ChangeNotifier {
           email: doc.get("email"),
           gender: doc.get("gender"),
           noTelp: doc.get("noTelp"),
-          // sampul: doc.get("sampul"),
+          sampul: doc.get("sampul"),
           password: doc.get("password"),
-          // foto: doc.get("foto"),
+          foto: doc.get("foto"),
+        ),
+      );
+    });
+    return users;
+  }
+
+  Future<User> getUser(int id) async {
+    QuerySnapshot querySnapshot = await _usersRef.get();
+
+    User? user;
+    querySnapshot.docs.forEach((doc) {
+      if (doc.get("id") == id) {
+        user = User(
+          id: doc.get("id"),
+          docId: doc.id,
+          tglDibuat: doc.get("tglDibuat").toDate(),
+          username: doc.get("username"),
+          namaLengkap: doc.get("namaLengkap"),
+          email: doc.get("email"),
+          gender: doc.get("gender"),
+          noTelp: doc.get("noTelp"),
+          sampul: doc.get("sampul"),
+          password: doc.get("password"),
+          foto: doc.get("foto"),
         );
       }
     });
+
     return user!;
   }
 }

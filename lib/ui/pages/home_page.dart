@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _index = 0;
 
-  List<int>? followedUserId;
+  // List<int>? followedUserId;
 
   @override
   void initState() {
@@ -20,33 +20,6 @@ class _HomePageState extends State<HomePage> {
     // jalankan fungsi-fungsi setelah widget selesai dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _getFollowedUserId();
-
-      // kalau login sudah jadi, hapus
-      // Provider.of<AuthData>(
-      //   context,
-      //   listen: false,
-      // ).login(
-      //   await Provider.of<UserData>(
-      //     context,
-      //     listen: false,
-      //   ).getUser("1") // user yg sedang login adalah user dgn id 1
-      // );
-
-      //     Provider.of<UserData>(context, listen: false).add(
-      //   User(
-      //     id: 1,
-      //     tglDibuat: DateTime.now(),
-      //     username: "bebek",
-      //     namaLengkap: "Bebek Geprek",
-      //     email: "bebeik.bakar@gmail.com",
-      //     password: "nyamnyam",
-      //     foto:
-      //         "https://d1vbn70lmn1nqe.cloudfront.net/prod/wp-content/uploads/2022/06/14024013/Tak-Hanya-Lezat-Ini-X-Manfaat-Bayam-bagi-Kesehatan-Tubuh-01.jpg",
-      //   ),
-      // );
-
-      // saat pertama kali running, urutkan dari yang terbaru
-      // karena defaultnya tab bar berada di tab post terbaru
     });
   }
 
@@ -143,27 +116,20 @@ class _HomePageState extends State<HomePage> {
                         child: const CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasData) {
-                      final data = snapshot.data!.docs;
+                      final posts = snapshot.data!.docs;
 
                       return Column(
                         children: [
-                          for (int i = 0; i < data.length; i++)
+                          for (int i = 0; i < posts.length; i++)
                             Column(
                               children: [
                                 PostWidget(
-                                    post: Post(
-                                  id: data[i].get("id"),
-                                  docId: data[i].id,
-                                  tglDibuat: data[i].get("tglDibuat").toDate(),
-                                  konten: data[i].get("konten"),
-                                  img: data[i].get("img"),
-                                  userId: data[i].get("userId"),
-                                  totalKomentar: data[i].get("totalKomentar"),
-                                  totalLike: data[i].get("totalLike"),
-                                )),
+                                  post: Post.fromJson(
+                                      posts[i].data() as Map<String, dynamic>),
+                                ),
 
                                 // kasih pembatas antar post --------------------------------------
-                                if (i != data.length - 1)
+                                if (i != posts.length - 1)
                                   Divider(
                                     color: Theme.of(ctx)
                                         .colorScheme
@@ -196,29 +162,33 @@ class _HomePageState extends State<HomePage> {
     switch (_index) {
       case 0:
         return Provider.of<PostData>(context)
-            .postsRef
+            .postsCollection
             .orderBy("tglDibuat", descending: true)
             .snapshots();
       case 1:
         return Provider.of<PostData>(context)
-            .postsRef
+            .postsCollection
             .orderBy("totalLike", descending: true)
             .orderBy("totalKomentar", descending: true)
             .orderBy("tglDibuat", descending: true)
             .snapshots();
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // REVISI NANTII!!
       default:
         return Provider.of<PostData>(context)
-            .postsRef
-            .where("userId", isEqualTo: followedUserId![0])
+            .postsCollection
+            .where("userId", isEqualTo: "2")
             .snapshots();
     }
   }
 
   void _getFollowedUserId() async {
-    List<Following> followings =
-        await Provider.of<FollowingData>(context, listen: false)
-            .getFollowings();
+    
+    // List<Following> followings =
+    //     await Provider.of<FollowingData>(context, listen: false)
+    //         .getFollowings();
 
-    followedUserId = followings.map((following) => following.userId2).toList();
+    // followedUserId = followings.map((following) => following.userId2).toList();
   }
 }

@@ -19,6 +19,7 @@ part 'introduction_page.dart';
 part 'landing_page.dart';
 part 'sign_in.dart';
 part 'sign_up.dart';
+part 'debugPage.dart';
 
 
 

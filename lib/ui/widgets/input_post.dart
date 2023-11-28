@@ -22,7 +22,7 @@ class _InputPostState extends State<InputPost> {
 
   @override
   Widget build(BuildContext context) {
-    String? authUserId = Provider.of<Auth>(context).id_now;
+    int authUserId = Provider.of<AuthData>(context).authUser.id!;
 
     return Column(
       children: [
@@ -103,13 +103,11 @@ class _InputPostState extends State<InputPost> {
                       ? () {
                           Provider.of<PostData>(context, listen: false).add(
                             Post(
-                              id: 1,
+                              id: "",
                               tglDibuat: DateTime.now(),
                               konten: _kontenCon.text,
                               userId: authUserId,
                               img: imgPath,
-                              totalKomentar: 0,
-                              totalLike: 0,
                             ),
                           );
                           _focus.unfocus();

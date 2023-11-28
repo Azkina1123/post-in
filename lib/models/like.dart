@@ -5,13 +5,13 @@ class Like {
   String? docId;
   int? postId;
   int? komentarId;
-  String? userId;
+  int userId;
 
-  Like({
-    required this.id,
-    this.docId,
-    this.postId,
-    this.komentarId,
-    required this.userId,
-  });
-}
+//   Like({
+//     required this.id,
+//     this.docId,
+//     this.postId,
+//     this.komentarId,
+//     required this.userId,
+//   });
+// }
