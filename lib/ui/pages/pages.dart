@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -18,6 +20,7 @@ part 'introduction_page.dart';
 part 'landing_page.dart';
 part 'sign_in.dart';
 part 'sign_up.dart';
+part 'debugPage.dart';
 
 
 

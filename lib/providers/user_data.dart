@@ -58,25 +58,27 @@ class UserData extends ChangeNotifier {
   //   ),
 
   // ];
-  final CollectionReference _usersRef =
+  final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection("users");
 
-  CollectionReference get usersRef {
-    return _usersRef;
+  CollectionReference get usersCollection {
+    return _usersCollection;
   }
 
   Future<int> get userCount async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
+    QuerySnapshot querySnapshot = await _usersCollection.get();
     return querySnapshot.size;
   }
+
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
-        await _usersRef.orderBy("id", descending: true).get();
-        if (querySnapshot.size == 0) {
+        await _usersCollection.orderBy("id", descending: true).get();
+    if (querySnapshot.size == 0) {
       return 0;
     }
     return querySnapshot.docs.first.get("id");
   }
+
   void add(User user) async {
     int id;
     if (userCount == 0) {
@@ -84,8 +86,9 @@ class UserData extends ChangeNotifier {
     } else {
       id = await lastId + 1;
     }
-    _usersRef.doc(id.toString()).set({
-      "id": id,
+
+    _usersCollection.doc(id.toString()).set({
+      "id": id.toString(),
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,
@@ -95,56 +98,30 @@ class UserData extends ChangeNotifier {
       "password": user.password,
       "foto": user.foto,
       "sampul": user.sampul,
+      "followings": user.followings
     });
     notifyListeners();
   }
 
   Future<List<User>> getUsers() async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
+    QuerySnapshot querySnapshot = await _usersCollection.get();
     List<User> users = [];
 
     querySnapshot.docs.forEach((doc) {
-      users.add(
-        User(
-          id: doc.get("id"),
-          docId: doc.id,
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          username: doc.get("username"),
-          namaLengkap: doc.get("namaLengkap"),
-          email: doc.get("email"),
-          gender: doc.get("gender"),
-          noTelp: doc.get("noTelp"),
-          sampul: doc.get("sampul"),
-          password: doc.get("password"),
-          foto: doc.get("foto"),
-        ),
-      );
+      User user = User.fromJson(doc.data() as Map<String, dynamic>);
+      users.add(user);
     });
     return users;
   }
 
-  Future<User> getUser(int id) async {
-    QuerySnapshot querySnapshot = await _usersRef.get();
+  Future<User> getUser(String id) async {
+    QuerySnapshot querySnapshot =
+        await _usersCollection.where("id", isEqualTo: id).get();
 
-    User? user;
-    querySnapshot.docs.forEach((doc) {
-      if (doc.get("id") == id) {
-        user = User(
-          id: doc.get("id"),
-          docId: doc.id,
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          username: doc.get("username"),
-          namaLengkap: doc.get("namaLengkap"),
-          email: doc.get("email"),
-          gender: doc.get("gender"),
-          noTelp: doc.get("noTelp"),
-          sampul: doc.get("sampul"),
-          password: doc.get("password"),
-          foto: doc.get("foto"),
-        );
-      }
-    });
+    final users = querySnapshot.docs;
+    // print(users.length);
+    User? user = User.fromJson(users[0].data() as Map<String, dynamic>);
 
-    return user!;
+    return user;
   }
 }

@@ -2,7 +2,7 @@ part of "providers.dart";
 
 class AuthData extends ChangeNotifier {
   User? _authUser = User(
-      id: 1,
+      id: "1",
       tglDibuat: DateTime.now(),
       username: "alu",
       namaLengkap: "Muhammad Alucard",

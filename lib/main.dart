@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserData()),
         ChangeNotifierProvider(create: (context) => PostData()),
         ChangeNotifierProvider(create: (context) => KomentarData()),
-        ChangeNotifierProvider(create: (context) => LikeData()),
-        ChangeNotifierProvider(create: (context) => FollowingData()),
+        // ChangeNotifierProvider(create: (context) => LikeData()),
+        // ChangeNotifierProvider(create: (context) => FollowingData()),
         
       ],
       child: Builder(builder: (ctx) {
@@ -294,37 +294,42 @@ class MyApp extends StatelessWidget {
           //themeMode: ThemeMode.system,
 
           // routes ==============================================================
-          onGenerateRoute: (settings) {
-            if (settings.name == "/post") {
-              final args = settings.arguments as Post;
+          // onGenerateRoute: (settings) {
+          //   if (settings.name == "/post") {
+          //     final args = settings.arguments as Post;
 
-              return MaterialPageRoute(
-                builder: ((ctx) {
-                  return PostPage(
-                    post: args,
-                  );
-                }),
-              );
-            } else if (settings.name == "/profile") {
-              final args = settings.arguments as User;
+          //     return MaterialPageRoute(
+          //       builder: ((ctx) {
+          //         return PostPage(
+          //           post: args,
+          //         );
+          //       }),
+          //     );
+          //   } else if (settings.name == "/profile") {
+          //     final args = settings.arguments as User;
 
-              return MaterialPageRoute(
-                builder: ((ctx) {
-                  return ProfilePage(
-                    user: args,
-                  );
-                }),
-              );
-            }
-          },
+          //     return MaterialPageRoute(
+          //       builder: ((ctx) {
+          //         return ProfilePage(
+          //           user: args,
+          //         );
+          //       }),
+          //     );
+          //   }
+          // },
           routes: {
             "/": (ctx) => const MainPage(),
             "/intro": (ctx) => const Introduction_Page(),
             "/sign-in": (ctx) => const SignIn(),
             "/sign-up": (ctx) => const SignUp(),
+            "/post": (ctx) => PostPage(),
+            "/profile": (ctx) => const ProfilePage(),
+
+            // !!!!!!!! NANTI HAPUSS !!!!!!!!,
+            "/debug":(ctx) => const DebugPage(),
           },
 
-          initialRoute: "/intro",
+          initialRoute: "/",
         );
       }),
     );

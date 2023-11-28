@@ -1,25 +1,25 @@
 part of "providers.dart";
 
 class KomentarData extends ChangeNotifier {
-  final CollectionReference _komentarsRef =
+  final CollectionReference _komentarsCollection =
       FirebaseFirestore.instance.collection("komentars");
 
-  CollectionReference get komentarsRef {
-    return _komentarsRef;
+  CollectionReference get komentarsCollection {
+    return _komentarsCollection;
   }
 
   Future<int> get komentarCount async {
-    QuerySnapshot querySnapshot = await _komentarsRef.get();
+    QuerySnapshot querySnapshot = await _komentarsCollection.get();
     return querySnapshot.size;
   }
 
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
-        await _komentarsRef.orderBy("id", descending: true).get();
-        if (querySnapshot.size == 0) {
+        await _komentarsCollection.orderBy("tglDibuat", descending: true).get();
+    if (querySnapshot.size == 0) {
       return 0;
     }
-    return querySnapshot.docs.first.get("id");
+    return int.parse(querySnapshot.docs.first.get("id"));
   }
 
   void add(Komentar komentar) async {
@@ -30,100 +30,100 @@ class KomentarData extends ChangeNotifier {
       id = await lastId + 1;
     }
 
-    _komentarsRef.doc(id.toString()).set({
-      "id": id,
+    _komentarsCollection.doc(id.toString()).set({
+      "id": id.toString(),
       "tglDibuat": komentar.tglDibuat,
       "konten": komentar.konten,
-      "totalLike": komentar.totalLike,
       "postId": komentar.postId,
-      "userId": komentar.userId
+      "userId": komentar.userId,
+      "likes": komentar.likes,
     });
+
+    // tambahkan komentar pada post
+    CollectionReference postsCollection =
+        FirebaseFirestore.instance.collection("posts");
+    QuerySnapshot posts =
+        await postsCollection.where("id", isEqualTo: komentar.postId).get();
+    List<String> komentars = List<String>.from(posts.docs[0].get("komentars"));
+    komentars.add(id.toString());
+    postsCollection.doc(komentar.postId).update({"komentars": komentars});
+  }
+
+  final List<String> _selectedKomentar = [];
+  UnmodifiableListView get selectedKomentar {
+    return UnmodifiableListView(_selectedKomentar);
+  }
+
+  void toggleSelectKomentar(String id) {
+    if (_selectedKomentar.contains(id)) {
+      _selectedKomentar.remove(id);
+    } else {
+      _selectedKomentar.add(id);
+    }
+    print(_selectedKomentar.length);
+    // _selectedKomentar.clear();
     // notifyListeners();
   }
 
-  void delete(int id) async {
-    Komentar komentar = await getkomentar(id);
+  void delete() async {
+    // hapus komentar pada post
+    CollectionReference postsCollection =
+        FirebaseFirestore.instance.collection("posts");
 
-    // hapus komentar
-    _komentarsRef.doc(komentar.docId).delete();
+    Komentar komentar = await getKomentar(_selectedKomentar[0]);
+    for (int i = 0; i < _selectedKomentar.length; i++) {
+      // hapus komentar dari collection komentars
+      _komentarsCollection.doc(_selectedKomentar[i]).delete();
+    }
+    // hapus komentar dari collection posts
+    QuerySnapshot posts =
+        await postsCollection.where("id", isEqualTo: komentar.postId).get();
+    List<String> komentars = List<String>.from(posts.docs[0].get("komentars"));
+    komentars.removeWhere((komentar) => _selectedKomentar.contains(komentar));
+    postsCollection.doc(komentar.postId).update({"komentars": komentars});
 
-    CollectionReference likesRef =
-        FirebaseFirestore.instance.collection("likes");
-    QuerySnapshot likes =
-        await likesRef.where("komentarId", isEqualTo: id).get();
-
-    // hapus semua like yang menyukai komentar
-    likes.docs.forEach((like) {
-      likesRef.doc(like.id).delete();
-    });
+    _selectedKomentar.removeRange(1, _selectedKomentar.length);
   }
 
-  void updateTotalLike(String docId, int totalLike) {
-    _komentarsRef.doc(docId).update({
-      "totalLike": totalLike,
-    });
-    // notifyListeners();
-  }
-
-  Future<List<Komentar>> getKomentars({int? postId, int? userId}) async {
+  Future<List<Komentar>> getKomentars({String? postId, String? userId}) async {
     QuerySnapshot? querySnapshot =
-        await _komentarsRef.where("postId", isEqualTo: postId).get();
+        await _komentarsCollection.where("postId", isEqualTo: postId).get();
     if (postId != null) {
-      querySnapshot = await _komentarsRef
+      querySnapshot = await _komentarsCollection
           .where("postId", isEqualTo: postId)
-          .orderBy("totalLike", descending: true)
           .orderBy("tglDibuat", descending: true)
           .get();
     } else if (userId != null) {
-      querySnapshot = await _komentarsRef
+      querySnapshot = await _komentarsCollection
           .where("userId", isEqualTo: userId)
-          .orderBy("totalLike", descending: true)
           .orderBy("tglDibuat", descending: true)
           .get();
     }
 
     List<Komentar> komentars = [];
-    querySnapshot!.docs.forEach((doc) {
-      komentars.add(
-        Komentar(
-          id: doc.get("id"),
-          docId: doc.id,
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          konten: doc.get("konten"),
-          totalLike: doc.get("totalLike"),
-          postId: doc.get("postId"),
-          userId: doc.get("userId"),
-        ),
-      );
+    querySnapshot.docs.forEach((doc) {
+      Komentar komentar = Komentar.fromJson(doc.data() as Map<String, dynamic>);
+      komentar.likes = List<String>.from(doc.get("likes"));
+      komentars.add(komentar);
     });
 
     return komentars;
   }
 
-  Future<Komentar> getkomentar(int id) async {
-    QuerySnapshot querySnapshot = await _komentarsRef.get();
+  Future<Komentar> getKomentar(String id) async {
+    QuerySnapshot querySnapshot =
+        await _komentarsCollection.where("id", isEqualTo: id).get();
 
-    Komentar? komentar;
-    querySnapshot.docs.forEach((doc) {
-      if (doc.get("id") == id) {
-        komentar = Komentar(
-          id: doc.get("id"),
-          docId: doc.id,
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          konten: doc.get("konten"),
-          totalLike: doc.get("totalLike"),
-          postId: doc.get("postId"),
-          userId: doc.get("userId"),
-        );
-      }
-    });
+    final komentars = querySnapshot.docs;
 
-    return komentar!;
+    Komentar? komentar =
+        Komentar.fromJson(komentars[0].data() as Map<String, dynamic>);
+    return komentar;
   }
 
   Future<int> getKomentarCount(int postId) async {
     QuerySnapshot? querySnapshot =
-        await _komentarsRef.where("postId", isEqualTo: postId).get();
+        await _komentarsCollection.where("postId", isEqualTo: postId).get();
     return querySnapshot.docs.length;
   }
 }

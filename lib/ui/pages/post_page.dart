@@ -1,14 +1,14 @@
 part of "pages.dart";
 
 class PostPage extends StatelessWidget {
-  Post post;
-  PostPage({super.key, required this.post});
+  PostPage({super.key});
+
+  List<String> _selectedKomentar = [];
 
   @override
   Widget build(BuildContext context) {
+    Post post = ModalRoute.of(context)!.settings.arguments as Post;
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
-      // List<Komentar> komentars = komentarData.getKomentars(postId: post.id);
-
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -29,16 +29,47 @@ class PostPage extends StatelessWidget {
         body: ListView(
           children: [
             // POST ============================================================================
-            PostWidget(
-              post: post,
+            StreamBuilder<QuerySnapshot>(
+                stream: Provider.of<PostData>(context, listen: false)
+                    .postsCollection
+                    .where("id", isEqualTo: post.id)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final posts = snapshot.data!.docs;
+                    return PostWidget(
+                      post: Post.fromJson(
+                          posts[0].data() as Map<String, dynamic>),
+                    );
+                  }
+                  return Container(
+                    width: width(context),
+                    alignment: Alignment.center,
+                    child: const CircularProgressIndicator(),
+                  );
+                }),
+
+            // KOMENTAR =======================================================================
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 10, bottom: 10),
+              child: Text(
+                // "Komentar (${komentars.length})",
+                "Komentar (${post.komentars.length})",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
 
+            // INPUT KOMENTAR =======================================================================
+            InputKomentar(
+              post: post,
+            ),
+            // DAFTAR KOMENTAR =======================================================================
+
             StreamBuilder<QuerySnapshot>(
-                stream: komentarData.komentarsRef
+                stream: komentarData.komentarsCollection
                     .where("postId", isEqualTo: post.id)
-                    .orderBy("totalLike", descending: true)
                     .orderBy("tglDibuat", descending: true)
-                    // .orderBy("tglDibuat", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,44 +79,23 @@ class PostPage extends StatelessWidget {
                       child: const CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasData) {
-                    final data = snapshot.data!.docs;
-                    int komentarCount = data.length;
+                    final komentars = snapshot.data!.docs;
+                    int komentarCount = komentars.length;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // KOMENTAR =======================================================================
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, right: 20, top: 10, bottom: 10),
-                          child: Text(
-                            // "Komentar (${komentars.length})",
-                            "Komentar ($komentarCount)",
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-
-                        // INPUT KOMENTAR =======================================================================
-
-                        InputKomentar(
-                          post: post,
-                        ),
-                        // DAFTAR KOMENTAR =======================================================================
-
                         for (int i = 0; i < komentarCount; i++)
                           Column(
                             children: [
                               KomentarWidget(
-                                komentar: Komentar(
-                                  id: data[i].get("id"),
-                                  docId: data[i].id,
-                                  tglDibuat: data[i].get("tglDibuat").toDate(),
-                                  konten: data[i].get("konten"),
-                                  totalLike: data[i].get("totalLike"),
-                                  postId: data[i].get("postId"),
-                                  userId: data[i].get("userId"),
-                                ),
+                                komentar: Komentar.fromJson(komentars[i]
+                                    .data() as Map<String, dynamic>),
                                 postId: post.id!,
+                                // selected: komentarData.selectedKomentar
+                                //         .contains(komentars[i].id)
+                                //     ? true
+                                //     : false,
                               ),
                               if (i != komentarCount - 1)
                                 Divider(

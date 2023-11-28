@@ -1,7 +1,7 @@
 part of "providers.dart";
 
 class PostData extends ChangeNotifier {
-  // final List<Post> _postsRef = [
+  // final List<Post> _postsCollection = [
   //   Post(
   //     id: 1,
   //     tglDibuat: DateTime.utc(2023, 5, 22, 7, 00),
@@ -51,25 +51,25 @@ class PostData extends ChangeNotifier {
   //   ),
   // ];
 
-  final CollectionReference _postsRef =
+  final CollectionReference _postsCollection =
       FirebaseFirestore.instance.collection("posts");
 
-  CollectionReference get postsRef {
-    return _postsRef;
+  CollectionReference get postsCollection {
+    return _postsCollection;
   }
 
   Future<int> get postCount async {
-    QuerySnapshot querySnapshot = await _postsRef.get();
+    QuerySnapshot querySnapshot = await _postsCollection.get();
     return querySnapshot.size;
   }
 
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
-        await _postsRef.orderBy("id", descending: true).get();
+        await _postsCollection.orderBy("tglDibuat", descending: true).get();
     if (querySnapshot.size == 0) {
       return 0;
     }
-    return querySnapshot.docs.first.get("id");
+    return int.parse(querySnapshot.docs.first.get("id"));
   }
 
   // tambahkan post baru
@@ -81,7 +81,7 @@ class PostData extends ChangeNotifier {
     String? url;
     if (post.img != null) {
       Reference ref =
-          FirebaseStorage.instance.ref().child("posts/${randomNumber}.jpg");
+          FirebaseStorage.instance.ref().child("posts/$randomNumber.jpg");
       await ref.putFile(File(post.img!));
       url = await ref.getDownloadURL();
     }
@@ -92,32 +92,24 @@ class PostData extends ChangeNotifier {
     } else {
       id = await lastId + 1;
     }
-    _postsRef.doc(id.toString()).set({
-      "id": id,
+
+    _postsCollection.doc(id.toString()).set({
+      "id": id.toString(),
       "tglDibuat": post.tglDibuat,
       "konten": post.konten,
       "img": url,
-      "totalLike": post.totalLike,
-      "totalKomentar": post.totalKomentar,
       "userId": post.userId,
+      "likes": post.likes,
+      "komentars": post.komentars,
     });
     // notifyListeners();
   }
 
-  void delete(int id) async {
-    Post post = await getPost(id);
+  void delete(String id) async {
+    // Post post = await getPost(id);
 
     // hapus post
-    _postsRef.doc(post.docId).delete();
-
-    CollectionReference likesRef =
-        FirebaseFirestore.instance.collection("likes");
-    QuerySnapshot likes = await likesRef.where("postId", isEqualTo: id).get();
-
-    // hapus semua like yang menyukai post
-    likes.docs.forEach((like) {
-      likesRef.doc(like.id).delete();
-    });
+    _postsCollection.doc(id).delete();
 
     CollectionReference komentarsRef =
         FirebaseFirestore.instance.collection("komentars");
@@ -128,55 +120,25 @@ class PostData extends ChangeNotifier {
     komentars.docs.forEach((komentar) {
       komentarsRef.doc(komentar.id).delete();
     });
-
-  }
-
-  void updateTotalLike(String docId, int totalLike) {
-    _postsRef.doc(docId).update({
-      "totalLike": totalLike,
-    });
-    // notifyListeners();
-  }
-
-  void updateTotalKomentar(String docId, int totalKomentar) {
-    _postsRef.doc(docId).update({
-      "totalKomentar": totalKomentar,
-    });
-    // notifyListeners();
   }
 
   Future<List<Post>> getPosts() async {
-    QuerySnapshot querySnapshot = await _postsRef.get();
+    QuerySnapshot querySnapshot = await _postsCollection.get();
     List<Post> posts = [];
     querySnapshot.docs.forEach((doc) {
-      posts.add(
-        Post(
-          id: doc.get("id"),
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          konten: doc.get("konten"),
-          userId: doc.get("userId"),
-        ),
-      );
+      Post post = Post.fromJson(doc.data() as Map<String, dynamic>);
+      posts.add(post);
     });
     return posts;
   }
 
-  Future<Post> getPost(int id) async {
-    QuerySnapshot querySnapshot = await _postsRef.get();
+  Future<Post> getPost(String id) async {
+    QuerySnapshot querySnapshot =
+        await _postsCollection.where("id", isEqualTo: id).get();
 
-    Post? post;
-    querySnapshot.docs.forEach((doc) {
-      if (doc.get("id") == id) {
-        post = Post(
-          id: doc.get("id"),
-          docId: doc.id,
-          tglDibuat: doc.get("tglDibuat").toDate(),
-          konten: doc.get("konten"),
-          userId: doc.get("userId"),
-        );
-      }
-    });
+    final posts = querySnapshot.docs;
 
-    return post!;
+    Post? post = Post.fromJson(posts[0].data() as Map<String, dynamic>);
+    return post;
   }
 }
