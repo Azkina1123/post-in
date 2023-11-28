@@ -1,13 +1,7 @@
 part of "models.dart";
 
-<<<<<<< HEAD
-class Userdata {
-  // int id;
-  String? docId;
-=======
-class User {
+class UserAcc {
   String id;
->>>>>>> 2b419a6060db0d4032fc8d2e598e46631d0bfd37
   DateTime tglDibuat;
   String username;
   String namaLengkap;
@@ -18,16 +12,11 @@ class User {
   String? foto;
   String? sampul;
 
-<<<<<<< HEAD
-  Userdata({
-    // required this.id,
-    this.docId,
-=======
+  int totalFollowing = 0;
   List<String> followings = [];
 
-  User({
+  UserAcc({
     required this.id,
->>>>>>> 2b419a6060db0d4032fc8d2e598e46631d0bfd37
     required this.tglDibuat,
     required this.username,
     required this.namaLengkap,
@@ -39,8 +28,8 @@ class User {
     this.sampul,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    User user = User(
+  factory UserAcc.fromJson(Map<String, dynamic> json) {
+    UserAcc user = UserAcc(
       id: json["id"].toString(),
       tglDibuat: json["tglDibuat"].toDate(),
       username: json["username"],

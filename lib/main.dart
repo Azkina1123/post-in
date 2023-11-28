@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:post_in/models/models.dart';
 import 'package:post_in/providers/providers.dart';
@@ -16,7 +16,7 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeModeData(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -30,12 +30,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PageData()),
-        ChangeNotifierProvider(create: (context) => Auth()),
+        ChangeNotifierProvider(create: (context) => AuthData()),
         ChangeNotifierProvider(create: (context) => UserData()),
         ChangeNotifierProvider(create: (context) => PostData()),
         ChangeNotifierProvider(create: (context) => KomentarData()),
-        ChangeNotifierProvider(create: (context) => LikeData()),
-        ChangeNotifierProvider(create: (context) => FollowingData()),
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(
@@ -163,131 +161,148 @@ class MyApp extends StatelessWidget {
               ),
               popupMenuTheme: PopupMenuThemeData(
                 surfaceTintColor: colors["milk-white"]!,
+              ),
+              snackBarTheme: SnackBarThemeData(
+                backgroundColor: colors["languid-lavender"]!.withOpacity(0.5),
+                actionTextColor: colors["sand"],
+                contentTextStyle: TextStyle(
+                  color: colors["dark-jungle-green"],
+                  fontSize: 16,
+                ),
               )),
 
           // dark mode ==============================================================
           darkTheme: ThemeData(
-              useMaterial3: true,
-              brightness: Brightness.light,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: colors["sand"]!,
-                background: colors["dark-jungle-green"],
-                onBackground: colors["milk-white"],
-                primary: colors["sand"],
-                onPrimary: colors["milk-white"],
-                secondary: colors["milk-white"],
-                onSecondary: colors["dark-jungle-green"],
-                tertiary: colors["languid-lavender"],
-                onTertiary: colors["dark-jungle-green"],
-                error: colors["smoky-topaz"],
-                onError: colors["milk-white"],
-                surface: colors["dark-jungle-green"],
-                onSurface: colors["milk-white"],
+            useMaterial3: true,
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: colors["sand"]!,
+              background: colors["dark-jungle-green"],
+              onBackground: colors["milk-white"],
+              primary: colors["sand"],
+              onPrimary: colors["milk-white"],
+              secondary: colors["milk-white"],
+              onSecondary: colors["dark-jungle-green"],
+              tertiary: colors["languid-lavender"],
+              onTertiary: colors["dark-jungle-green"],
+              error: colors["smoky-topaz"],
+              onError: colors["milk-white"],
+              surface: colors["dark-jungle-green"],
+              onSurface: colors["milk-white"],
+            ),
+            appBarTheme: AppBarTheme(
+              scrolledUnderElevation: 0,
+              color: colors["dark-jungle-green"],
+              elevation: null,
+              titleTextStyle: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: colors["sand"],
               ),
-              appBarTheme: AppBarTheme(
-                scrolledUnderElevation: 0,
-                color: colors["dark-jungle-green"],
-                elevation: null,
-                titleTextStyle: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: colors["sand"],
-                ),
-                iconTheme: IconThemeData(color: colors["sand"]!),
+              iconTheme: IconThemeData(color: colors["sand"]!),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors["sand"],
+                foregroundColor: colors["milk-white"],
               ),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors["sand"],
-                  foregroundColor: colors["milk-white"],
-                ),
+            ),
+            iconTheme: IconThemeData(color: colors["sand"]),
+            iconButtonTheme: IconButtonThemeData(
+              style: IconButton.styleFrom(
+                // backgroundColor: colors["dark-jungle-green"],
+                surfaceTintColor: colors["dark-jungle-green"],
+                shadowColor: Colors.transparent,
+                foregroundColor: colors["sand"],
               ),
-              iconTheme: IconThemeData(color: colors["sand"]),
-              iconButtonTheme: IconButtonThemeData(
-                style: IconButton.styleFrom(
-                  // backgroundColor: colors["dark-jungle-green"],
-                  surfaceTintColor: colors["dark-jungle-green"],
-                  shadowColor: Colors.transparent,
-                  foregroundColor: colors["sand"],
-                ),
-              ),
-              outlinedButtonTheme: OutlinedButtonThemeData(
-                style: ButtonStyle(
-                  side: MaterialStateProperty.all(
-                    BorderSide(
-                      color: colors["sand"]!,
-                    ),
-                  ),
-                ),
-              ),
-              filledButtonTheme: FilledButtonThemeData(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(colors["sand"]),
-                  foregroundColor: MaterialStateProperty.all(
-                    colors["dark-jungle-green"],
-                  ),
-                ),
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: colors["sand"],
-                ),
-              ),
-              textTheme: TextTheme(
-                bodyLarge: TextStyle(
-                  fontSize: 18,
-                  color: colors["milk-white"],
-                ),
-                bodyMedium: TextStyle(
-                  fontSize: 16,
-                  color: colors["milk-white"],
-                ),
-                bodySmall: TextStyle(
-                  fontSize: 14,
-                  color: colors["milk-white"],
-                ),
-                titleLarge: TextStyle(
-                  fontSize: 18,
-                  color: colors["sand"],
-                  fontWeight: FontWeight.bold,
-                ),
-                titleMedium: TextStyle(
-                  fontSize: 16,
-                  color: colors["milk-white"],
-                  fontWeight: FontWeight.bold,
-                ),
-                titleSmall: TextStyle(
-                  fontSize: 14,
-                  color: colors["milk-white"],
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              inputDecorationTheme: InputDecorationTheme(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: colors["milk-white"]!.withOpacity(0.5),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                contentPadding: const EdgeInsets.only(
-                  top: 10,
-                  bottom: 10,
-                  left: 15,
-                  right: 15,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: ButtonStyle(
+                side: MaterialStateProperty.all(
+                  BorderSide(
                     color: colors["sand"]!,
                   ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusColor: colors["sand!"],
-                hintStyle: TextStyle(
-                  color: colors["milk-white"]!.withOpacity(0.5),
                 ),
               ),
-              popupMenuTheme: PopupMenuThemeData(
-                surfaceTintColor: colors["dark-jungle-green"]!,
-              )),
+            ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                foregroundColor: MaterialStateProperty.all(
+                  colors["dark-jungle-green"],
+                ),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(
+                fontSize: 18,
+                color: colors["milk-white"],
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: colors["milk-white"],
+              ),
+              bodySmall: TextStyle(
+                fontSize: 14,
+                color: colors["milk-white"],
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18,
+                color: colors["sand"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16,
+                color: colors["milk-white"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleSmall: TextStyle(
+                fontSize: 14,
+                color: colors["milk-white"],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["milk-white"]!.withOpacity(0.5),
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              contentPadding: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                left: 15,
+                right: 15,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["sand"]!,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusColor: colors["sand!"],
+              hintStyle: TextStyle(
+                color: colors["milk-white"]!.withOpacity(0.5),
+              ),
+            ),
+            popupMenuTheme: PopupMenuThemeData(
+              surfaceTintColor: colors["dark-jungle-green"]!,
+            ),
+                          snackBarTheme: SnackBarThemeData(
+                backgroundColor: colors["old-lavender"]!.withOpacity(0.5),
+                actionTextColor: colors["sand"],
+                contentTextStyle: TextStyle(
+                  color: colors["milk-white"],
+                  fontSize: 16,
+                ),
+          ),
+          ),
 
           // theme yg digunakan ==============================================================
           themeMode: Provider.of<ThemeModeData>(context).themeMode,
@@ -299,6 +314,11 @@ class MyApp extends StatelessWidget {
             "/intro": (ctx) => const Introduction_Page(),
             "/sign-in": (ctx) => const SignIn(),
             "/sign-up": (ctx) => const SignUp(),
+            "/post": (ctx) => PostPage(),
+            "/profile": (ctx) => const ProfilePage(),
+
+            // !!!!!!!! NANTI HAPUSS !!!!!!!!,
+            "/debug": (ctx) => const DebugPage(),
           },
           initialRoute: "/intro",
         );

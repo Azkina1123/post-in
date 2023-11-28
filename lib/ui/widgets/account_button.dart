@@ -18,6 +18,7 @@ class AccountButton extends StatelessWidget {
             image: image,
             fit: BoxFit.cover,
           ),
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.5)
         ),
       ),
     );

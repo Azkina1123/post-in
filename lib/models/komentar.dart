@@ -4,9 +4,11 @@ class Komentar {
   String id;
   DateTime tglDibuat;
   String konten;
-  int totalLike;
-  int postId;
-  int userId;
+  String postId;
+  String userId;
+
+  int totalLike = 0;
+  List<String> likes = [];
 
   Komentar({
     required this.id,
@@ -26,6 +28,7 @@ class Komentar {
     );
 
     komentar.likes = List<String>.from(json["likes"]);
+    komentar.totalLike = komentar.likes.length;
     return komentar;
   }
 
@@ -38,8 +41,7 @@ class Komentar {
 
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
 
-    String authUserId =
-        Provider.of<AuthData>(context, listen: false).authUser.id;
+    String authUserId = FirebaseAuth.instance.currentUser!.uid;
     if (likes.contains(authUserId)) {
       likes.remove(authUserId);
     } else {
@@ -49,7 +51,7 @@ class Komentar {
     Provider.of<KomentarData>(context, listen: false)
         .komentarsCollection
         .doc(id)
-        .update({"likes": likes});
+        .update({"likes": likes, "totalLike": likes.length});
   }
 
   Future<bool> isLiked(BuildContext context) async {
@@ -61,7 +63,6 @@ class Komentar {
 
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
 
-    return likes
-        .contains(Provider.of<AuthData>(context, listen: false).authUser.id);
+    return likes.contains(FirebaseAuth.instance.currentUser!.uid);
   }
 }

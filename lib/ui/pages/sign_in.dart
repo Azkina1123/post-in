@@ -21,9 +21,9 @@ class _SignInState extends State<SignIn> {
     final email = _ctrlEmail.value.text;
     final password = _ctrlPass.value.text;
     setState(() => _loading = true);
-    await Auth().login(email, password);
+    await AuthData().login(email, password);
     setState(() => _loading = false);
-    Navigator.pushNamed(context, "/");
+    Navigator.popAndPushNamed(context, "/");
   }
 
   @override
@@ -39,136 +39,131 @@ class _SignInState extends State<SignIn> {
               size: 25, color: Theme.of(context).colorScheme.primary),
         ),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Masuk",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Masuk ke akun kamu !",
-                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                      )
-                    ],
+                  Text(
+                    "Masuk",
+                    style: TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _ctrlEmail,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Silakan Masukkan Email Anda';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Email',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextFormField(
-                          controller: _ctrlPass,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Silakan Masukkan Password Anda';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Password',
-                          ),
-                        ),
-                      ],
-                    ),
+                  SizedBox(
+                    height: 20,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 3, left: 3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () => handleSubmit(),
-                        child: _loading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text("Submit"),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.popAndPushNamed(context, "/sign-up");
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Belum Punya Akun ? ",
-                          style: TextStyle(
-                            color: Colors.grey[700], // Warna teks
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.popAndPushNamed(context, "/sign-up");
-                          },
-                          child: Text(
-                            "Daftar",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary, // Warna teks
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 100),
-                    height: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/background.png"),
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
+                  Text(
+                    "Masuk ke akun kamu !",
+                    style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                   )
                 ],
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _ctrlEmail,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Silakan Masukkan Email Anda';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Email',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      controller: _ctrlPass,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Silakan Masukkan Password Anda';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Password',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Container(
+                  padding: EdgeInsets.only(top: 3, left: 3),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () => handleSubmit(),
+                    child: _loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text("Submit"),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.popAndPushNamed(context, "/sign-up");
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Belum Punya Akun ? ",
+                      style: TextStyle(
+                        color: Colors.grey[700], // Warna teks
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.popAndPushNamed(context, "/sign-up");
+                      },
+                      child: Text(
+                        "Daftar",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary, // Warna teks
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 100),
+                height: 200,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/background.png"),
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

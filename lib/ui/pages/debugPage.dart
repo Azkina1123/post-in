@@ -24,12 +24,21 @@ class DebugPage extends StatelessWidget {
       body: Container(
         // color: Colors.amber,
         alignment: Alignment.center,
-        child: FutureBuilder<User>(
-          future: Provider.of<UserData>(context, listen: false).getUser("1"),
+        child: FutureBuilder<List<String>>(
+          future: Provider.of<UserData>(context, listen: false)
+              .getUserFollowerIds(FirebaseAuth.instance.currentUser!.uid),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              User user = snapshot.data!;
-              return Text(user.username);
+              List<String> ids = snapshot.data!;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("DEBUG PAGE"),
+                  Text(ids.length.toString()),
+                  for (int i = 0; i < ids.length; i++) Text(ids[i]),
+                ],
+              );
             }
             return Text("Gagal ambil data");
           },

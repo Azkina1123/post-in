@@ -9,99 +9,96 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 0;
-
-  // List<int>? followedUserId;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    // jalankan fungsi-fungsi setelah widget selesai dibangun
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _getFollowedUserId();
-    });
-  }
+  List<String> _followedUserIds = [];
 
   @override
   Widget build(BuildContext context) {
-    Userdata? awu;
-    Future<Userdata> user = Provider.of<UserData>(context, listen: false)
-        .getUser(Provider.of<Auth>(context).id_now);
-
     return Consumer<PostData>(builder: (ctx, postData, child) {
-      return Scaffold(
-        // app bar ========================================================================
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: null,
-          scrolledUnderElevation: 0,
+      return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          // app bar ========================================================================
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            leading: null,
+            scrolledUnderElevation: 0,
 
-          // judul post.in ---------------------------------------------------------------
-          title: Text(
-            "Post.In",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(ctx).colorScheme.primary,
+            // judul post.in ---------------------------------------------------------------
+            title: Text(
+              "Post.In",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(ctx).colorScheme.primary,
+              ),
+            ),
+
+            // username & foto profile -----------------------------------------------------
+            actions: [
+              FutureBuilder<UserAcc>(
+                  future: Provider.of<UserData>(context, listen: false)
+                      .getUser(FirebaseAuth.instance.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      UserAcc authUser = snapshot.data!;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              ctx,
+                              "/profile",
+                              arguments: authUser,
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                authUser.username,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              AccountButton(
+                                onPressed: null,
+                                image: NetworkImage(
+                                  authUser.foto!,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    return Text("");
+                  }),
+            ],
+            bottom: TabBar(
+              tabs: const [
+                Tab(text: "Post Terbaru"),
+                Tab(text: "Post Terpopuler"),
+                Tab(text: "Post Diikuti")
+              ],
+              labelStyle: TextStyle(
+                color: Theme.of(ctx).colorScheme.primary,
+                fontSize: Theme.of(ctx).textTheme.titleMedium!.fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+              labelPadding: EdgeInsets.only(left: 10, right: 10),
+              dividerColor: Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
+              onTap: (i) {
+                setState(() {
+                  _index = i;
+                  // if (i == 2) getFollowedUserIds();
+                });
+              },
             ),
           ),
 
-          // username & foto profile -----------------------------------------------------
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    ctx,
-                    "/profile",
-                    arguments: awu,
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(awu!.username),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    // AccountButton(
-                    //   onPressed: null,
-                    //   image: NetworkImage(
-                    //       // Provider.of<AuthData>(ctx, listen: false).authUser.foto,
-                    //       ),
-                    // ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        // konten halaman ===============================================================
-        body: DefaultTabController(
-          length: 3,
-          child: ListView(
+          // konten halaman ===============================================================
+          body: ListView(
             children: [
               // tab bar ---------------------------------------------------------------------
-              TabBar(
-                tabs: const [
-                  Tab(text: "Post Terbaru"),
-                  Tab(text: "Post Terpopuler"),
-                  Tab(text: "Post Diikuti")
-                ],
-                labelStyle: TextStyle(
-                  color: Theme.of(ctx).colorScheme.primary,
-                  fontSize: Theme.of(ctx).textTheme.titleMedium!.fontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-                labelPadding: EdgeInsets.only(left: 10, right: 10),
-                dividerColor:
-                    Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
-                onTap: (i) {
-                  _index = i;
-                  setState(() {});
-                },
-              ),
+
               // input postingan baru ------------------------------------------------------
               InputPost(tabIndex: _index),
 
@@ -173,22 +170,22 @@ class _HomePageState extends State<HomePage> {
             .orderBy("tglDibuat", descending: true)
             .snapshots();
 
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // REVISI NANTII!!
+      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // REVISI NANTII!!
       default:
+        getFollowedUserIds();
         return Provider.of<PostData>(context)
             .postsCollection
-            .where("userId", isEqualTo: "2")
+            .where("userId", whereIn: _followedUserIds.toList())
             .snapshots();
     }
   }
 
-  void _getFollowedUserId() async {
-    
-    // List<Following> followings =
-    //     await Provider.of<FollowingData>(context, listen: false)
-    //         .getFollowings();
+  void getFollowedUserIds() async {
+    UserAcc authUser = await Provider.of<UserData>(context, listen: false)
+        .getUser(FirebaseAuth.instance.currentUser!.uid);
 
-    // followedUserId = followings.map((following) => following.userId2).toList();
+    _followedUserIds = authUser.followings;
+    print(_followedUserIds.length);
   }
 }

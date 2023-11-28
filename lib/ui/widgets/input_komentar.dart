@@ -25,96 +25,98 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
-    int authUserId = Provider.of<AuthData>(context).authUser.id!;
-
     if (Provider.of<PageData>(context).komentarFocused) {
       _focus.requestFocus();
     } else {
       _focus.unfocus();
     }
 
-    return Column(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: width(context),
-          height: _focus.hasFocus ? 120 : 70,
-          padding: const EdgeInsets.only(left: 15, right: 20, bottom: 10),
-          margin: const EdgeInsets.only(top: 20),
+    return SizedBox(
+      child: FutureBuilder<UserAcc>(
+          future: Provider.of<UserData>(context, listen: false)
+              .getUser(FirebaseAuth.instance.currentUser!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              UserAcc authUser = snapshot.data!;
+              return Column(children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: width(context),
+                  height: _focus.hasFocus ? 120 : 70,
+                  padding:
+                      const EdgeInsets.only(left: 15, right: 20, bottom: 10),
+                  margin: const EdgeInsets.only(top: 20),
 
-          // isian postingan ---------------------------------------------------------
-          child: Focus(
-            // focusNode: _focus,
-            onFocusChange: (hasFocus) {
-              Provider.of<PageData>(context, listen: false)
-                  .changeKomentarFocus(_focus.hasFocus);
-              // setState(() {});
-            },
-            child: TextField(
-              focusNode: _focus,
-              // autofocus: ,
-              decoration: InputDecoration(
-                hintText: "Bagikan komentar Anda!",
-                // icon: AccountButton(
-                //   image: NetworkImage(
-                //       Provider.of<AuthData>(context, listen: false)
-                //           .authUser
-                //           .foto!),
-                //   onPressed: null,
-                // ),
-              ),
-              style: Theme.of(context).textTheme.bodyMedium,
-              maxLines: 5,
-              controller: _kontenCon,
-              onChanged: (value) {
-                setState(() {});
-              },
-            ),
-          ),
-        ),
-        if (_kontenCon.text.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            // alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: _kontenCon.text.isNotEmpty
-                      ? () async {
-                          final komentarData =
-                              Provider.of<KomentarData>(context, listen: false);
-
-                          // tambahkan komentar
-                          komentarData.add(
-                            Komentar(
-                              id: "",
-                              tglDibuat: DateTime.now(),
-                              konten: _kontenCon.text,
-                              postId: widget.post.id,
-                              userId: authUserId,
-                            ),
-                          );
-
-                          Provider.of<PostData>(context, listen: false)
-                              .updateTotalKomentar(
-                            widget.post.docId!,
-                            await komentarData
-                                    .getKomentarCount(widget.post.id) +
-                                1,
-                          );
-
-                          _focus.unfocus();
-                          _kontenCon.clear();
-                        }
-                      : null,
-                  // style: ,
-                  child: const Text("Kirim"),
+                  // isian postingan ---------------------------------------------------------
+                  child: Focus(
+                    // focusNode: _focus,
+                    onFocusChange: (hasFocus) {
+                      Provider.of<PageData>(context, listen: false)
+                          .changeKomentarFocus(_focus.hasFocus);
+                    },
+                    child: TextField(
+                      focusNode: _focus,
+                      // autofocus: ,
+                      decoration: InputDecoration(
+                        hintText: "Bagikan komentar Anda!",
+                        icon: AccountButton(
+                          image: NetworkImage(
+                            authUser.foto!,
+                          ),
+                          onPressed: null,
+                        ),
+                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      maxLines: 5,
+                      controller: _kontenCon,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                    ),
+                  ),
                 ),
-              ],
-            ),
-          )
-      ],
+                if (_kontenCon.text.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    // alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _kontenCon.text.isNotEmpty
+                              ? () async {
+                                  final komentarData =
+                                      Provider.of<KomentarData>(context,
+                                          listen: false);
+
+                                  // tambahkan komentar
+                                  komentarData.add(
+                                    Komentar(
+                                      id: "",
+                                      tglDibuat: DateTime.now(),
+                                      konten: _kontenCon.text,
+                                      postId: widget.post.id,
+                                      userId: authUser.id,
+                                    ),
+                                  );
+
+
+                                    _focus.unfocus();
+                                    _kontenCon.clear();
+
+                                  
+                                }
+                              : null,
+                          // style: ,
+                          child: const Text("Kirim"),
+                        ),
+                      ],
+                    ),
+                  )
+              ]);
+            }
+            return Text("");
+          }),
     );
   }
 }

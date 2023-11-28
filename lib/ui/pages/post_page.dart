@@ -14,7 +14,6 @@ class PostPage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              komentarData.resetSelectedKomentar();
               ScaffoldMessenger.of(context).clearSnackBars();
               Navigator.of(context).pop();
             },

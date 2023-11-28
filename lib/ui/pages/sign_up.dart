@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
     final gender = _ctrlGender.value.text;
     final nomor = _ctrlNomor.value.text;
     setState(() => _loading = true);
-    await Auth().regis(nama, email, username, password, gender, nomor);
+    await AuthData().regis(nama, email, username, password, gender, nomor);
     setState(() => _loading = false);
   }
 

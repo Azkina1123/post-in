@@ -37,16 +37,21 @@ class KomentarData extends ChangeNotifier {
       "postId": komentar.postId,
       "userId": komentar.userId,
       "likes": komentar.likes,
+      "totalLike": komentar.totalLike
     });
 
     // tambahkan komentar pada post
-    CollectionReference postsCollection =
-        FirebaseFirestore.instance.collection("posts");
-    QuerySnapshot posts =
-        await postsCollection.where("id", isEqualTo: komentar.postId).get();
+
+    QuerySnapshot posts = await PostData()
+        .postsCollection
+        .where("id", isEqualTo: komentar.postId)
+        .get();
     List<String> komentars = List<String>.from(posts.docs[0].get("komentars"));
     komentars.add(id.toString());
-    postsCollection.doc(komentar.postId).update({"komentars": komentars});
+    PostData().postsCollection.doc(komentar.postId).update({
+      "komentars": komentars,
+      "totalKomentar": komentars.length,
+    });
   }
 
   final List<String> _selectedKomentar = [];
@@ -60,36 +65,32 @@ class KomentarData extends ChangeNotifier {
     } else {
       _selectedKomentar.add(id);
     }
-    print(_selectedKomentar.length);
-    print(_selectedKomentar.toString() + " <<<<<<<<<<<<<<");
-    // _selectedKomentar.clear();
-    // notifyListeners();
+    print(_selectedKomentar.toString());
   }
 
   void delete() async {
-
     String postId = (await getKomentar(_selectedKomentar[0])).postId;
 
     CollectionReference postsCollection =
         FirebaseFirestore.instance.collection("posts");
     QuerySnapshot posts =
         await postsCollection.where("id", isEqualTo: postId).get();
+    List<String> komentars = List<String>.from(posts.docs[0].get("komentars"));
 
     for (int i = 0; i < _selectedKomentar.length; i++) {
       // hapus komentar dari collection komentars
       _komentarsCollection.doc(_selectedKomentar[i]).delete();
-      // hapus komentar dari collection posts
-      List<String> komentars = List<String>.from(posts.docs[0].get("komentars"));
-      komentars.remove(_selectedKomentar[i]);
-      postsCollection.doc(postId).update({"komentars": komentars});
-    }
 
-    _selectedKomentar.removeRange(0, _selectedKomentar.length);
+      // hapus komentar dari collection posts
+      komentars.remove(_selectedKomentar[i]);
+    }
+    postsCollection.doc(postId).update({"komentars": komentars});
+    _selectedKomentar.clear();
   }
 
   void resetSelectedKomentar() {
     // _selectedKomentar.clear();
-     _selectedKomentar.removeRange(0, _selectedKomentar.length);
+    _selectedKomentar.clear();
   }
 
   Future<List<Komentar>> getKomentars({String? postId, String? userId}) async {
@@ -133,5 +134,4 @@ class KomentarData extends ChangeNotifier {
         await _komentarsCollection.where("postId", isEqualTo: postId).get();
     return querySnapshot.docs.length;
   }
-
 }

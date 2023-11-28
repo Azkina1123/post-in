@@ -101,6 +101,8 @@ class PostData extends ChangeNotifier {
       "userId": post.userId,
       "likes": post.likes,
       "komentars": post.komentars,
+      "totalLike": post.totalLike,
+      "totalKomentar": post.totalKomentar,
     });
     // notifyListeners();
   }

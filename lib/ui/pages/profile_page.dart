@@ -1,7 +1,6 @@
 part of "pages.dart";
 
 class ProfilePage extends StatelessWidget {
-  User user; // profile user yg sedang dilihat
 
   const ProfilePage({super.key});
 
@@ -9,12 +8,11 @@ class ProfilePage extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    User user = ModalRoute.of(context)!.settings.arguments
-        as User; // profile user yg sedang dilihat
+    UserAcc user = ModalRoute.of(context)!.settings.arguments as UserAcc; // profile user yg sedang dilihat
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("My profile"),
+        title: Text("My Profile"),
       ),
       body: ListView(
         children: [
@@ -23,7 +21,7 @@ class ProfilePage extends StatelessWidget {
             height: 150,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: Image.network(user.sampul).image,
+                image: Image.network(user.sampul!).image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -49,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 20),
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: Image.network(user.foto).image,
+                      backgroundImage: Image.network(user.foto!).image,
                     ),
                   ),
                 ]),

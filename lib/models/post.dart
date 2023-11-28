@@ -5,9 +5,13 @@ class Post {
   DateTime tglDibuat;
   String konten;
   String? img;
-  int totalLike;
-  int totalKomentar;
-  int userId;
+  String userId;
+
+  int totalLike = 0;
+  List<String> likes = [];
+
+  int totalKomentar = 0;
+  List<String> komentars = [];
 
   Post({
     required this.id,
@@ -27,7 +31,9 @@ class Post {
     );
 
     post.likes = List<String>.from(json["likes"]);
+    post.totalLike = post.likes.length;
     post.komentars = List<String>.from(json["komentars"]);
+    post.totalKomentar = post.komentars.length;
 
     return post;
   }
@@ -38,12 +44,9 @@ class Post {
             .postsCollection
             .where("id", isEqualTo: id)
             .get();
-    // Post post = Post.fromJson(querySnapshot.docs[0] as Map<String, dynamic>);
-    // final post =
+
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
-    // .map((userId) => userId.toString());
-    String authUserId =
-        Provider.of<AuthData>(context, listen: false).authUser.id;
+    String authUserId = FirebaseAuth.instance.currentUser!.uid;
     if (likes.contains(authUserId)) {
       likes.remove(authUserId);
     } else {
@@ -53,7 +56,7 @@ class Post {
     Provider.of<PostData>(context, listen: false)
         .postsCollection
         .doc(id)
-        .update({"likes": likes});
+        .update({"likes": likes, "totalLike": likes.length});
   }
 
   Future<bool> isLiked(BuildContext context) async {
@@ -65,7 +68,6 @@ class Post {
 
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
 
-    return likes
-        .contains(Provider.of<AuthData>(context, listen: false).authUser.id);
+    return likes.contains(FirebaseAuth.instance.currentUser!.uid);
   }
 }
