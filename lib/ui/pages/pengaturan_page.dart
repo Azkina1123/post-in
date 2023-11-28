@@ -11,6 +11,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
   @override
   Widget build(BuildContext context) {
     final themeModeData = Provider.of<ThemeModeData>(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -262,40 +263,32 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           icon: Icon(Icons.logout_rounded,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
-                              onPressed: (){
-                                
-                              },
-                          // onPressed: () async {
-                          //   try {
-                          //     await FirebaseAuth.instance.signOut();
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) {
-                          //           return SignIn();
-                          //         },
-                          //       ),
-                          //     );
-                          //   } catch (e) {
-                          //     print("Error during sign out: $e");
-
-                          //     final mySnackBar = SnackBar(
-                          //       content:
-                          //           Text("Mohon Maaf, Proses Logout Gagal !"),
-                          //       duration: Duration(seconds: 3),
-                          //       padding: EdgeInsets.all(10),
-                          //       backgroundColor:
-                          //           Theme.of(context).colorScheme.primary,
-                          //     );
-                          //     ScaffoldMessenger.of(context)
-                          //         .showSnackBar(mySnackBar);
-                          //   }
-                          // },
+                          onPressed: () {
+                            FirebaseAuth.instance.signOut();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return SignIn();
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return SignIn();
+                              },
+                            ),
+                          );
+                        },
                         child: Text(
                           "Keluar Akun",
                           style: TextStyle(
@@ -323,12 +316,38 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           icon: Icon(Icons.delete,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
-                          onPressed: () {},
+                          onPressed: () {
+                          //   String id =
+                          //       "RxFHqNWwFzZr048KlQHl3IhVkJ72";
+                          //   hapusData(context, id);
+
+                          //   Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) {
+                          //       return SignIn();
+                          //     },
+                          //   ),
+                          // );
+                          },
                         ),
                       ),
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // String id =
+                          //       "RxFHqNWwFzZr048KlQHl3IhVkJ72";
+                          //   hapusData(context, id);
+
+                          //   Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) {
+                          //       return SignIn();
+                          //     },
+                          //   ),
+                          // );
+                        },
                         child: Text(
                           "Hapus Akun",
                           style: TextStyle(
@@ -351,3 +370,36 @@ class _PengaturanPageState extends State<PengaturanPage> {
     );
   }
 }
+
+// Future<dynamic> hapusData(BuildContext context, String id) {
+//   FirebaseFirestore firestore = FirebaseFirestore.instance;
+//   CollectionReference users = firestore.collection("users");
+//   return showDialog(
+//     context: context,
+//     builder: (context) {
+//       return AlertDialog(
+//         title: Text("Hapus Data"),
+//         content: Text("Anda yakin ingin menghapus data ini ?"),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//             child: Text("Cancel"),
+//           ),
+//           TextButton(
+//             onPressed: () async {
+//               await hapusAkun(users, id);
+//               Navigator.of(context).pop();
+//             },
+//             child: Text("Yes"),
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+
+// Future<void> hapusAkun(CollectionReference users, String id) async {
+//   await users.doc(id).delete();
+// }
