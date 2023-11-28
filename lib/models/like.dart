@@ -5,7 +5,7 @@ class Like {
   String? docId;
   int? postId;
   int? komentarId;
-  int userId;
+  String? userId;
 
   Like({
     required this.id,

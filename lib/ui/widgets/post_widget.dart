@@ -3,13 +3,13 @@ part of "widgets.dart";
 class PostWidget extends StatelessWidget {
   Post post;
 
-  User? user;
+  Userdata? user;
 
   PostWidget({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
-    int authUserid = Provider.of<AuthData>(context).authUser.id;
+    String? authUserid = Provider.of<Auth>(context).id_now;
 
     return Consumer2<LikeData, KomentarData>(
         builder: (context, likeData, komentarData, child) {
@@ -18,7 +18,7 @@ class PostWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FutureBuilder<User>(
+            FutureBuilder<Userdata>(
               future: Provider.of<UserData>(context).getUser(post.userId),
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
@@ -32,10 +32,10 @@ class PostWidget extends StatelessWidget {
                       );
                     },
                     splashColor: Colors.transparent,
-                    leading: AccountButton(
-                      onPressed: null,
-                      image: NetworkImage(user!.foto),
-                    ),
+                    // leading: AccountButton(
+                    //   onPressed: null,
+                    //   image: NetworkImage(user!.foto),
+                    // ),
                     title: Text(user!.username,
                         style: Theme.of(context).textTheme.titleMedium),
                     subtitle: Text(

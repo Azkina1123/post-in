@@ -8,7 +8,7 @@ class Post {
   String? img;
   int totalLike;
   int totalKomentar;
-  int userId;
+  String? userId;
 
   Post({
     required this.id,

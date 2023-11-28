@@ -1,7 +1,36 @@
 part of "pages.dart";
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  bool _loading = false;
+
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _ctrlNama = TextEditingController();
+  final TextEditingController _ctrlEmail = TextEditingController();
+  final TextEditingController _ctrlUsername = TextEditingController();
+  final TextEditingController _ctrlGender = TextEditingController();
+  final TextEditingController _ctrlNomor = TextEditingController();
+  final TextEditingController _ctrlPass = TextEditingController();
+
+  handleSubmit() async {
+    // if (!_formKey.currentState!.validate()) return;
+    final nama = _ctrlNama.value.text;
+    final email = _ctrlEmail.value.text;
+    final username = _ctrlUsername.value.text;
+    final password = _ctrlPass.value.text;
+    final gender = _ctrlGender.value.text;
+    final nomor = _ctrlNomor.value.text;
+    setState(() => _loading = true);
+    await Auth().regis(nama, email, username, password, gender, nomor);
+    setState(() => _loading = false);
+  }
 
   Widget buttonUpload(
     String label,
@@ -65,45 +94,107 @@ class SignUp extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: inputFile(
-                            label: "Nama Lengkap", textColor: Colors.white),
-                      ),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: inputFile(
-                            label: "Username", textColor: Colors.white),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child:
-                            inputFile(label: "Email", textColor: Colors.white),
-                      ),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child:
-                            inputFile(label: "Gender", textColor: Colors.white),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: inputFile(
-                          label: "Nomor Telp",
-                          textColor: Colors.white,
+                        child: TextFormField(
+                          controller: _ctrlNama,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Nama lengkap Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Nama Lengkap',
+                          ),
                         ),
                       ),
                       SizedBox(width: 20),
                       Expanded(
-                        child: inputFile(
-                            label: "Password",
-                            obscureText: true,
-                            textColor: Colors.white),
+                        child: TextFormField(
+                          controller: _ctrlUsername,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Username Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Username',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ctrlEmail,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Email Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Email',
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ctrlGender,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Gender Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Gender',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ctrlNomor,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Nomor Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Nomor Telepon',
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _ctrlPass,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Password Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Password',
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -136,26 +227,40 @@ class SignUp extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      Navigator.popAndPushNamed(context, "/sign-in");
-                    },
-                    color: Theme.of(context).colorScheme.primary,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Text(
-                      "Daftar",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                    ),
+                  child: ElevatedButton(
+                    onPressed: () => handleSubmit(),
+                    child: _loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text("Daftar"),
                   ),
+                  // MaterialButton(
+                  //   minWidth: double.infinity,
+                  //   height: 60,
+                  //   onPressed: () {
+                  //     // Navigator.popAndPushNamed(context, "/sign-in");
+
+                  //   },
+                  //   color: Theme.of(context).colorScheme.primary,
+                  //   elevation: 0,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(50),
+                  //   ),
+                  //   child: Text(
+                  //     "Daftar",
+                  //     style: TextStyle(
+                  //       fontWeight: FontWeight.w600,
+                  //       fontSize: 18,
+                  //       color: Theme.of(context).colorScheme.onSecondary,
+                  //     ),
+                  //   ),
+                  // ),
                 ),
               ),
               Row(

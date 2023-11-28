@@ -25,7 +25,7 @@ class _InputKomentarState extends State<InputKomentar> {
 
   @override
   Widget build(BuildContext context) {
-    int authUserId = Provider.of<AuthData>(context).authUser.id!;
+    String? authUserId = Provider.of<Auth>(context).id_now;
 
     if (Provider.of<PageData>(context).komentarFocused) {
       _focus.requestFocus();
@@ -55,13 +55,13 @@ class _InputKomentarState extends State<InputKomentar> {
               // autofocus: ,
               decoration: InputDecoration(
                 hintText: "Bagikan komentar Anda!",
-                icon: AccountButton(
-                  image: NetworkImage(
-                      Provider.of<AuthData>(context, listen: false)
-                          .authUser
-                          .foto!),
-                  onPressed: null,
-                ),
+                // icon: AccountButton(
+                //   image: NetworkImage(
+                //       Provider.of<AuthData>(context, listen: false)
+                //           .authUser
+                //           .foto!),
+                //   onPressed: null,
+                // ),
               ),
               style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 5,
@@ -101,7 +101,8 @@ class _InputKomentarState extends State<InputKomentar> {
                               .updateTotalKomentar(
                             widget.post.docId!,
                             await komentarData
-                              .getKomentarCount(widget.post.id) + 1,
+                                    .getKomentarCount(widget.post.id) +
+                                1,
                           );
 
                           _focus.unfocus();

@@ -7,7 +7,7 @@ class Komentar {
   String konten;
   int totalLike;
   int postId;
-  int userId;
+  String? userId;
 
   Komentar({
     required this.id,

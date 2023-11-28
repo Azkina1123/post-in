@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:post_in/models/models.dart';
 import 'package:post_in/providers/providers.dart';
@@ -29,13 +30,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PageData()),
-        ChangeNotifierProvider(create: (context) => AuthData()),
+        ChangeNotifierProvider(create: (context) => Auth()),
         ChangeNotifierProvider(create: (context) => UserData()),
         ChangeNotifierProvider(create: (context) => PostData()),
         ChangeNotifierProvider(create: (context) => KomentarData()),
         ChangeNotifierProvider(create: (context) => LikeData()),
         ChangeNotifierProvider(create: (context) => FollowingData()),
-        
       ],
       child: Builder(builder: (ctx) {
         return MaterialApp(
@@ -284,7 +284,7 @@ class MyApp extends StatelessWidget {
                 hintStyle: TextStyle(
                   color: colors["milk-white"]!.withOpacity(0.5),
                 ),
-              ), 
+              ),
               popupMenuTheme: PopupMenuThemeData(
                 surfaceTintColor: colors["dark-jungle-green"]!,
               )),
@@ -306,7 +306,7 @@ class MyApp extends StatelessWidget {
                 }),
               );
             } else if (settings.name == "/profile") {
-              final args = settings.arguments as User;
+              final args = settings.arguments as Userdata;
 
               return MaterialPageRoute(
                 builder: ((ctx) {
@@ -323,7 +323,6 @@ class MyApp extends StatelessWidget {
             "/sign-in": (ctx) => const SignIn(),
             "/sign-up": (ctx) => const SignUp(),
           },
-
           initialRoute: "/intro",
         );
       }),

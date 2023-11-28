@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:post_in/models/models.dart';
+import 'package:provider/provider.dart';
 
 part 'post_data.dart';
 part 'page_data.dart';

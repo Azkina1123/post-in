@@ -1,7 +1,7 @@
 part of "models.dart";
 
-class User {
-  int id;
+class Userdata {
+  // int id;
   String? docId;
   DateTime tglDibuat;
   String username;
@@ -10,11 +10,11 @@ class User {
   String noTelp;
   String gender;
   String password;
-  String foto;
-  String sampul;
+  String? foto;
+  String? sampul;
 
-  User({
-    required this.id,
+  Userdata({
+    // required this.id,
     this.docId,
     required this.tglDibuat,
     required this.username,
@@ -23,7 +23,7 @@ class User {
     required this.noTelp,
     required this.gender,
     required this.password,
-    required this.foto,
-    required this.sampul,
+    this.foto,
+    this.sampul,
   });
 }

@@ -11,7 +11,7 @@ class KomentarWidget extends StatefulWidget {
 }
 
 class _KomentarWidgetState extends State<KomentarWidget> {
-  User? _user;
+  Userdata? _user;
   bool _selected = false;
 
   @override
@@ -22,7 +22,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    int authUserId = Provider.of<AuthData>(context, listen: false).authUser.id;
+    String? authUserId = Provider.of<Auth>(context, listen: false).id_now;
 
     return Consumer<LikeData>(builder: (context, likeData, child) {
       return InkWell(
@@ -48,7 +48,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                             Post post = await postData.getPost(widget.postId);
 
                             komentarData.delete(widget.komentar.id);
-                            
+
                             postData.updateTotalKomentar(
                               post.docId!,
                               await komentarData.getKomentarCount(post.id),
@@ -75,7 +75,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                 ? colors["sand"]!.withOpacity(0.3)
                 : Theme.of(context).colorScheme.surface,
           ),
-          child: FutureBuilder<User>(
+          child: FutureBuilder<Userdata>(
               future: Provider.of<UserData>(context, listen: false)
                   .getUser(widget.komentar.userId),
               builder: (context, snapshot) {
@@ -93,16 +93,16 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                         padding: const EdgeInsets.only(left: 15, right: 10),
                         child: Column(
                           children: [
-                            AccountButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  "/profile",
-                                  arguments: _user,
-                                );
-                              },
-                              image: NetworkImage(_user!.foto),
-                            ),
+                            // AccountButton(
+                            //   onPressed: () {
+                            //     Navigator.pushNamed(
+                            //       context,
+                            //       "/profile",
+                            //       arguments: _user,
+                            //     );
+                            //   },
+                            //   image: NetworkImage(_user!.foto),
+                            // ),
                           ],
                         ),
                       ),
@@ -162,7 +162,10 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final data = snapshot.data!.docs;
-                              bool isLiked = data.where((like) => like.get("userId") == authUserId).isNotEmpty;
+                              bool isLiked = data
+                                  .where((like) =>
+                                      like.get("userId") == authUserId)
+                                  .isNotEmpty;
                               return Column(
                                 children: [
                                   IconButton(

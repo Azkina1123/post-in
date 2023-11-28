@@ -32,12 +32,12 @@ class landingPage extends StatelessWidget {
           ),
           Image.asset(
             'assets/landing(1).png',
-            width: 480,
-            height: 450,
+            width: 400,
+            height: 380,
             fit: BoxFit.cover,
           ),
           SizedBox(
-            height: 140,
+            height: 120,
           ),
           Column(
             children: [
@@ -106,7 +106,6 @@ class landingPage extends StatelessWidget {
           )
         ],
       ),
-      
     );
   }
 }

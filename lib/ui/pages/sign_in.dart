@@ -1,7 +1,30 @@
 part of "pages.dart";
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  bool _loading = false;
+
+  // final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _ctrlEmail = TextEditingController();
+
+  final TextEditingController _ctrlPass = TextEditingController();
+
+  handleSubmit() async {
+    // if (!_formKey.currentState!.validate()) return;
+    final email = _ctrlEmail.value.text;
+    final password = _ctrlPass.value.text;
+    setState(() => _loading = true);
+    await Auth().login(email, password);
+    setState(() => _loading = false);
+    Navigator.pushNamed(context, "/");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +69,35 @@ class SignIn extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: [
-                        inputFile(
-                          label: "Email",
-                          textColor: Colors.white, // Warna teks
+                        TextFormField(
+                          controller: _ctrlEmail,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Email Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Email',
+                          ),
                         ),
                         SizedBox(
                           height: 20,
                         ),
-                        inputFile(
-                          label: "Password",
+                        TextFormField(
+                          controller: _ctrlPass,
                           obscureText: true,
-                          textColor: Colors.white, // Warna teks
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan Masukkan Password Anda';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Password',
+                          ),
                         ),
                       ],
                     ),
@@ -68,25 +109,18 @@ class SignIn extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/");
-                        },
-                        color: Theme.of(context).colorScheme.primary,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Text(
-                          "Masuk",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Theme.of(context).colorScheme.onSecondary,
-                          ),
-                        ),
+                      child: ElevatedButton(
+                        onPressed: () => handleSubmit(),
+                        child: _loading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text("Submit"),
                       ),
                     ),
                   ),
@@ -105,7 +139,7 @@ class SignIn extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                             Navigator.popAndPushNamed(context, "/sign-up");
+                            Navigator.popAndPushNamed(context, "/sign-up");
                           },
                           child: Text(
                             "Daftar",

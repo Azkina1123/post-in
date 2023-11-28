@@ -22,7 +22,7 @@ class _InputPostState extends State<InputPost> {
 
   @override
   Widget build(BuildContext context) {
-    int authUserId = Provider.of<AuthData>(context).authUser.id!;
+    String? authUserId = Provider.of<Auth>(context).id_now;
 
     return Column(
       children: [
@@ -46,13 +46,13 @@ class _InputPostState extends State<InputPost> {
               autofocus: imgPath != null ? true : false,
               decoration: InputDecoration(
                 hintText: "Ceritakan kisah Anda hari ini!",
-                icon: AccountButton(
-                  image: NetworkImage(
-                      Provider.of<AuthData>(context, listen: false)
-                          .authUser
-                          .foto!),
-                  onPressed: null,
-                ),
+                // icon: AccountButton(
+                //   image: NetworkImage(
+                //       Provider.of<AuthData>(context, listen: false)
+                //           .authUser
+                //           .foto!),
+                //   onPressed: null,
+                // ),
               ),
               style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 5,

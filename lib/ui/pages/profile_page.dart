@@ -1,7 +1,7 @@
 part of "pages.dart";
 
 class ProfilePage extends StatelessWidget {
-  User user; // profile user yg sedang dilihat
+  Userdata user; // profile user yg sedang dilihat
 
   ProfilePage({super.key, required this.user});
 
@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 20),
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: Image.network(user.foto).image,
+                      // backgroundImage: Image.network(user.foto).image,
                     ),
                   ),
                 ]),

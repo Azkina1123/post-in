@@ -69,23 +69,27 @@ class UserData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _usersRef.get();
     return querySnapshot.size;
   }
+
   Future<int> get lastId async {
     QuerySnapshot querySnapshot =
         await _usersRef.orderBy("id", descending: true).get();
-        if (querySnapshot.size == 0) {
+    if (querySnapshot.size == 0) {
       return 0;
     }
     return querySnapshot.docs.first.get("id");
   }
-  void add(User user) async {
-    int id;
-    if (userCount == 0) {
-      id = await userCount + 1;
-    } else {
-      id = await lastId + 1;
-    }
-    _usersRef.doc(id.toString()).set({
-      "id": id,
+
+  void add(Userdata user) async {
+    // int id;
+    // if (userCount == 0) {
+    //   id = await userCount + 1;
+    // } else {
+    //   id = await lastId + 1;
+    // }
+
+    // final id =
+    _usersRef.doc(user.docId).set({
+      "id": user.docId,
       "tglDibuat": user.tglDibuat,
       "username": user.username,
       "namaLengkap": user.namaLengkap,
@@ -93,44 +97,44 @@ class UserData extends ChangeNotifier {
       "gender": user.gender,
       "noTelp": user.noTelp,
       "password": user.password,
-      "foto": user.foto,
-      "sampul": user.sampul,
+      // "foto": user.foto,
+      // "sampul": user.sampul,
     });
     notifyListeners();
   }
 
-  Future<List<User>> getUsers() async {
+  Future<List<Userdata>> getUsers() async {
     QuerySnapshot querySnapshot = await _usersRef.get();
-    List<User> users = [];
+    List<Userdata> users = [];
 
     querySnapshot.docs.forEach((doc) {
       users.add(
-        User(
-          id: doc.get("id"),
-          docId: doc.id,
+        Userdata(
+          // id: doc.get("id"),
+          docId: doc.get("id"),
           tglDibuat: doc.get("tglDibuat").toDate(),
           username: doc.get("username"),
           namaLengkap: doc.get("namaLengkap"),
           email: doc.get("email"),
           gender: doc.get("gender"),
           noTelp: doc.get("noTelp"),
-          sampul: doc.get("sampul"),
+          // sampul: doc.get("sampul"),
           password: doc.get("password"),
-          foto: doc.get("foto"),
+          // foto: doc.get("foto"),
         ),
       );
     });
     return users;
   }
 
-  Future<User> getUser(int id) async {
+  Future<Userdata> getUser(String? id) async {
     QuerySnapshot querySnapshot = await _usersRef.get();
 
-    User? user;
+    Userdata? user;
     querySnapshot.docs.forEach((doc) {
       if (doc.get("id") == id) {
-        user = User(
-          id: doc.get("id"),
+        user = Userdata(
+          // id: doc.get("id"),
           docId: doc.id,
           tglDibuat: doc.get("tglDibuat").toDate(),
           username: doc.get("username"),
@@ -138,13 +142,12 @@ class UserData extends ChangeNotifier {
           email: doc.get("email"),
           gender: doc.get("gender"),
           noTelp: doc.get("noTelp"),
-          sampul: doc.get("sampul"),
+          // sampul: doc.get("sampul"),
           password: doc.get("password"),
-          foto: doc.get("foto"),
+          // foto: doc.get("foto"),
         );
       }
     });
-
     return user!;
   }
 }

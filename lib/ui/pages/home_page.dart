@@ -52,6 +52,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Userdata? awu;
+    Future<Userdata> user = Provider.of<UserData>(context, listen: false)
+        .getUser(Provider.of<Auth>(context).id_now);
+
     return Consumer<PostData>(builder: (ctx, postData, child) {
       return Scaffold(
         // app bar ========================================================================
@@ -78,26 +82,21 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(
                     ctx,
                     "/profile",
-                    arguments:
-                        Provider.of<AuthData>(ctx, listen: false).authUser,
+                    arguments: awu,
                   );
                 },
                 child: Row(
                   children: [
-                    Text(
-                      Provider.of<AuthData>(ctx, listen: false)
-                          .authUser
-                          .username,
-                    ),
+                    Text(awu!.username),
                     SizedBox(
                       width: 10,
                     ),
-                    AccountButton(
-                      onPressed: null,
-                      image: NetworkImage(
-                        Provider.of<AuthData>(ctx, listen: false).authUser.foto,
-                      ),
-                    ),
+                    // AccountButton(
+                    //   onPressed: null,
+                    //   image: NetworkImage(
+                    //       // Provider.of<AuthData>(ctx, listen: false).authUser.foto,
+                    //       ),
+                    // ),
                   ],
                 ),
               ),
