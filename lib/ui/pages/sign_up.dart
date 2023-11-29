@@ -9,15 +9,27 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool _loading = false;
+  String? _selectedGender;
+  bool _isObscure = true;
+  List<String> _genderOptions = ["Male", "Female", "Non"];
 
+  // String? _profileImagePath;
+  // String? _coverImagePath;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _ctrlNama = TextEditingController();
   final TextEditingController _ctrlEmail = TextEditingController();
   final TextEditingController _ctrlUsername = TextEditingController();
-  final TextEditingController _ctrlGender = TextEditingController();
   final TextEditingController _ctrlNomor = TextEditingController();
   final TextEditingController _ctrlPass = TextEditingController();
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
 
   handleSubmit() async {
     // if (!_formKey.currentState!.validate()) return;
@@ -25,10 +37,26 @@ class _SignUpState extends State<SignUp> {
     final email = _ctrlEmail.value.text;
     final username = _ctrlUsername.value.text;
     final password = _ctrlPass.value.text;
-    final gender = _ctrlGender.value.text;
+    final gender = _selectedGender ?? "";
     final nomor = _ctrlNomor.value.text;
+    if (nama.isEmpty ||
+        email.isEmpty ||
+        username.isEmpty ||
+        password.isEmpty ||
+        gender == null ||
+        nomor.isEmpty) {
+      _showSnackBar('Semua bidang harus diisi');
+      return;
+    }
     setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor);
+    // if (_profileImagePath != null) {
+    //   await AuthData().uploadProfileImage(_profileImagePath!);
+    // }
+
+    // if (_coverImagePath != null) {
+    //   await AuthData().uploadCoverImage(_coverImagePath!);
+    // }
     setState(() => _loading = false);
   }
 
@@ -146,13 +174,18 @@ class _SignUpState extends State<SignUp> {
                       ),
                       SizedBox(width: 20),
                       Expanded(
-                        child: TextFormField(
-                          controller: _ctrlGender,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Silakan Masukkan Gender Anda';
-                            }
-                            return null;
+                        child: DropdownButtonFormField<String>(
+                          value: _selectedGender,
+                          items: _genderOptions.map((String gender) {
+                            return DropdownMenuItem<String>(
+                              value: gender,
+                              child: Text(gender),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
                           },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -174,6 +207,9 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nomor Telepon',
@@ -184,6 +220,7 @@ class _SignUpState extends State<SignUp> {
                       Expanded(
                         child: TextFormField(
                           controller: _ctrlPass,
+                          obscureText: _isObscure,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Silakan Masukkan Password Anda';
@@ -193,6 +230,16 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Password',
+                            suffixIcon: IconButton(
+                              icon: Icon(_isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -201,21 +248,41 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 30),
                   Row(
                     children: [
-                      Expanded(
-                        child: buttonUpload(
-                          "Upload Foto Profil",
-                          Icons.upload,
-                          () {},
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: buttonUpload(
+                      //     "Upload Foto Profil",
+                      //     Icons.upload,
+                      //     () async {
+                      //       final pickedFile = await ImagePicker()
+                      //           .getImage(source: ImageSource.gallery);
+                      //       if (pickedFile != null) {
+                      //         setState(() {
+                      //           _profileImagePath = pickedFile.path;
+                      //         });
+                      //         // You can add more logic related to profile image upload here
+                      //         // For example: await AuthData().uploadProfileImage(_profileImagePath!);
+                      //       }
+                      //     },
+                      //   ),
+                      // ),
                       SizedBox(width: 20),
-                      Expanded(
-                        child: buttonUpload(
-                          "Upload Sampul",
-                          Icons.upload,
-                          () {},
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: buttonUpload(
+                      //     "Upload Sampul",
+                      //     Icons.upload,
+                      //     () async {
+                      //       final pickedFile = await ImagePicker()
+                      //           .getImage(source: ImageSource.gallery);
+                      //       if (pickedFile != null) {
+                      //         setState(() {
+                      //           _coverImagePath = pickedFile.path;
+                      //         });
+                      //         // You can add more logic related to cover image upload here
+                      //         // For example: await AuthData().uploadCoverImage(_coverImagePath!);
+                      //       }
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

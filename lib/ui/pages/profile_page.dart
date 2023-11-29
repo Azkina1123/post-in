@@ -1,14 +1,14 @@
 part of "pages.dart";
 
 class ProfilePage extends StatelessWidget {
-
   const ProfilePage({super.key});
 
   @override
   Widget build(
     BuildContext context,
   ) {
-    UserAcc user = ModalRoute.of(context)!.settings.arguments as UserAcc; // profile user yg sedang dilihat
+    UserAcc user = ModalRoute.of(context)!.settings.arguments
+        as UserAcc; // profile user yg sedang dilihat
 
     return Scaffold(
       appBar: AppBar(

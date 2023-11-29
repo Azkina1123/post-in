@@ -1,13 +1,12 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:post_in/providers/providers.dart';
 import 'package:post_in/ui/widgets/widgets.dart';
 import 'package:post_in/models/models.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 part 'main_page.dart';

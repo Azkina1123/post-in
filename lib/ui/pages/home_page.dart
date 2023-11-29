@@ -103,56 +103,58 @@ class _HomePageState extends State<HomePage> {
               InputPost(tabIndex: _index),
 
               // daftar postingan ----------------------------------------------------------
-              if (_index == 2 && _followedUserIds.isEmpty) Container(
-                child: const Text("Anda belum mengikuti user mana pun."),
-                height: height(context)/2,
-                alignment: Alignment.center,
-              )
-              else StreamBuilder<QuerySnapshot>(
-                  stream: _getSnapshot(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        width: width(context),
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasData) {
-                      final posts = snapshot.data!.docs;
+              if (_index == 2 && _followedUserIds.isEmpty)
+                Container(
+                  child: const Text("Anda belum mengikuti user mana pun."),
+                  height: height(context) / 2,
+                  alignment: Alignment.center,
+                )
+              else
+                StreamBuilder<QuerySnapshot>(
+                    stream: _getSnapshot(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          width: width(context),
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        final posts = snapshot.data!.docs;
 
-                      return Column(
-                        children: [
-                          for (int i = 0; i < posts.length; i++)
-                            Column(
-                              children: [
-                                PostWidget(
-                                  post: Post.fromJson(
-                                      posts[i].data() as Map<String, dynamic>),
-                                ),
+                        return Column(
+                          children: [
+                            for (int i = 0; i < posts.length; i++)
+                              Column(
+                                children: [
+                                  PostWidget(
+                                    post: Post.fromJson(posts[i].data()
+                                        as Map<String, dynamic>),
+                                  ),
 
-                                // kasih pembatas antar post --------------------------------------
-                                if (i != posts.length - 1)
-                                  Divider(
-                                    color: Theme.of(ctx)
-                                        .colorScheme
-                                        .tertiary
-                                        .withOpacity(0.5),
-                                    indent: 10,
-                                    endIndent: 10,
-                                  )
-                                // di post terakhir tidak perlu pembatas -------------------------
-                                else
-                                  const SizedBox(
-                                    height: 20,
-                                  )
-                              ],
-                            )
-                        ],
-                      );
-                    }
+                                  // kasih pembatas antar post --------------------------------------
+                                  if (i != posts.length - 1)
+                                    Divider(
+                                      color: Theme.of(ctx)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.5),
+                                      indent: 10,
+                                      endIndent: 10,
+                                    )
+                                  // di post terakhir tidak perlu pembatas -------------------------
+                                  else
+                                    const SizedBox(
+                                      height: 20,
+                                    )
+                                ],
+                              )
+                          ],
+                        );
+                      }
 
-                    return const Text("Belum ada post yang ditambahkan.");
-                  })
+                      return const Text("Belum ada post yang ditambahkan.");
+                    })
             ],
           ),
         ),

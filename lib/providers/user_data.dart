@@ -74,7 +74,6 @@ class UserData extends ChangeNotifier {
     List<String> userIds = [];
 
     querySnapshot.docs.forEach((doc) {
-      
       userIds.add(doc.get("id"));
     });
     return userIds;

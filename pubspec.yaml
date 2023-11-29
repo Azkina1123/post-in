@@ -48,6 +48,7 @@ dependencies:
   email_validator: ^2.1.17
   firebase_storage: ^11.5.0
   introduction_screen: ^3.1.12
+
   
 
 dev_dependencies:

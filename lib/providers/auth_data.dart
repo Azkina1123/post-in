@@ -15,6 +15,27 @@ class AuthData extends ChangeNotifier {
       email: email,
       password: password,
     );
+    Future<void> uploadProfileImage(String imagePath) async {
+      try {
+        Reference storageReference =
+            FirebaseStorage.instance.ref().child('profile_images/$id_now.jpg');
+        UploadTask uploadTask = storageReference.putFile(File(imagePath));
+        await uploadTask.whenComplete(() => print('Profile image uploaded'));
+      } catch (e) {
+        print('Error uploading profile image: $e');
+      }
+    }
+
+    Future<void> uploadCoverImage(String imagePath) async {
+      try {
+        Reference storageReference =
+            FirebaseStorage.instance.ref().child('cover_images/$id_now.jpg');
+        UploadTask uploadTask = storageReference.putFile(File(imagePath));
+        await uploadTask.whenComplete(() => print('Cover image uploaded'));
+      } catch (e) {
+        print('Error uploading cover image: $e');
+      }
+    }
 
     id_now = user.user!.uid;
 

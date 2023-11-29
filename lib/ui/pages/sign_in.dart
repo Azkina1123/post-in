@@ -9,21 +9,42 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   bool _loading = false;
+  bool _isObscure = true;
 
   // final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _ctrlEmail = TextEditingController();
 
   final TextEditingController _ctrlPass = TextEditingController();
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
 
-  handleSubmit() async {
-    // if (!_formKey.currentState!.validate()) return;
+  void handleSubmit() async {
     final email = _ctrlEmail.value.text;
     final password = _ctrlPass.value.text;
+    if (email.isEmpty || password.isEmpty) {
+      _showSnackBar('Semua field harus diisi');
+      return;
+    }
+
     setState(() => _loading = true);
-    await AuthData().login(email, password);
-    setState(() => _loading = false);
-    Navigator.popAndPushNamed(context, "/");
+
+    try {
+      // Cobalah untuk melakukan login
+      await AuthData().login(email, password);
+
+      Navigator.popAndPushNamed(context, "/");
+    } catch (e) {
+      print('Error: $e');
+      _showSnackBar('Email atau password tidak valid');
+    } finally {
+      setState(() => _loading = false);
+    }
   }
 
   @override
@@ -50,8 +71,7 @@ class _SignInState extends State<SignIn> {
                 children: [
                   Text(
                     "Masuk",
-                    style: TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 20,
@@ -84,7 +104,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     TextFormField(
                       controller: _ctrlPass,
-                      obscureText: true,
+                      obscureText: _isObscure,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Silakan Masukkan Password Anda';
@@ -94,6 +114,16 @@ class _SignInState extends State<SignIn> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ],
