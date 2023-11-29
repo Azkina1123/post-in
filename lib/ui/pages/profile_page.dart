@@ -35,11 +35,25 @@ class ProfilePage extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(user.username),
+                      Text(
+                        user.username,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize:
+                              Theme.of(context).textTheme.titleLarge!.fontSize,
+                        ),
+                      ),
                       SizedBox(
                         width: 20,
                       ),
-                      Text(user.namaLengkap),
+                      Text(
+                        user.namaLengkap,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize:
+                              Theme.of(context).textTheme.titleMedium!.fontSize,
+                        ),
+                      ),
                     ],
                   ),
                   Spacer(),
@@ -63,7 +77,7 @@ class ProfilePage extends StatelessWidget {
                       TextButton(
                           style: Theme.of(context).textButtonTheme.style,
                           onPressed: () {
-                            //  Navigator.pushNamed(context, '/follow');
+                            Navigator.pushNamed(context, '/follow');
                           },
                           child: Text("10" + " Following")),
                       SizedBox(
@@ -71,7 +85,9 @@ class ProfilePage extends StatelessWidget {
                       ),
                       TextButton(
                           style: Theme.of(context).textButtonTheme.style,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/follow');
+                          },
                           child: Text("10" + " Follower")),
                     ]),
               ),

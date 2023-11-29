@@ -20,6 +20,7 @@ part 'landing_page.dart';
 part 'sign_in.dart';
 part 'sign_up.dart';
 part 'debugPage.dart';
+part 'follow_page.dart';
 
 
 
