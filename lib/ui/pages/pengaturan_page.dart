@@ -10,7 +10,7 @@ class PengaturanPage extends StatefulWidget {
 class _PengaturanPageState extends State<PengaturanPage> {
   @override
   Widget build(BuildContext context) {
-    final themeModeData = Provider.of<ThemeModeData>(context);
+    UserAcc? user;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,43 +27,71 @@ class _PengaturanPageState extends State<PengaturanPage> {
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Username"),
-                      Text("Email"),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 95, top: 40),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.navigate_next_rounded,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.secondary,
+          FutureBuilder<UserAcc>(
+            future: Provider.of<UserData>(context, listen: false)
+                .getUser(FirebaseAuth.instance.currentUser!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                user = snapshot.data!;
+              }
+              return Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        user?.foto ?? "",
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user?.username ?? "",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .fontSize,
+                            ),
+                          ),
+                          Text(
+                            user?.email ?? "",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .fontSize,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 35),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.navigate_next_rounded,
+                            size: 30,
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -313,10 +341,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                             AuthData authData = AuthData();
                             // Hapus ID User saat ini pada firestore
                             String id = FirebaseAuth.instance.currentUser!.uid;
-
-                            // Hapus ID User saat ini pada autentikasi
-                            await FirebaseAuth.instance.currentUser!.delete();
-                            hapusData(context, id);
+                            hapusDataAkun(context, id);
                           },
                         ),
                       ),
@@ -326,10 +351,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           AuthData authData = AuthData();
                           // Hapus ID User saat ini pada firestore
                           String id = FirebaseAuth.instance.currentUser!.uid;
-
-                          // Hapus ID User saat ini pada autentikasi
-                          await FirebaseAuth.instance.currentUser!.delete();
-                          hapusData(context, id);
+                          hapusDataAkun(context, id);
                         },
                         child: Text(
                           "Hapus Akun",
@@ -354,35 +376,55 @@ class _PengaturanPageState extends State<PengaturanPage> {
   }
 }
 
-Future<dynamic> hapusData(BuildContext context, String id) {
+Future<void> hapusDataAkun(BuildContext context, String id) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference users = firestore.collection("users");
+  CollectionReference posts = firestore.collection("posts");
+
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text("Hapus Data"),
-        content: Text("Anda yakin ingin menghapus data ini ?"),
+        title: Text(
+          "Hapus Akun",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
+          ),
+        ),
+        content: Text(
+          "Yakin akan menghapus akun ?",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Cancel"),
+            child: Text(
+              "Batal",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () async {
-              await hapusAkun(users, id);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SignIn();
-                  },
-                ),
-              );
+              String userId = FirebaseAuth.instance.currentUser!.uid;
+              await hapusData(posts, users, userId, id);
+              Navigator.pushReplacementNamed(context, "sign-in");
             },
-            child: Text("Yes"),
+            child: Text(
+              "Yakin",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              ),
+            ),
           ),
         ],
       );
@@ -390,6 +432,25 @@ Future<dynamic> hapusData(BuildContext context, String id) {
   );
 }
 
+Future<void> hapusData(CollectionReference posts, CollectionReference users,
+    String userId, String id) async {
+  try {
+    // Hapus post yang terkait dengan akun
+    await hapusPost(posts, userId);
+
+    // Hapus data akun dari Firestore
+    await hapusAkun(users, id);
+  } catch (error) {
+    print("Error: Gagal Menghapus Data");
+    // Tangani error, tampilkan pesan atau lakukan tindakan yang sesuai
+  }
+}
+
 Future<void> hapusAkun(CollectionReference users, String id) async {
   await users.doc(id).delete();
+  await FirebaseAuth.instance.currentUser!.delete();
+}
+
+Future<void> hapusPost(CollectionReference posts, String userId) async {
+  await posts.doc(userId).delete();
 }
