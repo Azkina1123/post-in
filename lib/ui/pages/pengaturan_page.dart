@@ -280,14 +280,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return SignIn();
-                              },
-                            ),
-                          );
+                          Navigator.popAndPushNamed(context, "sign-in");
                         },
                         child: Text(
                           "Keluar Akun",
@@ -316,37 +309,27 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           icon: Icon(Icons.delete,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
-                          onPressed: () {
-                          //   String id =
-                          //       "RxFHqNWwFzZr048KlQHl3IhVkJ72";
-                          //   hapusData(context, id);
+                          onPressed: () async {
+                            AuthData authData = AuthData();
+                            // Hapus ID User saat ini pada firestore
+                            String id = FirebaseAuth.instance.currentUser!.uid;
 
-                          //   Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return SignIn();
-                          //     },
-                          //   ),
-                          // );
+                            // Hapus ID User saat ini pada autentikasi
+                            await FirebaseAuth.instance.currentUser!.delete();
+                            hapusData(context, id);
                           },
                         ),
                       ),
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: () {
-                          // String id =
-                          //       "RxFHqNWwFzZr048KlQHl3IhVkJ72";
-                          //   hapusData(context, id);
+                        onPressed: () async {
+                          AuthData authData = AuthData();
+                          // Hapus ID User saat ini pada firestore
+                          String id = FirebaseAuth.instance.currentUser!.uid;
 
-                          //   Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return SignIn();
-                          //     },
-                          //   ),
-                          // );
+                          // Hapus ID User saat ini pada autentikasi
+                          await FirebaseAuth.instance.currentUser!.delete();
+                          hapusData(context, id);
                         },
                         child: Text(
                           "Hapus Akun",
@@ -371,35 +354,42 @@ class _PengaturanPageState extends State<PengaturanPage> {
   }
 }
 
-// Future<dynamic> hapusData(BuildContext context, String id) {
-//   FirebaseFirestore firestore = FirebaseFirestore.instance;
-//   CollectionReference users = firestore.collection("users");
-//   return showDialog(
-//     context: context,
-//     builder: (context) {
-//       return AlertDialog(
-//         title: Text("Hapus Data"),
-//         content: Text("Anda yakin ingin menghapus data ini ?"),
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Navigator.of(context).pop();
-//             },
-//             child: Text("Cancel"),
-//           ),
-//           TextButton(
-//             onPressed: () async {
-//               await hapusAkun(users, id);
-//               Navigator.of(context).pop();
-//             },
-//             child: Text("Yes"),
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }
+Future<dynamic> hapusData(BuildContext context, String id) {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference users = firestore.collection("users");
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Hapus Data"),
+        content: Text("Anda yakin ingin menghapus data ini ?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await hapusAkun(users, id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return SignIn();
+                  },
+                ),
+              );
+            },
+            child: Text("Yes"),
+          ),
+        ],
+      );
+    },
+  );
+}
 
-// Future<void> hapusAkun(CollectionReference users, String id) async {
-//   await users.doc(id).delete();
-// }
+Future<void> hapusAkun(CollectionReference users, String id) async {
+  await users.doc(id).delete();
+}
