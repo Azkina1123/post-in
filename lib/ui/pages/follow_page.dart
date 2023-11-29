@@ -1,16 +1,33 @@
-import 'package:flutter/material.dart';
+part of 'pages.dart';
 
-class follow extends StatefulWidget {
-  const follow({super.key});
+class FollowPage extends StatelessWidget {
+  const FollowPage({super.key});
 
-  @override
-  State<follow> createState() => _followState();
-}
-
-class _followState extends State<follow> {
   @override
   Widget build(BuildContext context) {
+    UserAcc? user;
+
     return Scaffold(
+      appBar: AppBar(
+        title: FutureBuilder<UserAcc>(
+            future: Provider.of<UserData>(context, listen: false)
+                .getUser(FirebaseAuth.instance.currentUser!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                user = snapshot.data!;
+              }
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Text(
+                  user?.username ?? "",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
+                  ),
+                ),
+              );
+            }),
+      ),
       body: DefaultTabController(
         length: 2,
         child: Column(
