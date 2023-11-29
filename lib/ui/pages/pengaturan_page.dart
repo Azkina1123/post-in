@@ -293,14 +293,11 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               size: 30),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SignIn();
-                                },
-                              ),
-                            );
+                            Navigator.popAndPushNamed(context, "sign-in");
+                            
+                            // kembalikan ke home page
+                            Provider.of<PageData>(context, listen: false)
+                                .changePage(0);
                           },
                         ),
                       ),

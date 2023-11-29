@@ -41,6 +41,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       onPressed: () {
                         _successDelete = true;
                         komentarData.delete();
+                ScaffoldMessenger.of(context).clearSnackBars();
+
 
                         setState(() {
                           if (_successDelete) {
@@ -96,7 +98,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                 arguments: _user,
                               );
                             },
-                            image: NetworkImage(_user!.foto!),
+                            image: NetworkImage(_user?.foto ?? ""),
                           ),
                         ],
                       ),

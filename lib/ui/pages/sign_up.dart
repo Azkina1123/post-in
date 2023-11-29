@@ -207,6 +207,7 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],

@@ -1,4 +1,5 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:post_in/models/models.dart';
 import 'package:post_in/providers/providers.dart';
@@ -315,13 +316,14 @@ class MyApp extends StatelessWidget {
             "/intro": (ctx) => const Introduction_Page(),
             "/sign-in": (ctx) => const SignIn(),
             "/sign-up": (ctx) => const SignUp(),
-            "/post": (ctx) => PostPage(),
+            "/post": (ctx) => const PostPage(),
             "/profile": (ctx) => const ProfilePage(),
 
             // !!!!!!!! NANTI HAPUSS !!!!!!!!,
             "/debug": (ctx) => const DebugPage(),
           },
-          initialRoute: "/intro",
+          // FirebaseAuth.instance.authStateChanges()
+          initialRoute: FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
         );
       }),
     );

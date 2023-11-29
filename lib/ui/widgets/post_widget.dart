@@ -9,7 +9,6 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
-    // bool isLiked = post.likes.contains(authUserid);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +31,7 @@ class PostWidget extends StatelessWidget {
               splashColor: Colors.transparent,
               leading: AccountButton(
                 onPressed: null,
-                image: NetworkImage(user?.foto! ?? ""),
+                image: NetworkImage(user?.foto ?? ""),
               ),
               title: Text(user?.username ?? "",
                   style: Theme.of(context).textTheme.titleMedium),
@@ -85,12 +84,17 @@ class PostWidget extends StatelessWidget {
                       )
                     : const Text(""),
 
+                ModalRoute.of(context)!.settings.name == "/post" ?
+                Text(
+                  post.konten,
+                ) :
                 Text(
                   post.konten,
                   maxLines: 3,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                 ),
+
                 const SizedBox(
                   height: 10,
                 ),
@@ -132,12 +136,9 @@ class PostWidget extends StatelessWidget {
                         child: TextButton.icon(
                           onPressed: () {
                             // jika berada di halaman home,
-                            // jike tekan tombol komentar, maka akan dialihkan ke,
+                            // jike tekan tombol komentar, maka akan dialihkan ke
                             // halaman post dan textfield komentar dalam mode focus,
-                            // if (ModalRoute.of(context)!.settings.name == "/" || ModalRoute.of(context)!.settings.name == "/profile") {
-                            if (ModalRoute.of(context)!.settings.name != null) {
-                              Provider.of<PageData>(context, listen: false)
-                                  .changeRoute("/post");
+                            if (ModalRoute.of(context)!.settings.name != "/post") {
                               Navigator.pushNamed(
                                 context,
                                 "/post",

@@ -45,4 +45,25 @@ class UserAcc {
 
     return user;
   }
+
+  void toggleIkuti(BuildContext context) async {
+    QuerySnapshot querySnapshot =
+        await Provider.of<UserData>(context, listen: false)
+            .usersCollection
+            .where("id", isEqualTo: id)
+            .get();
+
+    List<String> followings = List<String>.from(querySnapshot.docs[0].get("followings"));
+    String authUserId = FirebaseAuth.instance.currentUser!.uid;
+    if (followings.contains(authUserId)) {
+      followings.remove(authUserId);
+    } else {
+      followings.add(authUserId);
+    }
+
+    Provider.of<UserData>(context, listen: false)
+        .usersCollection
+        .doc(id)
+        .update({"followings": followings, "totalLike": followings.length});
+  }
 }

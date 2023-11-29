@@ -23,12 +23,6 @@ class UserData extends ChangeNotifier {
   }
 
   void add(UserAcc user) async {
-    // int id;
-    // if (userCount == 0) {
-    //   id = await userCount + 1;
-    // } else {
-    //   id = await lastId + 1;
-    // }
 
     _usersCollection.doc(user.id).set({
       "id": user.id,
@@ -46,6 +40,7 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
+  
   Future<List<UserAcc>> getUsers() async {
     QuerySnapshot querySnapshot = await _usersCollection.get();
     List<UserAcc> users = [];
@@ -78,4 +73,6 @@ class UserData extends ChangeNotifier {
     });
     return userIds;
   }
+
+  
 }

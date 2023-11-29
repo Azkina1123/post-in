@@ -9,12 +9,12 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _currentRoute = "/";
-  String get currentRoute => _currentRoute;
-  void changeRoute(String route) {
-    _currentRoute = route;
-    notifyListeners();
-  }
+  // String _currentRoute = "/";
+  // String get currentRoute => _currentRoute;
+  // void changeRoute(String route) {
+  //   _currentRoute = route;
+  //   notifyListeners();
+  // }
 
   // focus tambah komentar ketika buka post page
   bool _komentarFocused = false;

@@ -1,9 +1,8 @@
 part of "pages.dart";
 
 class PostPage extends StatelessWidget {
-  PostPage({super.key});
-  
-  List<String> _selectedKomentar = [];
+  const PostPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,11 +91,7 @@ class PostPage extends StatelessWidget {
                               KomentarWidget(
                                 komentar: Komentar.fromJson(komentars[i].data()
                                     as Map<String, dynamic>),
-                                postId: post.id!,
-                                // selected: komentarData.selectedKomentar
-                                //         .contains(komentars[i].id)
-                                //     ? true
-                                //     : false,
+                                postId: post.id,
                               ),
                               if (i != komentarCount - 1)
                                 Divider(

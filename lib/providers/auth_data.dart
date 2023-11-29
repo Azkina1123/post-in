@@ -53,16 +53,10 @@ class AuthData extends ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    try {
       final user = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       id_now = user.user!.uid;
-
-      // _authUser = await UserData().getUser(id_now!);
-    } catch (e) {
-      print("Gagal login.");
-    }
   }
 }
