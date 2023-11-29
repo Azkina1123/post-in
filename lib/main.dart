@@ -320,6 +320,8 @@ class MyApp extends StatelessWidget {
             "/post": (ctx) => const PostPage(),
             "/profile": (ctx) => const ProfilePage(),
             "/follow": (ctx) => FollowPage(),
+            "/edit": (ctx) => EditPage(),
+            "/pengaturan": (ctx) => PengaturanPage(),
 
             // !!!!!!!! NANTI HAPUSS !!!!!!!!,
             "/debug": (ctx) => const DebugPage(),

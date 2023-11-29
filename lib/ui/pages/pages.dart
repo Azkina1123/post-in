@@ -21,6 +21,7 @@ part 'sign_in.dart';
 part 'sign_up.dart';
 part 'debugPage.dart';
 part 'follow_page.dart';
+part 'edit_page.dart';
 
 
 
