@@ -80,11 +80,23 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       padding: const EdgeInsets.only(top: 35),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.navigate_next_rounded,
-                            size: 30,
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return EditPage();
+                                },
+                              ),
+                            );
+                            },
+                            child: Icon(
+                              Icons.navigate_next_rounded,
+                              size: 30,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -294,7 +306,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
                             Navigator.popAndPushNamed(context, "sign-in");
-                            
+
                             // kembalikan ke home page
                             Provider.of<PageData>(context, listen: false)
                                 .changePage(0);
@@ -338,8 +350,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () async {
-                            AuthData authData = AuthData();
-                            // Hapus ID User saat ini pada firestore
                             String id = FirebaseAuth.instance.currentUser!.uid;
                             hapusDataAkun(context, id);
                           },
@@ -348,8 +358,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       SizedBox(width: 10),
                       TextButton(
                         onPressed: () async {
-                          AuthData authData = AuthData();
-                          // Hapus ID User saat ini pada firestore
                           String id = FirebaseAuth.instance.currentUser!.uid;
                           hapusDataAkun(context, id);
                         },
@@ -434,16 +442,7 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
 
 Future<void> hapusData(CollectionReference posts, CollectionReference users,
     String userId, String id) async {
-  try {
-    // Hapus post yang terkait dengan akun
-    await hapusPost(posts, userId);
-
-    // Hapus data akun dari Firestore
-    await hapusAkun(users, id);
-  } catch (error) {
-    print("Error: Gagal Menghapus Data");
-    // Tangani error, tampilkan pesan atau lakukan tindakan yang sesuai
-  }
+  await hapusAkun(users, id);
 }
 
 Future<void> hapusAkun(CollectionReference users, String id) async {
