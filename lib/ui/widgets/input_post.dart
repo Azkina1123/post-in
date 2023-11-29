@@ -52,7 +52,7 @@ class _InputPostState extends State<InputPost> {
                         decoration: InputDecoration(
                           hintText: "Ceritakan kisah Anda hari ini!",
                           icon: AccountButton(
-                            image: NetworkImage(authUser.foto!),
+                            image: NetworkImage(authUser.foto ?? ""),
                             onPressed: null,
                           ),
                         ),

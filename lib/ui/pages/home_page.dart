@@ -55,13 +55,13 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 authUser.username,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               AccountButton(
                                 onPressed: null,
                                 image: NetworkImage(
-                                  authUser.foto!,
+                                  authUser.foto ?? "",
                                 ),
                               ),
                             ],
@@ -103,7 +103,12 @@ class _HomePageState extends State<HomePage> {
               InputPost(tabIndex: _index),
 
               // daftar postingan ----------------------------------------------------------
-              StreamBuilder<QuerySnapshot>(
+              if (_index == 2 && _followedUserIds.isEmpty) Container(
+                child: const Text("Anda belum mengikuti user mana pun."),
+                height: height(context)/2,
+                alignment: Alignment.center,
+              )
+              else StreamBuilder<QuerySnapshot>(
                   stream: _getSnapshot(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
