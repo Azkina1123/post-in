@@ -9,13 +9,14 @@ class Introduction_Page extends StatelessWidget {
       done: Text("Lanjut"),
       onDone: () {
         Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return landingPage();
-            },
-          ),
-        );
+        Navigator.popAndPushNamed(context, "/landing");
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return landingPage();
+        //     },
+        //   ),
+        // );
       },
       pages: [
         PageViewModel(

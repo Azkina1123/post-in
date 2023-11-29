@@ -316,6 +316,7 @@ class MyApp extends StatelessWidget {
             "/intro": (ctx) => const Introduction_Page(),
             "/sign-in": (ctx) => const SignIn(),
             "/sign-up": (ctx) => const SignUp(),
+            "/landing": (ctx) => const landingPage(),
             "/post": (ctx) => const PostPage(),
             "/profile": (ctx) => const ProfilePage(),
             "/follow": (ctx) => FollowPage(),

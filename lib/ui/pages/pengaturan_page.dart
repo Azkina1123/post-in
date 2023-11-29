@@ -306,6 +306,9 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
                           Navigator.popAndPushNamed(context, "sign-in");
+                          // kembalikan ke home page
+                          Provider.of<PageData>(context, listen: false)
+                              .changePage(0);
                         },
                         child: Text(
                           "Keluar Akun",
