@@ -44,7 +44,7 @@ class PostWidget extends StatelessWidget {
                   fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                 ),
               ),
-              trailing: PopupMenuButton(
+              trailing: post.userId == authUserId ? PopupMenuButton(
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
@@ -56,10 +56,8 @@ class PostWidget extends StatelessWidget {
                     )
                   ];
                 },
-              ),
+              ) : null,
             );
-
-            return const Text("");
           }),
         ),
         InkWell(
@@ -89,6 +87,9 @@ class PostWidget extends StatelessWidget {
 
                 Text(
                   post.konten,
+                  maxLines: 3,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(
                   height: 10,
@@ -181,6 +182,8 @@ class PostWidget extends StatelessWidget {
                   Navigator.of(context).pop();
                   Navigator.popAndPushNamed(context, "/");
                   Provider.of<PostData>(context, listen: false).delete(post.id);
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Post berhasil dihapus!")));
                 },
                 child: const Text("Ya"),
               ),

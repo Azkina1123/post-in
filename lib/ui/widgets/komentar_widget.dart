@@ -13,6 +13,7 @@ class KomentarWidget extends StatefulWidget {
 class _KomentarWidgetState extends State<KomentarWidget> {
   UserAcc? _user;
   bool _selected = false;
+  bool _successDelete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                   Provider.of<KomentarData>(context, listen: false);
               setState(() {
                 komentarData.toggleSelectKomentar(widget.komentar.id);
-                _selected = komentarData.selectedKomentar.contains(widget.komentar.id);
+                _selected =
+                    komentarData.selectedKomentar.contains(widget.komentar.id);
               });
 
               if (komentarData.selectedKomentar.isNotEmpty) {
@@ -37,9 +39,18 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                     action: SnackBarAction(
                       label: "Ya",
                       onPressed: () {
+                        _successDelete = true;
                         komentarData.delete();
-                        _selected = false;
-                        ScaffoldMessenger.of(context).clearSnackBars();
+
+                        setState(() {
+                          if (_successDelete) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text("Komentar berhasil dihapus!")));
+                            _successDelete = false;
+                          }
+                        });
                       },
                     ),
                     duration: const Duration(days: 1),

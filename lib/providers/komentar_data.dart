@@ -65,7 +65,7 @@ class KomentarData extends ChangeNotifier {
     } else {
       _selectedKomentar.add(id);
     }
-    print(_selectedKomentar.toString());
+    // print(_selectedKomentar.toString());
   }
 
   void delete() async {
@@ -86,11 +86,7 @@ class KomentarData extends ChangeNotifier {
     }
     postsCollection.doc(postId).update({"komentars": komentars});
     _selectedKomentar.clear();
-  }
-
-  void resetSelectedKomentar() {
-    // _selectedKomentar.clear();
-    _selectedKomentar.clear();
+    notifyListeners();
   }
 
   Future<List<Komentar>> getKomentars({String? postId, String? userId}) async {

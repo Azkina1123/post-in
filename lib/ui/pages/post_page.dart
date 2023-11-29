@@ -2,17 +2,18 @@ part of "pages.dart";
 
 class PostPage extends StatelessWidget {
   PostPage({super.key});
-
+  
   List<String> _selectedKomentar = [];
 
   @override
   Widget build(BuildContext context) {
+  
     Post post = ModalRoute.of(context)!.settings.arguments as Post;
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               ScaffoldMessenger.of(context).clearSnackBars();
               Navigator.of(context).pop();
@@ -117,7 +118,7 @@ class PostPage extends StatelessWidget {
                     );
                   }
 
-                  return Text(
+                  return const Text(
                     "Tidak dapat tersambung.",
                     textAlign: TextAlign.center,
                   );

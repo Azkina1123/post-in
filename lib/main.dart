@@ -42,134 +42,135 @@ class MyApp extends StatelessWidget {
 
           // light mode =============================================================
           theme: ThemeData(
-              useMaterial3: true,
-              brightness: Brightness.light,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: colors["sand"]!,
-                background: colors["milk-white"],
-                onBackground: colors["dark-jungle-green"],
-                primary: colors["sand"],
-                onPrimary: colors["milk-white"],
-                secondary: colors["dark-jungle-green"],
-                onSecondary: colors["milk-white"],
-                tertiary: colors["languid-lavender"],
-                onTertiary: colors["dark-jungle-green"],
-                error: colors["smoky-topaz"],
-                onError: colors["milk-white"],
-                surface: colors["milk-white"],
-                onSurface: colors["dark-jungle-green"],
-              ),
-              appBarTheme: AppBarTheme(
-                  scrolledUnderElevation: 0,
-                  color: colors["milk-white"],
-                  elevation: null,
-                  titleTextStyle: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: colors["sand"],
-                  ),
-                  iconTheme: IconThemeData(color: colors["sand"]!)),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colors["sand"],
-                  foregroundColor: colors["milk-white"],
-                ),
-              ),
-              iconTheme: IconThemeData(color: colors["sand"]),
-              iconButtonTheme: IconButtonThemeData(
-                style: IconButton.styleFrom(
-                  // backgroundColor: colors["milk-white"],
-                  surfaceTintColor: colors["milk-white"],
-                  shadowColor: Colors.transparent,
-                  foregroundColor: colors["sand"],
-                ),
-              ),
-              outlinedButtonTheme: OutlinedButtonThemeData(
-                style: ButtonStyle(
-                  side: MaterialStateProperty.all(
-                    BorderSide(
-                      color: colors["sand"]!,
-                    ),
-                  ),
-                ),
-              ),
-              filledButtonTheme: FilledButtonThemeData(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(colors["sand"]),
-                  foregroundColor: MaterialStateProperty.all(
-                    colors["dark-jungle-green"],
-                  ),
-                ),
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: colors["sand"],
-                ),
-              ),
-              textTheme: TextTheme(
-                bodyLarge: TextStyle(
-                  fontSize: 18,
-                  color: colors["dark-jungle-green"],
-                ),
-                bodyMedium: TextStyle(
-                  fontSize: 16,
-                  color: colors["dark-jungle-green"],
-                ),
-                bodySmall: TextStyle(
-                  fontSize: 14,
-                  color: colors["dark-jungle-green"],
-                ),
-                titleLarge: TextStyle(
-                  fontSize: 18,
+            useMaterial3: true,
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: colors["sand"]!,
+              background: colors["milk-white"],
+              onBackground: colors["dark-jungle-green"],
+              primary: colors["sand"],
+              onPrimary: colors["milk-white"],
+              secondary: colors["dark-jungle-green"],
+              onSecondary: colors["milk-white"],
+              tertiary: colors["languid-lavender"],
+              onTertiary: colors["dark-jungle-green"],
+              error: colors["smoky-topaz"],
+              onError: colors["milk-white"],
+              surface: colors["milk-white"],
+              onSurface: colors["dark-jungle-green"],
+            ),
+            appBarTheme: AppBarTheme(
+                scrolledUnderElevation: 0,
+                color: colors["milk-white"],
+                elevation: null,
+                titleTextStyle: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                   color: colors["sand"],
-                  fontWeight: FontWeight.bold,
                 ),
-                titleMedium: TextStyle(
-                  fontSize: 16,
-                  color: colors["dark-jungle-green"],
-                  fontWeight: FontWeight.bold,
-                ),
-                titleSmall: TextStyle(
-                  fontSize: 14,
-                  color: colors["dark-jungle-green"],
-                  fontWeight: FontWeight.bold,
-                ),
+                iconTheme: IconThemeData(color: colors["sand"]!)),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors["sand"],
+                foregroundColor: colors["milk-white"],
               ),
-              inputDecorationTheme: InputDecorationTheme(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: colors["dark-jungle-green"]!.withOpacity(0.5),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                contentPadding: const EdgeInsets.only(
-                  top: 10,
-                  bottom: 10,
-                  left: 15,
-                  right: 15,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+            ),
+            iconTheme: IconThemeData(color: colors["sand"]),
+            iconButtonTheme: IconButtonThemeData(
+              style: IconButton.styleFrom(
+                // backgroundColor: colors["milk-white"],
+                surfaceTintColor: colors["milk-white"],
+                shadowColor: Colors.transparent,
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: ButtonStyle(
+                side: MaterialStateProperty.all(
+                  BorderSide(
                     color: colors["sand"]!,
                   ),
-                  borderRadius: BorderRadius.circular(10),
                 ),
-                focusColor: colors["sand!"],
-                hintStyle: TextStyle(
+              ),
+            ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(colors["sand"]),
+                foregroundColor: MaterialStateProperty.all(
+                  colors["dark-jungle-green"],
+                ),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colors["sand"],
+              ),
+            ),
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(
+                fontSize: 18,
+                color: colors["dark-jungle-green"],
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 16,
+                color: colors["dark-jungle-green"],
+              ),
+              bodySmall: TextStyle(
+                fontSize: 14,
+                color: colors["dark-jungle-green"],
+              ),
+              titleLarge: TextStyle(
+                fontSize: 18,
+                color: colors["sand"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleMedium: TextStyle(
+                fontSize: 16,
+                color: colors["dark-jungle-green"],
+                fontWeight: FontWeight.bold,
+              ),
+              titleSmall: TextStyle(
+                fontSize: 14,
+                color: colors["dark-jungle-green"],
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
                   color: colors["dark-jungle-green"]!.withOpacity(0.5),
                 ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              popupMenuTheme: PopupMenuThemeData(
-                surfaceTintColor: colors["milk-white"]!,
+              contentPadding: const EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                left: 15,
+                right: 15,
               ),
-              snackBarTheme: SnackBarThemeData(
-                backgroundColor: colors["languid-lavender"]!.withOpacity(0.5),
-                actionTextColor: colors["sand"],
-                contentTextStyle: TextStyle(
-                  color: colors["dark-jungle-green"],
-                  fontSize: 16,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colors["sand"]!,
                 ),
-              )),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusColor: colors["sand!"],
+              hintStyle: TextStyle(
+                color: colors["dark-jungle-green"]!.withOpacity(0.5),
+              ),
+            ),
+            popupMenuTheme: PopupMenuThemeData(
+              surfaceTintColor: colors["milk-white"]!,
+            ),
+            // snackBarTheme: SnackBarThemeData(
+            //   backgroundColor: colors["languid-lavender"],
+            //   actionTextColor: colors["sand"],
+            //   contentTextStyle: TextStyle(
+            //     color: colors["dark-jungle-green"],
+            //     fontSize: 16,
+            //   ),
+            // ),
+          ),
 
           // dark mode ==============================================================
           darkTheme: ThemeData(
@@ -294,14 +295,14 @@ class MyApp extends StatelessWidget {
             popupMenuTheme: PopupMenuThemeData(
               surfaceTintColor: colors["dark-jungle-green"]!,
             ),
-                          snackBarTheme: SnackBarThemeData(
-                backgroundColor: colors["old-lavender"]!.withOpacity(0.5),
-                actionTextColor: colors["sand"],
-                contentTextStyle: TextStyle(
-                  color: colors["milk-white"],
-                  fontSize: 16,
-                ),
-          ),
+            // snackBarTheme: SnackBarThemeData(
+            //   backgroundColor: colors["old-lavender"]!.withOpacity(0.5),
+            //   actionTextColor: colors["sand"],
+            //   contentTextStyle: TextStyle(
+            //     color: colors["milk-white"],
+            //     fontSize: 16,
+            //   ),
+            // ),
           ),
 
           // theme yg digunakan ==============================================================
