@@ -83,13 +83,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           InkWell(
                             onTap: () {
                               Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return EditPage();
-                                },
-                              ),
-                            );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return EditPage();
+                                  },
+                                ),
+                              );
                             },
                             child: Icon(
                               Icons.navigate_next_rounded,
@@ -275,7 +275,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       ),
                       SizedBox(width: 10),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          String id = FirebaseAuth.instance.currentUser!.uid;
+                          ubahPass(context, id);
+                        },
                         child: Text(
                           "Ubah Password",
                           style: TextStyle(
@@ -384,6 +387,62 @@ class _PengaturanPageState extends State<PengaturanPage> {
   }
 }
 
+Future<void> ubahPass(BuildContext context, String id) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference users = firestore.collection("users");
+  UserAcc? user;
+
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(
+          "Ubah Password",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
+          ),
+        ),
+        content: TextFormField(
+            // controller: _ctrlUsername,
+            // decoration: InputDecoration(
+            //   border: OutlineInputBorder(),
+            //   hintText: user?.username ?? "",
+            // ),
+            ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Batal",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              String userId = FirebaseAuth.instance.currentUser!.uid;
+              //await hapusData(posts, users, userId, id);
+              Navigator.pushReplacementNamed(context, "/sign-in");
+            },
+            child: Text(
+              "Yakin",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> hapusDataAkun(BuildContext context, String id) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference users = firestore.collection("users");
@@ -424,7 +483,7 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
             onPressed: () async {
               String userId = FirebaseAuth.instance.currentUser!.uid;
               await hapusData(posts, users, userId, id);
-              Navigator.pushReplacementNamed(context, "sign-in");
+              Navigator.pushReplacementNamed(context, "/sign-in");
             },
             child: Text(
               "Yakin",
@@ -450,6 +509,30 @@ Future<void> hapusAkun(CollectionReference users, String id) async {
   await FirebaseAuth.instance.currentUser!.delete();
 }
 
-Future<void> hapusPost(CollectionReference posts, String userId) async {
+Future<void> hapusKomentar(CollectionReference posts, String userId) async {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference komentarsRef =
+      FirebaseFirestore.instance.collection("komentars");
+  QuerySnapshot komentars =
+      await komentarsRef.where("userId", isEqualTo: userId).get();
+
+  // hapus semua komentar yang mengomentari post
+  komentars.docs.forEach((komentar) {
+    komentarsRef.doc(komentar.id).delete();
+  });
   await posts.doc(userId).delete();
 }
+
+// Future<void> hapusPost(CollectionReference posts, String userId) async {
+//   String userId = FirebaseAuth.instance.currentUser!.uid;
+//   CollectionReference postsRef =
+//       FirebaseFirestore.instance.collection("posts");
+//   QuerySnapshot posts =
+//       await postsRef.where("userId", isEqualTo: userId).get();
+
+//   // hapus semua komentar yang mengomentari post
+//   posts.docs.forEach((post) {
+//     postsRef.doc(post.id).delete();
+//   });
+//   await posts.doc(userId).delete();
+// }
