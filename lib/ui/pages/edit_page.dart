@@ -32,26 +32,26 @@ class _EditPageState extends State<EditPage> {
     _ctrlPass.text = user?.password ?? "";
   }
 
-  handleSubmit() async {
-    // if (!_formKey.currentState!.validate()) return;
-    final nama = _ctrlNama.value.text;
-    final email = _ctrlEmail.value.text;
-    final username = _ctrlUsername.value.text;
-    final password = _ctrlPass.value.text;
-    final gender = _selectedGender ?? "";
-    final nomor = _ctrlNomor.value.text;
+  // handleSubmit() async {
+  //   // if (!_formKey.currentState!.validate()) return;
+  //   final nama = _ctrlNama.value.text;
+  //   final email = _ctrlEmail.value.text;
+  //   final username = _ctrlUsername.value.text;
+  //   final password = _ctrlPass.value.text;
+  //   final gender = _selectedGender ?? "";
+  //   final nomor = _ctrlNomor.value.text;
 
-    setState(() => _loading = true);
-    await AuthData().regis(nama, email, username, password, gender, nomor);
+  //   setState(() => _loading = true);
+  //   await AuthData().regis(nama, email, username, password, gender, nomor);
 
-    setState(() => _loading = false);
-  }
+  //   setState(() => _loading = false);
+  // }
 
-  @override
-  void initState() {
-    super.initState();
-    setInitialValues();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   setInitialValues();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -154,24 +154,24 @@ class _EditPageState extends State<EditPage> {
                             ),
                           ),
                           SizedBox(height: 20.0),
-                          // DropdownButtonFormField<String>(
-                          //   value: _selectedGender,
-                          //   items: _genderOptions.map((String gender) {
-                          //     return DropdownMenuItem<String>(
-                          //       value: gender,
-                          //       child: Text(gender),
-                          //     );
-                          //   }).toList(),
-                          //   onChanged: (String? value) {
-                          //     setState(() {
-                          //       _selectedGender = value;
-                          //     });
-                          //   },
-                          //   decoration: InputDecoration(
-                          //     border: OutlineInputBorder(),
-                          //     hintText: user?.gender ?? "",
-                          //   ),
-                          // ),
+                          DropdownButtonFormField<String>(
+                            value: _selectedGender,
+                            items: _genderOptions.map((String gender) {
+                              return DropdownMenuItem<String>(
+                                value: gender,
+                                child: Text(gender),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedGender = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: user?.gender ?? "", 
+                            ),
+                          ),
                           SizedBox(height: 20.0),
                           TextFormField(
                             controller: _ctrlNomor,
@@ -187,16 +187,19 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () async {
-                              String id = FirebaseAuth.instance.currentUser!.uid;
+                              String id =
+                                  FirebaseAuth.instance.currentUser!.uid;
                               users.doc(id).update({
-                                "namaLengkap" : _ctrlNama.text.toString(),
-                                "email" : _ctrlEmail.text.toString(),
-                                "username" : _ctrlUsername.text.toString(),
-                                "gender" : _selectedGender,
-                                "noTelp" : _ctrlNomor.text.toString(),
+                                "namaLengkap": _ctrlNama.text.toString(),
+                                "email": _ctrlEmail.text.toString(),
+                                "username": _ctrlUsername.text.toString(),
+                                "gender": _selectedGender,
+                                "noTelp": _ctrlNomor.text.toString(),
                               });
-                              await FirebaseAuth.instance.currentUser!.updateDisplayName(_ctrlNama.text.toString());
-                              await FirebaseAuth.instance.currentUser!.updateEmail(_ctrlEmail.text.toString());
+                              await FirebaseAuth.instance.currentUser!
+                                  .updateDisplayName(_ctrlNama.text.toString());
+                              await FirebaseAuth.instance.currentUser!
+                                  .updateEmail(_ctrlEmail.text.toString());
                               //await FirebaseAuth.instance.currentUser!.updatePhoneNumber(_ctrlNomor.text.toString());
                               Navigator.popAndPushNamed(context, "pengaturan");
                             },
