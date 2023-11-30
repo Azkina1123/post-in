@@ -23,14 +23,14 @@ class _EditPageState extends State<EditPage> {
   TextEditingController _ctrlNomor = TextEditingController();
   TextEditingController _ctrlPass = TextEditingController();
 
-  void setInitialValues() {
-    _ctrlNama.text = user?.namaLengkap ?? "";
-    _ctrlEmail.text = user?.email ?? "";
-    _ctrlUsername.text = user?.username ?? "";
-    _ctrlNomor.text = user?.noTelp ?? "";
-    _selectedGender = user?.gender ?? "";
-    _ctrlPass.text = user?.password ?? "";
-  }
+  // void setInitialValues() {
+  //   _ctrlNama.text = user?.namaLengkap ?? "";
+  //   _ctrlEmail.text = user?.email ?? "";
+  //   _ctrlUsername.text = user?.username ?? "";
+  //   _ctrlNomor.text = user?.noTelp ?? "";
+  //   _selectedGender = user?.gender ?? "";
+  //   _ctrlPass.text = user?.password ?? "";
+  // }
 
   // handleSubmit() async {
   //   // if (!_formKey.currentState!.validate()) return;
@@ -83,6 +83,12 @@ class _EditPageState extends State<EditPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               user = snapshot.data!;
+              // _ctrlNama.text = _ctrlNama.text.isEmpty ? user?.namaLengkap ?? "": _ctrlNama.text;
+              // _ctrlEmail.text = _ctrlEmail.text.isEmpty ? user?.email ?? "": _ctrlEmail.text;
+              // _ctrlUsername.text = _ctrlUsername.text.isEmpty ? user?.username ?? "": _ctrlUsername.text;
+              // _ctrlNomor.text = _ctrlNomor.text.isEmpty ? user?.noTelp ?? "": _ctrlNomor.text;
+              // _selectedGender = _selectedGender!.isEmpty ? user?.gender ?? "": _selectedGender;
+              // _ctrlPass.text = _ctrlPass.text.isEmpty ? user?.password ?? "": _ctrlPass.text;
             }
             return SingleChildScrollView(
               child: Column(
@@ -169,7 +175,7 @@ class _EditPageState extends State<EditPage> {
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: user?.gender ?? "", 
+                              hintText: user?.gender ?? "",
                             ),
                           ),
                           SizedBox(height: 20.0),
@@ -187,21 +193,26 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () async {
-                              String id =
+                              setState(() async {
+                                String id =
                                   FirebaseAuth.instance.currentUser!.uid;
                               users.doc(id).update({
-                                "namaLengkap": _ctrlNama.text.toString(),
-                                "email": _ctrlEmail.text.toString(),
-                                "username": _ctrlUsername.text.toString(),
-                                "gender": _selectedGender,
-                                "noTelp": _ctrlNomor.text.toString(),
+                                "namaLengkap": _ctrlNama.text.isEmpty ? user!.namaLengkap : _ctrlNama.text.toString(),
+                                "email": _ctrlEmail.text.isEmpty ? user!.email : _ctrlEmail.text.toString(),
+                                "username": _ctrlUsername.text.isEmpty ? user!.username : _ctrlUsername.text.toString(),
+                                "gender": _selectedGender!.isEmpty ? user!.gender : _selectedGender,
+                                "noTelp": _ctrlNomor.text.isEmpty ? user!.noTelp : _ctrlNomor.text.toString(),
                               });
+
+                              //FirebaseAuth
                               await FirebaseAuth.instance.currentUser!
                                   .updateDisplayName(_ctrlNama.text.toString());
                               await FirebaseAuth.instance.currentUser!
                                   .updateEmail(_ctrlEmail.text.toString());
                               //await FirebaseAuth.instance.currentUser!.updatePhoneNumber(_ctrlNomor.text.toString());
-                              Navigator.popAndPushNamed(context, "pengaturan");
+                              });
+                              
+                              Navigator.popAndPushNamed(context, "/pengaturan");
                             },
                             child: _loading
                                 ? const SizedBox(
