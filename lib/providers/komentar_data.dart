@@ -130,4 +130,26 @@ class KomentarData extends ChangeNotifier {
         await _komentarsCollection.where("postId", isEqualTo: postId).get();
     return querySnapshot.docs.length;
   }
+
+  void toggleLike(String id) async {
+    QuerySnapshot querySnapshot =
+        await komentarsCollection
+            .where("id", isEqualTo: id)
+            .get();
+
+    List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
+
+    String authUserId = FirebaseAuth.instance.currentUser!.uid;
+    if (likes.contains(authUserId)) {
+      likes.remove(authUserId);
+    } else {
+      likes.add(authUserId);
+    }
+
+    komentarsCollection
+        .doc(id)
+        .update({"likes": likes, "totalLike": likes.length});
+  }
+
+
 }

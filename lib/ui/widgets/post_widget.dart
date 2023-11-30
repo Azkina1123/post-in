@@ -25,7 +25,7 @@ class PostWidget extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   "/profile",
-                  arguments: user!.id,
+                  arguments: user!,
                 );
               },
               splashColor: Colors.transparent,
@@ -43,19 +43,21 @@ class PostWidget extends StatelessWidget {
                   fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
                 ),
               ),
-              trailing: post.userId == authUserId ? PopupMenuButton(
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: const Text('Delete'),
-                      onTap: () {
-                        showDeleteDialog(context);
+              trailing: post.userId == authUserId
+                  ? PopupMenuButton(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: const Text('Delete'),
+                            onTap: () {
+                              showDeleteDialog(context);
+                            },
+                          )
+                        ];
                       },
                     )
-                  ];
-                },
-              ) : null,
+                  : null,
             );
           }),
         ),
@@ -84,16 +86,16 @@ class PostWidget extends StatelessWidget {
                       )
                     : const Text(""),
 
-                ModalRoute.of(context)!.settings.name == "/post" ?
-                Text(
-                  post.konten,
-                ) :
-                Text(
-                  post.konten,
-                  maxLines: 3,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                ModalRoute.of(context)!.settings.name == "/post"
+                    ? Text(
+                        post.konten,
+                      )
+                    : Text(
+                        post.konten,
+                        maxLines: 3,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 
                 const SizedBox(
                   height: 10,
@@ -108,7 +110,8 @@ class PostWidget extends StatelessWidget {
                       width: 70,
                       child: TextButton.icon(
                         onPressed: () async {
-                          post.toggleLike(context);
+                          Provider.of<PostData>(context, listen: false)
+                              .toggleLike(post.id);
                         },
                         icon: Icon(
                           post.likes.contains(authUserId)
@@ -138,7 +141,8 @@ class PostWidget extends StatelessWidget {
                             // jika berada di halaman home,
                             // jike tekan tombol komentar, maka akan dialihkan ke
                             // halaman post dan textfield komentar dalam mode focus,
-                            if (ModalRoute.of(context)!.settings.name != "/post") {
+                            if (ModalRoute.of(context)!.settings.name !=
+                                "/post") {
                               Navigator.pushNamed(
                                 context,
                                 "/post",
@@ -183,8 +187,8 @@ class PostWidget extends StatelessWidget {
                   Navigator.of(context).pop();
                   Navigator.popAndPushNamed(context, "/");
                   Provider.of<PostData>(context, listen: false).delete(post.id);
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Post berhasil dihapus!")));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Post berhasil dihapus!")));
                 },
                 child: const Text("Ya"),
               ),

@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushNamed(
                               ctx,
                               "/profile",
-                              arguments: authUser.id,
+                              arguments: authUser,
                             );
                           },
                           child: Row(
@@ -103,13 +103,6 @@ class _HomePageState extends State<HomePage> {
               InputPost(tabIndex: _index),
 
               // daftar postingan ----------------------------------------------------------
-              if (_index == 2 && _followedUserIds.isEmpty)
-                Container(
-                  child: const Text("Anda belum mengikuti user mana pun."),
-                  height: height(context) / 2,
-                  alignment: Alignment.center,
-                )
-              else
                 StreamBuilder<QuerySnapshot>(
                     stream: _getSnapshot(),
                     builder: (context, snapshot) {
@@ -122,7 +115,11 @@ class _HomePageState extends State<HomePage> {
                       } else if (snapshot.hasData) {
                         final posts = snapshot.data!.docs;
 
-                        return Column(
+                        return (_index == 2 && posts.isEmpty) ? Container(
+                  child: const Text("User yang Anda ikuti belum membuat post."),
+                  height: height(context) / 2,
+                  alignment: Alignment.center,
+                ) : Column(
                           children: [
                             for (int i = 0; i < posts.length; i++)
                               Column(
@@ -193,6 +190,5 @@ class _HomePageState extends State<HomePage> {
         .getUser(FirebaseAuth.instance.currentUser!.uid);
 
     _followedUserIds = authUser.followings;
-    print(_followedUserIds.length);
   }
 }

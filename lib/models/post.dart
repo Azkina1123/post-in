@@ -38,36 +38,4 @@ class Post {
     return post;
   }
 
-  void toggleLike(BuildContext context) async {
-    QuerySnapshot querySnapshot =
-        await Provider.of<PostData>(context, listen: false)
-            .postsCollection
-            .where("id", isEqualTo: id)
-            .get();
-
-    List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
-    String authUserId = FirebaseAuth.instance.currentUser!.uid;
-    if (likes.contains(authUserId)) {
-      likes.remove(authUserId);
-    } else {
-      likes.add(authUserId);
-    }
-
-    Provider.of<PostData>(context, listen: false)
-        .postsCollection
-        .doc(id)
-        .update({"likes": likes, "totalLike": likes.length});
-  }
-
-  Future<bool> isLiked(BuildContext context) async {
-    QuerySnapshot querySnapshot =
-        await Provider.of<PostData>(context, listen: false)
-            .postsCollection
-            .where("id", isEqualTo: id)
-            .get();
-
-    List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
-
-    return likes.contains(FirebaseAuth.instance.currentUser!.uid);
-  }
 }

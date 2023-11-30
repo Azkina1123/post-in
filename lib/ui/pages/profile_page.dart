@@ -14,20 +14,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(
     BuildContext context,
   ) {
-    String userId = ModalRoute.of(context)!.settings.arguments
-        as String; // profile user yg sedang dilihat
+    UserAcc user = ModalRoute.of(context)!.settings.arguments
+        as UserAcc; // profile user yg sedang dilihat
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userId == FirebaseAuth.instance.currentUser!.uid ? "My Profile" : "Profile"),
+        title: Text(user.id == FirebaseAuth.instance.currentUser!.uid ? "My Profile" : "Profile"),
       ),
-      body: FutureBuilder<UserAcc>(
-          future: Provider.of<UserData>(context, listen: false)
-              .getUser(userId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              UserAcc user = snapshot.data!;
-              return ListView(
+      body: ListView(
                 children: [
                   Stack(
                     clipBehavior: Clip.none,
@@ -110,16 +104,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             user.id != FirebaseAuth.instance.currentUser!.uid
                                 ? StreamBuilder<QuerySnapshot>(
                                     stream: Provider.of<UserData>(context,
-                                            listen: false)
-                                        .usersCollection
-                                        .where("id", isEqualTo: FirebaseAuth
-                                                .instance.currentUser!.uid)
-                                        .snapshots(),
+                                            listen: false).usersCollection
+                                            .where("id", isEqualTo: FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                              .snapshots(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        UserAcc authUser = UserAcc.fromJson(
-                                            snapshot.data!.docs[0].data()
-                                                as Map<String, dynamic>);
+                                        UserAcc authUser = UserAcc.fromJson(snapshot.data!.docs[0].data() as Map<String, dynamic>);
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                               right: 15),
@@ -321,14 +312,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ],
-              );
-            }
-            return Container(
-              width: width(context),
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
-            );
-          }),
+              )
+            
     );
   }
 }

@@ -94,7 +94,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                               Navigator.pushNamed(
                                 context,
                                 "/profile",
-                                arguments: _user!.id,
+                                arguments: _user!,
                               );
                             },
                             image: NetworkImage(_user?.foto ?? ""),
@@ -149,7 +149,9 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       children: [
                         IconButton(
                           onPressed: () async {
-                            widget.komentar.toggleLike(context);
+                            Provider.of<KomentarData>(context, listen: false)
+                                .toggleLike(widget.komentar.id);
+
                           },
                           icon: Icon(
                             isLiked
