@@ -2,9 +2,9 @@ part of "widgets.dart";
 
 class KomentarWidget extends StatefulWidget {
   Komentar komentar;
-  String postId;
+  String? postId;
 
-  KomentarWidget({super.key, required this.komentar, required this.postId});
+  KomentarWidget({super.key, required this.komentar, this.postId});
 
   @override
   State<KomentarWidget> createState() => _KomentarWidgetState();
@@ -41,8 +41,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       onPressed: () {
                         _successDelete = true;
                         komentarData.delete();
-                ScaffoldMessenger.of(context).clearSnackBars();
-
+                        ScaffoldMessenger.of(context).clearSnackBars();
 
                         setState(() {
                           if (_successDelete) {
