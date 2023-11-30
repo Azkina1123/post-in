@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushNamed(
                               ctx,
                               "/profile",
-                              arguments: authUser,
+                              arguments: authUser.id,
                             );
                           },
                           child: Row(

@@ -74,5 +74,23 @@ class UserData extends ChangeNotifier {
     return userIds;
   }
 
+  void toggleIkuti(String id) async {
+    String authUserId = FirebaseAuth.instance.currentUser!.uid;
+        QuerySnapshot querySnapshot = await usersCollection
+            .where("id", isEqualTo: authUserId)
+            .get();
+
+    List<String> followings = List<String>.from(querySnapshot.docs[0].get("followings"));
+    if (followings.contains(id)) {
+      followings.remove(id);
+    } else {
+      followings.add(id);
+    }
+
+    usersCollection
+        .doc(authUserId)
+        .update({"followings": followings, "totalLike": followings.length});
+  }
+
   
 }

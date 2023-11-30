@@ -25,7 +25,7 @@ class PostWidget extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   "/profile",
-                  arguments: user,
+                  arguments: user!.id,
                 );
               },
               splashColor: Colors.transparent,
@@ -62,7 +62,7 @@ class PostWidget extends StatelessWidget {
         InkWell(
           onTap: ModalRoute.of(context)!.settings.name == "/"
               ? () {
-                  Navigator.pushNamed(context, "/post", arguments: post);
+                  Navigator.pushNamed(context, "/post", arguments: post.id);
                 }
               : null,
           child: Padding(

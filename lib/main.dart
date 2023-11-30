@@ -327,10 +327,10 @@ class MyApp extends StatelessWidget {
             "/debug": (ctx) => const DebugPage(),
           },
           // FirebaseAuth.instance.authStateChanges()
-          // initialRoute:
-          //     FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
+          initialRoute:
+              FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
 
-          initialRoute: "/debug",
+          // initialRoute: "/debug",
         );
       }),
     );

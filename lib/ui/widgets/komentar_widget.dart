@@ -94,7 +94,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                               Navigator.pushNamed(
                                 context,
                                 "/profile",
-                                arguments: _user,
+                                arguments: _user!.id,
                               );
                             },
                             image: NetworkImage(_user?.foto ?? ""),

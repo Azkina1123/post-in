@@ -305,7 +305,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               size: 30),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
-                            Navigator.popAndPushNamed(context, "sign-in");
+                            Navigator.popAndPushNamed(context, "/sign-in");
 
                             // kembalikan ke home page
                             Provider.of<PageData>(context, listen: false)
@@ -317,7 +317,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
-                          Navigator.popAndPushNamed(context, "sign-in");
+                          Navigator.popAndPushNamed(context, "/sign-in");
                           // kembalikan ke home page
                           Provider.of<PageData>(context, listen: false)
                               .changePage(0);

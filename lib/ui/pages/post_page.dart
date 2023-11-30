@@ -7,7 +7,7 @@ class PostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
   
-    Post post = ModalRoute.of(context)!.settings.arguments as Post;
+    String postId = ModalRoute.of(context)!.settings.arguments as String;
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       return Scaffold(
         appBar: AppBar(
@@ -32,14 +32,33 @@ class PostPage extends StatelessWidget {
             StreamBuilder<QuerySnapshot>(
                 stream: Provider.of<PostData>(context, listen: false)
                     .postsCollection
-                    .where("id", isEqualTo: post.id)
+                    .where("id", isEqualTo: postId)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    final posts = snapshot.data!.docs;
-                    return PostWidget(
-                      post: Post.fromJson(
-                          posts[0].data() as Map<String, dynamic>),
+                    Post post = Post.fromJson(
+                              snapshot.data!.docs[0].data() as Map<String, dynamic>);
+                    return Column(
+                      children: [
+                        PostWidget(
+                          post: post,
+                        ),
+                        // KOMENTAR =======================================================================
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 10, bottom: 10),
+                          child: Text(
+                            // "Komentar (${komentars.length})",
+                            "Komentar (${post.komentars.length})",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+
+                        // INPUT KOMENTAR =======================================================================
+                        InputKomentar(
+                          post: post,
+                        ),
+                      ],
                     );
                   }
                   return Container(
@@ -49,26 +68,10 @@ class PostPage extends StatelessWidget {
                   );
                 }),
 
-            // KOMENTAR =======================================================================
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
-              child: Text(
-                // "Komentar (${komentars.length})",
-                "Komentar (${post.komentars.length})",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-
-            // INPUT KOMENTAR =======================================================================
-            InputKomentar(
-              post: post,
-            ),
             // DAFTAR KOMENTAR =======================================================================
-
             StreamBuilder<QuerySnapshot>(
                 stream: komentarData.komentarsCollection
-                    .where("postId", isEqualTo: post.id)
+                    .where("postId", isEqualTo: postId)
                     .orderBy("tglDibuat", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -91,7 +94,7 @@ class PostPage extends StatelessWidget {
                               KomentarWidget(
                                 komentar: Komentar.fromJson(komentars[i].data()
                                     as Map<String, dynamic>),
-                                postId: post.id,
+                                postId: postId,
                               ),
                               if (i != komentarCount - 1)
                                 Divider(
