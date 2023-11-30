@@ -318,7 +318,7 @@ class MyApp extends StatelessWidget {
             "/sign-up": (ctx) => const SignUp(),
             "/landing": (ctx) => const landingPage(),
             "/post": (ctx) => const PostPage(),
-            "/profile": (ctx) => const ProfilePage(),
+            "/profile": (ctx) =>  ProfilePage(),
             "/follow": (ctx) => FollowPage(),
             "/edit": (ctx) => EditPage(),
             "/pengaturan": (ctx) => PengaturanPage(),
@@ -327,7 +327,8 @@ class MyApp extends StatelessWidget {
             "/debug": (ctx) => const DebugPage(),
           },
           // FirebaseAuth.instance.authStateChanges()
-          initialRoute: FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
+          initialRoute:
+              FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
         );
       }),
     );

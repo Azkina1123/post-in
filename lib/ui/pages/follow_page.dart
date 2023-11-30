@@ -33,7 +33,7 @@ class FollowPage extends StatelessWidget {
         child: Column(
           children: [
             TabBar(
-              tabs: const [Tab(text: "Following"), Tab(text: "Followers")],
+              tabs: const [Tab(text: "Followings"), Tab(text: "Followers")],
               labelStyle: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
@@ -42,6 +42,11 @@ class FollowPage extends StatelessWidget {
               labelPadding: EdgeInsets.only(left: 10, right: 10),
               dividerColor:
                   Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [],
+              ),
             ),
           ],
         ),
