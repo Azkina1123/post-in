@@ -23,7 +23,6 @@ class UserData extends ChangeNotifier {
   }
 
   void add(UserAcc user) async {
-
     _usersCollection.doc(user.id).set({
       "id": user.id,
       "tglDibuat": user.tglDibuat,
@@ -40,7 +39,6 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   Future<List<UserAcc>> getUsers() async {
     QuerySnapshot querySnapshot = await _usersCollection.get();
     List<UserAcc> users = [];
@@ -57,7 +55,6 @@ class UserData extends ChangeNotifier {
         await _usersCollection.where("id", isEqualTo: id).get();
 
     final users = querySnapshot.docs;
-    // print(users.length);
     UserAcc? user = UserAcc.fromJson(users[0].data() as Map<String, dynamic>);
 
     return user;
@@ -76,11 +73,11 @@ class UserData extends ChangeNotifier {
 
   void toggleIkuti(String id) async {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
-        QuerySnapshot querySnapshot = await usersCollection
-            .where("id", isEqualTo: authUserId)
-            .get();
+    QuerySnapshot querySnapshot =
+        await usersCollection.where("id", isEqualTo: authUserId).get();
 
-    List<String> followings = List<String>.from(querySnapshot.docs[0].get("followings"));
+    List<String> followings =
+        List<String>.from(querySnapshot.docs[0].get("followings"));
     if (followings.contains(id)) {
       followings.remove(id);
     } else {
@@ -90,7 +87,6 @@ class UserData extends ChangeNotifier {
     usersCollection
         .doc(authUserId)
         .update({"followings": followings, "totalLike": followings.length});
+    notifyListeners();
   }
-
-  
 }

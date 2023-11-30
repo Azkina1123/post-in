@@ -9,6 +9,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
+    bool isLiked = post.likes.contains(authUserId);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,10 +115,10 @@ class PostWidget extends StatelessWidget {
                               .toggleLike(post.id);
                         },
                         icon: Icon(
-                          post.likes.contains(authUserId)
+                          isLiked
                               ? Icons.favorite_rounded
                               : Icons.favorite_outline,
-                          color: post.likes.contains(authUserId)
+                          color: isLiked
                               ? colors["soft-pink"]
                               : Theme.of(context).colorScheme.primary,
                         ),
@@ -125,7 +126,7 @@ class PostWidget extends StatelessWidget {
                         label: Text(
                           post.likes.length.toString(),
                           style: TextStyle(
-                            color: post.likes.contains(authUserId)
+                            color: isLiked
                                 ? colors["soft-pink"]
                                 : Theme.of(context).colorScheme.primary,
                           ),

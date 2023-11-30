@@ -11,7 +11,7 @@ class _MainPageState extends State<MainPage> {
   // int _index = 0;
 
   final List<Widget> _pages = [
-    const HomePage(),
+    HomePage(),
     const CariPage(),
     const PengaturanPage()
   ];
@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
     return Consumer<PageData>(builder: (context, pageProvider, child) {
       return Scaffold(
         body: _pages.elementAt(
-          pageProvider.currentIndex,
+          pageProvider.mainIndex,
         ),
 
         // bottom navigation
@@ -50,9 +50,9 @@ class _MainPageState extends State<MainPage> {
               label: "Pengaturan",
             ),
           ],
-          currentIndex: pageProvider.currentIndex,
+          currentIndex: pageProvider.mainIndex,
           onTap: (i) {
-            pageProvider.changePage(i);
+            pageProvider.changeMainPage(i);
           },
         ),
       );

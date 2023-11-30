@@ -309,7 +309,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
 
                             // kembalikan ke home page
                             Provider.of<PageData>(context, listen: false)
-                                .changePage(0);
+                                .changeMainPage(0);
                           },
                         ),
                       ),
@@ -320,7 +320,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           Navigator.popAndPushNamed(context, "/sign-in");
                           // kembalikan ke home page
                           Provider.of<PageData>(context, listen: false)
-                              .changePage(0);
+                              .changeMainPage(0);
                         },
                         child: Text(
                           "Keluar Akun",

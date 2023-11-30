@@ -12,7 +12,15 @@ class _HomePageState extends State<HomePage> {
   List<String> _followedUserIds = [];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    getFollowedUserIds();
+
     return Consumer<PostData>(builder: (ctx, postData, child) {
       return DefaultTabController(
         length: 3,
@@ -88,7 +96,6 @@ class _HomePageState extends State<HomePage> {
               onTap: (i) {
                 setState(() {
                   _index = i;
-                  // if (i == 2) getFollowedUserIds();
                 });
               },
             ),
@@ -103,55 +110,58 @@ class _HomePageState extends State<HomePage> {
               InputPost(tabIndex: _index),
 
               // daftar postingan ----------------------------------------------------------
-                StreamBuilder<QuerySnapshot>(
-                    stream: _getSnapshot(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                          width: width(context),
-                          alignment: Alignment.center,
-                          child: const CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasData) {
-                        final posts = snapshot.data!.docs;
+              StreamBuilder<QuerySnapshot>(
+                  stream: _getSnapshot(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        width: width(context),
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasData) {
+                      final posts = snapshot.data!.docs;
 
-                        return (_index == 2 && posts.isEmpty) ? Container(
-                  child: const Text("User yang Anda ikuti belum membuat post."),
-                  height: height(context) / 2,
-                  alignment: Alignment.center,
-                ) : Column(
-                          children: [
-                            for (int i = 0; i < posts.length; i++)
-                              Column(
-                                children: [
-                                  PostWidget(
-                                    post: Post.fromJson(posts[i].data()
-                                        as Map<String, dynamic>),
-                                  ),
+                      return (_index == 2 && posts.isEmpty)
+                          ? Container(
+                              height: height(context) / 2,
+                              alignment: Alignment.center,
+                              child: const Text(
+                                  "User yang Anda ikuti belum membuat post."),
+                            )
+                          : Column(
+                              children: [
+                                for (int i = 0; i < posts.length; i++)
+                                  Column(
+                                    children: [
+                                      PostWidget(
+                                        post: Post.fromJson(posts[i].data()
+                                            as Map<String, dynamic>),
+                                      ),
 
-                                  // kasih pembatas antar post --------------------------------------
-                                  if (i != posts.length - 1)
-                                    Divider(
-                                      color: Theme.of(ctx)
-                                          .colorScheme
-                                          .tertiary
-                                          .withOpacity(0.5),
-                                      indent: 10,
-                                      endIndent: 10,
-                                    )
-                                  // di post terakhir tidak perlu pembatas -------------------------
-                                  else
-                                    const SizedBox(
-                                      height: 20,
-                                    )
-                                ],
-                              )
-                          ],
-                        );
-                      }
+                                      // kasih pembatas antar post --------------------------------------
+                                      if (i != posts.length - 1)
+                                        Divider(
+                                          color: Theme.of(ctx)
+                                              .colorScheme
+                                              .tertiary
+                                              .withOpacity(0.5),
+                                          indent: 10,
+                                          endIndent: 10,
+                                        )
+                                      // di post terakhir tidak perlu pembatas -------------------------
+                                      else
+                                        const SizedBox(
+                                          height: 20,
+                                        )
+                                    ],
+                                  )
+                              ],
+                            );
+                    }
 
-                      return const Text("Belum ada post yang ditambahkan.");
-                    })
+                    return const Text("Belum ada post yang ditambahkan.");
+                  })
             ],
           ),
         ),
@@ -174,21 +184,18 @@ class _HomePageState extends State<HomePage> {
             .orderBy("tglDibuat", descending: true)
             .snapshots();
 
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // REVISI NANTII!!
       default:
-        getFollowedUserIds();
         return Provider.of<PostData>(context)
             .postsCollection
-            .where("userId", whereIn: _followedUserIds.toList())
+            .where("userId", whereIn: _followedUserIds.isNotEmpty ?  _followedUserIds.toList() : [-1])
             .snapshots();
     }
   }
 
   void getFollowedUserIds() async {
-    UserAcc authUser = await Provider.of<UserData>(context, listen: false)
-        .getUser(FirebaseAuth.instance.currentUser!.uid);
 
-    _followedUserIds = authUser.followings;
+    UserAcc authUser = await Provider.of<UserData>(context)
+        .getUser(FirebaseAuth.instance.currentUser!.uid);
+_followedUserIds = authUser.followings;
   }
 }

@@ -1,20 +1,18 @@
 part of "providers.dart";
 
 class PageData extends ChangeNotifier {
-  int _currentIndex = 0;
-  int get currentIndex => _currentIndex;
+  int mainIndex = 0;
 
-  void changePage(int index) {
-    _currentIndex = index;
+  void changeMainPage(int index) {
+    mainIndex = index;
     notifyListeners();
   }
 
-  // String _currentRoute = "/";
-  // String get currentRoute => _currentRoute;
-  // void changeRoute(String route) {
-  //   _currentRoute = route;
-  //   notifyListeners();
-  // }
+  int homeIndex = 0;
+  void changeHomePage(int index) {
+    homeIndex = index;
+    notifyListeners();
+  }
 
   // focus tambah komentar ketika buka post page
   bool _komentarFocused = false;
