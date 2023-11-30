@@ -1,10 +1,17 @@
 part of 'pages.dart';
 
-class FollowPage extends StatelessWidget {
+class FollowPage extends StatefulWidget {
   const FollowPage({super.key});
 
   @override
+  State<FollowPage> createState() => _FollowPageState();
+}
+
+class _FollowPageState extends State<FollowPage> {
+  @override
   Widget build(BuildContext context) {
+    var lebar = MediaQuery.of(context).size.width;
+    String userId = ModalRoute.of(context)!.settings.arguments as String;
     UserAcc? user;
 
     return Scaffold(
@@ -43,11 +50,22 @@ class FollowPage extends StatelessWidget {
               dividerColor:
                   Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
             ),
-            Expanded(
-              child: TabBarView(
-                children: [],
-              ),
-            ),
+            FutureBuilder<UserAcc>(
+                future: Provider.of<UserData>(context, listen: false)
+                    .getUser(userId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    user = snapshot.data!;
+                  }
+                  return Column(
+                    children: [
+                      Container(
+                        width: lebar,
+                        height: 30,
+                      ),
+                    ],
+                  );
+                }),
           ],
         ),
       ),

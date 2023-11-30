@@ -318,8 +318,8 @@ class MyApp extends StatelessWidget {
             "/sign-up": (ctx) => const SignUp(),
             "/landing": (ctx) => const landingPage(),
             "/post": (ctx) => const PostPage(),
-            "/profile": (ctx) =>  ProfilePage(),
-            "/follow": (ctx) => FollowPage(),
+            "/profile": (ctx) => const ProfilePage(),
+            "/follow": (ctx) => const FollowPage(),
             "/edit": (ctx) => EditPage(),
             "/pengaturan": (ctx) => PengaturanPage(),
 
