@@ -6,3 +6,28 @@ Halaman home & post target
 -. Snackbar berhasil menambahkan like
 -. Posting dengan kamera
 
+
+
+
+ di sign up
+- blum dikasi upload foto profil dan sampul, 
+- belum dikasi eerror handling di textfield password kalau kurang dari 6
+- belum sambungin upload foto prodil dan sammpul ke firestore untuk gambar
+- baikin tampilan
+
+di sign in 
+- ubah bodynya jadi container bisa gabisa di scroll
+- baikin tampilan 
+
+di landing page 
+- ubah body jaid container 
+- kecilkan gambarnya
+- bikin tombolnya biar ga mepet
+- baikin tampilan
+
+di introduction 
+pakaika animation hero
+- ubah kat kata nya
+- bikin logo 
+- baiki tampilannya
+
