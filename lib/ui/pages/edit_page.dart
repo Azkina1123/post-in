@@ -15,43 +15,11 @@ class _EditPageState extends State<EditPage> {
 
   // String? _profileImagePath;
   // String? _coverImagePath;
-  final _formKey = GlobalKey<FormState>();
 
   TextEditingController _ctrlNama = TextEditingController();
   TextEditingController _ctrlEmail = TextEditingController();
   TextEditingController _ctrlUsername = TextEditingController();
   TextEditingController _ctrlNomor = TextEditingController();
-  TextEditingController _ctrlPass = TextEditingController();
-
-  // void setInitialValues() {
-  //   _ctrlNama.text = user?.namaLengkap ?? "";
-  //   _ctrlEmail.text = user?.email ?? "";
-  //   _ctrlUsername.text = user?.username ?? "";
-  //   _ctrlNomor.text = user?.noTelp ?? "";
-  //   _selectedGender = user?.gender ?? "";
-  //   _ctrlPass.text = user?.password ?? "";
-  // }
-
-  // handleSubmit() async {
-  //   // if (!_formKey.currentState!.validate()) return;
-  //   final nama = _ctrlNama.value.text;
-  //   final email = _ctrlEmail.value.text;
-  //   final username = _ctrlUsername.value.text;
-  //   final password = _ctrlPass.value.text;
-  //   final gender = _selectedGender ?? "";
-  //   final nomor = _ctrlNomor.value.text;
-
-  //   setState(() => _loading = true);
-  //   await AuthData().regis(nama, email, username, password, gender, nomor);
-
-  //   setState(() => _loading = false);
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   setInitialValues();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +49,14 @@ class _EditPageState extends State<EditPage> {
           future: Provider.of<UserData>(context, listen: false)
               .getUser(FirebaseAuth.instance.currentUser!.uid),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: width(context),
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData) {
               user = snapshot.data!;
-              // _ctrlNama.text = _ctrlNama.text.isEmpty ? user?.namaLengkap ?? "": _ctrlNama.text;
-              // _ctrlEmail.text = _ctrlEmail.text.isEmpty ? user?.email ?? "": _ctrlEmail.text;
-              // _ctrlUsername.text = _ctrlUsername.text.isEmpty ? user?.username ?? "": _ctrlUsername.text;
-              // _ctrlNomor.text = _ctrlNomor.text.isEmpty ? user?.noTelp ?? "": _ctrlNomor.text;
-              // _selectedGender = _selectedGender!.isEmpty ? user?.gender ?? "": _selectedGender;
-              // _ctrlPass.text = _ctrlPass.text.isEmpty ? user?.password ?? "": _ctrlPass.text;
             }
             return SingleChildScrollView(
               child: Column(
@@ -99,15 +67,65 @@ class _EditPageState extends State<EditPage> {
                       clipBehavior: Clip.none,
                       alignment: Alignment.center,
                       children: [
-                        ClipRRect(
-                          child: Image.network(
-                            user?.sampul ?? "",
-                            width: lebar,
-                            fit: BoxFit.cover,
+                        Container(
+                          width: lebar,
+                          height: 110,
+                          child: ClipRRect(
+                            child: Image.network(
+                              user?.sampul ?? "",
+                              width: lebar,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+                        // Positioned(
+                        //     top: 50,
+                        //     child: GestureDetector(
+                        //       onTap: () {},
+                        //     )),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+                        //   child: Row(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Container(
+                        //         padding: EdgeInsets.all(5),
+                        //         decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(10),
+                        //           border: Border.all(
+                        //             color: Theme.of(context)
+                        //                 .colorScheme
+                        //                 .primaryContainer,
+                        //             width: 2,
+                        //           ),
+                        //         ),
+                        //         child: Row(
+                        //           children: [
+                        //             Icon(
+                        //               Icons.edit,
+                        //               color: Theme.of(context)
+                        //                   .colorScheme
+                        //                   .onPrimary,
+                        //               size: 16,
+                        //             ),
+                        //             Text("  Ubah Sampul",
+                        //                 style: TextStyle(
+                        //                   fontSize: Theme.of(context)
+                        //                       .textTheme
+                        //                       .titleSmall!
+                        //                       .fontSize,
+                        //                   color: Theme.of(context)
+                        //                       .colorScheme
+                        //                       .onPrimary,
+                        //                 ))
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Positioned(
-                          top: 140,
+                          top: 50,
                           child: Container(
                             width: 100,
                             height: 100,
@@ -115,7 +133,7 @@ class _EditPageState extends State<EditPage> {
                               borderRadius: BorderRadius.circular(100),
                               border: Border.all(
                                 color: Theme.of(context).colorScheme.background,
-                                width: 5,
+                                width: 3,
                               ),
                             ),
                             child: ClipRRect(
@@ -129,8 +147,66 @@ class _EditPageState extends State<EditPage> {
                             ),
                           ),
                         ),
+                        // Positioned(
+                        //     top: 180,
+                        //     child: GestureDetector(
+                        //       onTap: () {},
+                        //     )),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 150.0),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        //       Container(
+                        //         padding: EdgeInsets.all(5),
+                        //         decoration: BoxDecoration(
+                        //           shape: BoxShape.circle,
+                        //             color: Theme.of(context)
+                        //                 .colorScheme
+                        //                 .primaryContainer,
+                          
+                        //         ),
+                        //         child: Icon(
+                        //           Icons.edit,
+                        //           color: Theme.of(context)
+                        //               .colorScheme
+                        //               .onPrimary,
+                        //           size: 16,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
+                    // Row(
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(top: 5.0, left: 20.0),
+                    //       child: ElevatedButton(
+                    //         onPressed: () {},
+                    //         child: Row(
+                    //           children: [
+                    //             Icon(Icons.edit),
+                    //             SizedBox(width: 8),
+                    //             Text("Ubah Sampul"),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Spacer(),
+                    //     ElevatedButton(
+                    //         onPressed: () {},
+                    //         child: Row(
+                    //           children: [
+                    //             Icon(Icons.edit),
+                    //             SizedBox(width: 8),
+                    //             Text("Ubah Profil"),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //   ],
+                    // ),
                     SizedBox(height: 40),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -169,9 +245,7 @@ class _EditPageState extends State<EditPage> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
-                              setState(() {
                                 _selectedGender = value;
-                              });
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -193,26 +267,35 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () async {
-                              setState(() async {
                                 String id =
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              users.doc(id).update({
-                                "namaLengkap": _ctrlNama.text.isEmpty ? user!.namaLengkap : _ctrlNama.text.toString(),
-                                "email": _ctrlEmail.text.isEmpty ? user!.email : _ctrlEmail.text.toString(),
-                                "username": _ctrlUsername.text.isEmpty ? user!.username : _ctrlUsername.text.toString(),
-                                "gender": _selectedGender!.isEmpty ? user!.gender : _selectedGender,
-                                "noTelp": _ctrlNomor.text.isEmpty ? user!.noTelp : _ctrlNomor.text.toString(),
-                              });
+                                    FirebaseAuth.instance.currentUser!.uid;
+                                users.doc(id).update({
+                                  "namaLengkap": _ctrlNama.text.isEmpty
+                                      ? user!.namaLengkap
+                                      : _ctrlNama.text.toString(),
+                                  "email": _ctrlEmail.text.isEmpty
+                                      ? user!.email
+                                      : _ctrlEmail.text.toString(),
+                                  "username": _ctrlUsername.text.isEmpty
+                                      ? user!.username
+                                      : _ctrlUsername.text.toString(),
+                                  "gender": _selectedGender!.isEmpty
+                                      ? user!.gender
+                                      : _selectedGender,
+                                  "noTelp": _ctrlNomor.text.isEmpty
+                                      ? user!.noTelp
+                                      : _ctrlNomor.text.toString(),
+                                });
 
-                              //FirebaseAuth
-                              await FirebaseAuth.instance.currentUser!
-                                  .updateDisplayName(_ctrlNama.text.toString());
-                              await FirebaseAuth.instance.currentUser!
-                                  .updateEmail(_ctrlEmail.text.toString());
-                              //await FirebaseAuth.instance.currentUser!.updatePhoneNumber(_ctrlNomor.text.toString());
-                              });
+                                //FirebaseAuth
+                                await FirebaseAuth.instance.currentUser!
+                                    .updateDisplayName(
+                                        _ctrlNama.text.toString());
+                                await FirebaseAuth.instance.currentUser!
+                                    .updateEmail(_ctrlEmail.text.toString());
+                                //await FirebaseAuth.instance.currentUser!.updatePhoneNumber(_ctrlNomor.text.toString());
                               
-                              Navigator.popAndPushNamed(context, "/pengaturan");
+                              Navigator.of(context).pop();
                             },
                             child: _loading
                                 ? const SizedBox(
