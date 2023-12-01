@@ -64,29 +64,19 @@ class _CariPageState extends State<CariPage> {
               dividerColor:
                   Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
             ),
-            Text(_ctrlCari.text),
             _ctrlCari.text.isEmpty && !_search
-                ? Text(_index == 0
-                    ? "Belum ada akun yang dicari."
-                    : "Belum ada postingan yang dicari.")
+                ? Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(_index == 0
+                      ? "Belum ada akun yang dicari."
+                      : "Belum ada postingan yang dicari."),
+                )
                 : (_index == 0 ? showAkun() : showPostingan())
           ],
         ),
       ),
     );
   }
-
-  // void getPostingan() async {
-  //   QuerySnapshot postingan = await Provider.of<PostData>(context, listen: false)
-  //       .postsCollection
-  //       .where("konten", isEqualTo: _ctrlCari.text)
-  //       .orderBy("tglDibuat", descending: true)
-  //       .get();
-  //   final posts = postingan.docs;
-  //   posts.forEach((post) {
-  //     PostCari.add(Post.fromJson(post.data() as Map<String, dynamic>));
-  //   });
-  // }
 
   Widget showPostingan() {
     return Expanded(
@@ -99,11 +89,6 @@ class _CariPageState extends State<CariPage> {
           if (snapshot.hasData) {
             final posts = snapshot.data!.docs;
             return ListView(
-              // children: [
-              //   for (int i = 0; i < posts.length; i++)
-              //     Text(Post.fromJson(posts[i].data() as Map<String, dynamic>)
-              //         .konten),
-              // ],
               children: [
                 for (int i = 0; i < posts.length; i++)
                   Column(
@@ -156,11 +141,6 @@ class _CariPageState extends State<CariPage> {
             );
           } else if (snapshot.hasData) {
             final users = snapshot.data!.docs;
-            // return Text(users[0].get("username"));
-            // return AkunWidget(
-            //             user: UserAcc.fromJson(
-            //                 users[0].data() as Map<String, dynamic>),
-            //           );
             return ListView(
               children: [
                 for (int i = 0; i < users.length; i++)
@@ -171,7 +151,7 @@ class _CariPageState extends State<CariPage> {
                             users[i].data() as Map<String, dynamic>),
                       ),
 
-                      // kasih pembatas antar post --------------------------------------
+                      // kasih pembatas antar akun --------------------------------------
                       if (i != users.length - 1)
                         Divider(
                           color: Theme.of(context)
@@ -181,7 +161,7 @@ class _CariPageState extends State<CariPage> {
                           indent: 10,
                           endIndent: 10,
                         )
-                      // di post terakhir tidak perlu pembatas -------------------------
+                      // di aakun terakhir tidak perlu pembatas -------------------------
                       else
                         const SizedBox(
                           height: 20,
@@ -191,7 +171,7 @@ class _CariPageState extends State<CariPage> {
               ],
             );
           }
-          return const Text("Belum ada Akun yang ditambahkan.");
+          return const Text("Belum ada Akun yang dicari.");
         },
       ),
     );
