@@ -319,11 +319,18 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               size: 30),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
-                            Navigator.popAndPushNamed(context, "/sign-in");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return SignIn();
+                                  },
+                                ),
+                              );
 
                             // kembalikan ke home page
-                            Provider.of<PageData>(context, listen: false)
-                                .changeMainPage(0);
+                            // Provider.of<PageData>(context, listen: false)
+                            //     .changeMainPage(0);
                           },
                         ),
                       ),
@@ -516,7 +523,9 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
           TextButton(
             onPressed: () async {
               String userId = FirebaseAuth.instance.currentUser!.uid;
-              await hapusData(posts, users, userId, id);
+              await hapusKomentar(posts, userId);
+              await hapusPost(posts, userId);
+              await hapusData(users, id);
               Navigator.pushReplacementNamed(context, "/sign-in");
             },
             child: Text(
@@ -533,10 +542,14 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
   );
 }
 
-Future<void> hapusData(CollectionReference posts, CollectionReference users,
-    String userId, String id) async {
+Future<void> hapusData(CollectionReference users, String id) async {
   await hapusAkun(users, id);
 }
+
+// Future<void> hapusData(CollectionReference posts, CollectionReference users,
+//     String userId, String id) async {
+//   await hapusAkun(users, id);
+// }
 
 Future<void> hapusAkun(CollectionReference users, String id) async {
   await users.doc(id).delete();
@@ -554,19 +567,18 @@ Future<void> hapusKomentar(CollectionReference posts, String userId) async {
   komentars.docs.forEach((komentar) {
     komentarsRef.doc(komentar.id).delete();
   });
-  await posts.doc(userId).delete();
+  //await posts.doc(userId).delete();
 }
 
-// Future<void> hapusPost(CollectionReference posts, String userId) async {
-//   String userId = FirebaseAuth.instance.currentUser!.uid;
-//   CollectionReference postsRef =
-//       FirebaseFirestore.instance.collection("posts");
-//   QuerySnapshot posts =
-//       await postsRef.where("userId", isEqualTo: userId).get();
+Future<void> hapusPost(CollectionReference posts, String userId) async {
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference postsRef =
+      FirebaseFirestore.instance.collection("posts");
+  QuerySnapshot posts =
+      await postsRef.where("userId", isEqualTo: userId).get();
 
-//   // hapus semua komentar yang mengomentari post
-//   posts.docs.forEach((post) {
-//     postsRef.doc(post.id).delete();
-//   });
-//   await posts.doc(userId).delete();
-// }
+  posts.docs.forEach((post) {
+    postsRef.doc(post.id).delete();
+  });
+  //await user.doc(userId).delete();
+}
