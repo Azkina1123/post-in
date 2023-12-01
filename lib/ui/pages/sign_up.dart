@@ -12,6 +12,7 @@ class _SignUpState extends State<SignUp> {
   String? _selectedGender;
   bool _isObscure = true;
   List<String> _genderOptions = ["Male", "Female", "Non"];
+  String? _profileImagePath;
 
   // String? _profileImagePath;
   // String? _coverImagePath;
@@ -30,6 +31,29 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+  //   Future<void> uploadImage() async {
+  //   try {
+  //     final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+
+  //     if (pickedFile != null) {
+  //       setState(() {
+  //         _profileImagePath = pickedFile.path;
+  //       });
+
+  //       // Assuming you have a unique identifier like `randomNumber` for the image file
+  //       String randomNumber = "your_unique_identifier_here";
+
+  //       Reference ref = FirebaseStorage.instance.ref().child("posts/$randomNumber.jpg");
+  //       await ref.putFile(File(pickedFile.path));
+  //       String url = await ref.getDownloadURL();
+
+  //       // You can use the `url` for further processing if needed
+  //       print("Image uploaded successfully. Download URL: $url");
+  //     }
+  //   } catch (e) {
+  //     print("Error uploading image: $e");
+  //   }
+  // }
 
   handleSubmit() async {
     // if (!_formKey.currentState!.validate()) return;
@@ -39,15 +63,22 @@ class _SignUpState extends State<SignUp> {
     final password = _ctrlPass.value.text;
     final gender = _selectedGender ?? "";
     final nomor = _ctrlNomor.value.text;
+
     if (nama.isEmpty ||
         email.isEmpty ||
         username.isEmpty ||
         password.isEmpty ||
         gender == null ||
         nomor.isEmpty) {
-      _showSnackBar('Semua bidang harus diisi');
+      _showSnackBar('Semua field harus diisi');
       return;
     }
+    if (password.length < 6) {
+      _showSnackBar('Isi Password minimal 6 karakter');
+      setState(() => _loading = false);
+      return;
+    }
+
     setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor);
     // if (_profileImagePath != null) {

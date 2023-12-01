@@ -10,25 +10,25 @@ class landingPage extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           Align(
             alignment: Alignment.topCenter,
             child: Text(
               "Selamat Datang !",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 40,
+                fontSize: 35,
               ),
             ),
           ),
-          SizedBox(height: 25),
+          SizedBox(height: 17),
           Text(
             "di Sosial Media Masa Depan",
-            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 60,
+            height: 40,
           ),
           Image.asset(
             'assets/landing(1).png',
@@ -37,7 +37,7 @@ class landingPage extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           SizedBox(
-            height: 120,
+            height: 70,
           ),
           Column(
             children: [

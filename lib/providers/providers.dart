@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:post_in/models/models.dart';
-import 'package:provider/provider.dart';
 
 part 'post_data.dart';
 part 'page_data.dart';
