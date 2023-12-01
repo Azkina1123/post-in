@@ -7,6 +7,10 @@ class PengaturanPage extends StatefulWidget {
   State<PengaturanPage> createState() => _PengaturanPageState();
 }
 
+//bool _isObscure = true;
+UserAcc? user;
+TextEditingController _ctrlPass = TextEditingController();
+
 class _PengaturanPageState extends State<PengaturanPage> {
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
             future: Provider.of<UserData>(context, listen: false)
                 .getUser(FirebaseAuth.instance.currentUser!.uid),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: width(context),
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
                 user = snapshot.data!;
               }
               return Padding(
@@ -59,7 +69,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               color: Theme.of(context).colorScheme.secondary,
                               fontSize: Theme.of(context)
                                   .textTheme
-                                  .titleSmall!
+                                  .titleMedium!
                                   .fontSize,
                             ),
                           ),
@@ -69,13 +79,14 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               color: Theme.of(context).colorScheme.secondary,
                               fontSize: Theme.of(context)
                                   .textTheme
-                                  .titleSmall!
+                                  .bodySmall!
                                   .fontSize,
                             ),
                           ),
                         ],
                       ),
                     ),
+                    Spacer(),
                     Padding(
                       padding: const EdgeInsets.only(top: 35),
                       child: Row(
@@ -388,9 +399,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
 }
 
 Future<void> ubahPass(BuildContext context, String id) async {
+  await Provider.of<UserData>(context, listen: false)
+      .getUser(FirebaseAuth.instance.currentUser!.uid);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference users = firestore.collection("users");
-  UserAcc? user;
 
   return showDialog(
     context: context,
@@ -403,13 +415,31 @@ Future<void> ubahPass(BuildContext context, String id) async {
             fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
           ),
         ),
-        content: TextFormField(
-            // controller: _ctrlUsername,
-            // decoration: InputDecoration(
-            //   border: OutlineInputBorder(),
-            //   hintText: user?.username ?? "",
-            // ),
-            ),
+        content: FutureBuilder(
+          future: Provider.of<UserData>(context, listen: false)
+              .getUser(FirebaseAuth.instance.currentUser!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return TextFormField(
+                controller: _ctrlPass,
+                //obscureText: _isObscure,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: snapshot.data?.password ?? "",
+                  // suffixIcon: IconButton(
+                  //   icon: Icon(
+                  //       _isObscure ? Icons.visibility : Icons.visibility_off),
+                  //   onPressed: () {
+                  //     _isObscure = !_isObscure;
+                  //   },
+                  // ),
+                ),
+              );
+            } else {
+              return Text("Loading . . .");
+            }
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -425,9 +455,13 @@ Future<void> ubahPass(BuildContext context, String id) async {
           ),
           TextButton(
             onPressed: () async {
-              String userId = FirebaseAuth.instance.currentUser!.uid;
-              //await hapusData(posts, users, userId, id);
-              Navigator.pushReplacementNamed(context, "/sign-in");
+              String id = FirebaseAuth.instance.currentUser!.uid;
+              await users.doc(id).update({
+                "password": _ctrlPass.text.isEmpty
+                    ? user!.password
+                    : _ctrlPass.text.toString(),
+              });
+              Navigator.popAndPushNamed(context, "/pengaturan");
             },
             child: Text(
               "Yakin",
