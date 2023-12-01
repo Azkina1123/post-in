@@ -24,9 +24,9 @@ class _CariPageState extends State<CariPage> {
           height: 40,
           child: TextField(
             controller: _ctrlCari,
-            onSubmitted: (query) {
+            onSubmitted: (value) {
               setState(() {
-                _ctrlCari.text = query;
+                _ctrlCari.text = value;
                 _search = true;
                 //getPostingan();
               });
@@ -76,68 +76,64 @@ class _CariPageState extends State<CariPage> {
     );
   }
 
-  void getPostingan() async {
-    QuerySnapshot postingan = await Provider.of<PostData>(context, listen: false)
-        .postsCollection
-        .where("konten", isEqualTo: _ctrlCari.text)
-        .orderBy("tglDibuat", descending: true)
-        .get();
-    final posts = postingan.docs;
-    posts.forEach((post) {
-      PostCari.add(Post.fromJson(post.data() as Map<String, dynamic>));
-    });
-  }
+  // void getPostingan() async {
+  //   QuerySnapshot postingan = await Provider.of<PostData>(context, listen: false)
+  //       .postsCollection
+  //       .where("konten", isEqualTo: _ctrlCari.text)
+  //       .orderBy("tglDibuat", descending: true)
+  //       .get();
+  //   final posts = postingan.docs;
+  //   posts.forEach((post) {
+  //     PostCari.add(Post.fromJson(post.data() as Map<String, dynamic>));
+  //   });
+  // }
 
   Widget showPostingan() {
     return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
+      child: StreamBuilder(
         stream: Provider.of<PostData>(context, listen: false)
             .postsCollection
-            .where("konten", isEqualTo: _ctrlCari.text)
-            // .orderBy("tglDibuat", descending: true)
+            .where("konten", isGreaterThanOrEqualTo: _ctrlCari.text)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              width: width(context),
-              alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasData) {
+          if (snapshot.hasData) {
             final posts = snapshot.data!.docs;
-            // posts.forEach((post) {
-            //   PostCari.add(
-            //     Post.fromJson(post.data() as Map<String, dynamic>),
-            //   );
-            // });
-            Column(
-        children: [
-          Text(posts[0].get("konten")),
-          for (int i = 0; i < posts.length; i++)
-            Column(
+            return ListView(
+              // children: [
+              //   for (int i = 0; i < posts.length; i++)
+              //     Text(Post.fromJson(posts[i].data() as Map<String, dynamic>)
+              //         .konten),
+              // ],
               children: [
-                PostWidget(post: Post.fromJson(posts[i].data() as Map<String, dynamic>)),
-                // Kasih pembatas antar post --------------------------------------
-                if (i != posts.length - 1)
-                  Divider(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .tertiary
-                        .withOpacity(0.5),
-                    indent: 10,
-                    endIndent: 10,
-                  )
-                // Di post terakhir tidak perlu pembatas -------------------------
-                else
-                  const SizedBox(
-                    height: 20,
+                for (int i = 0; i < posts.length; i++)
+                  Column(
+                    children: [
+                      PostWidget(
+                        post: Post.fromJson(
+                            posts[i].data() as Map<String, dynamic>),
+                      ),
+
+                      // kasih pembatas antar post --------------------------------------
+                      if (i != posts.length - 1)
+                        Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .tertiary
+                              .withOpacity(0.5),
+                          indent: 10,
+                          endIndent: 10,
+                        )
+                      // di post terakhir tidak perlu pembatas -------------------------
+                      else
+                        const SizedBox(
+                          height: 20,
+                        )
+                    ],
                   )
               ],
-            )
-        ],
-      );
+            );
           }
-          return const Text("Belum ada post yang ditambahkan.");
+          return Text("Loading...");
         },
       ),
     );
@@ -160,9 +156,42 @@ class _CariPageState extends State<CariPage> {
             );
           } else if (snapshot.hasData) {
             final users = snapshot.data!.docs;
-            return Text(users[0].get("username"));
+            // return Text(users[0].get("username"));
+            // return AkunWidget(
+            //             user: UserAcc.fromJson(
+            //                 users[0].data() as Map<String, dynamic>),
+            //           );
+            return ListView(
+              children: [
+                for (int i = 0; i < users.length; i++)
+                  Column(
+                    children: [
+                      AkunWidget(
+                        user: UserAcc.fromJson(
+                            users[i].data() as Map<String, dynamic>),
+                      ),
+
+                      // kasih pembatas antar post --------------------------------------
+                      if (i != users.length - 1)
+                        Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .tertiary
+                              .withOpacity(0.5),
+                          indent: 10,
+                          endIndent: 10,
+                        )
+                      // di post terakhir tidak perlu pembatas -------------------------
+                      else
+                        const SizedBox(
+                          height: 20,
+                        )
+                    ],
+                  )
+              ],
+            );
           }
-          return const Text("Belum ada post yang ditambahkan.");
+          return const Text("Belum ada Akun yang ditambahkan.");
         },
       ),
     );
