@@ -66,11 +66,11 @@ class _CariPageState extends State<CariPage> {
             ),
             _ctrlCari.text.isEmpty && !_search
                 ? Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(_index == 0
-                      ? "Belum ada akun yang dicari."
-                      : "Belum ada postingan yang dicari."),
-                )
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(_index == 0
+                        ? "Belum ada akun yang dicari."
+                        : "Belum ada postingan yang dicari."),
+                  )
                 : (_index == 0 ? showAkun() : showPostingan())
           ],
         ),
@@ -86,7 +86,18 @@ class _CariPageState extends State<CariPage> {
             .where("konten", isGreaterThanOrEqualTo: _ctrlCari.text)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              width: width(context),
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text("Postingan Tidak Ditemukan."),
+            );
+          } else if (snapshot.hasData) {
             final posts = snapshot.data!.docs;
             return ListView(
               children: [
@@ -117,6 +128,8 @@ class _CariPageState extends State<CariPage> {
                   )
               ],
             );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Text("Postingan Tidak Ditemukan.");
           }
           return Text("Loading...");
         },
@@ -138,6 +151,11 @@ class _CariPageState extends State<CariPage> {
               width: width(context),
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text("Akun Tidak Ditemukan."),
             );
           } else if (snapshot.hasData) {
             final users = snapshot.data!.docs;
@@ -161,7 +179,7 @@ class _CariPageState extends State<CariPage> {
                           indent: 10,
                           endIndent: 10,
                         )
-                      // di aakun terakhir tidak perlu pembatas -------------------------
+                      // di akun terakhir tidak perlu pembatas -------------------------
                       else
                         const SizedBox(
                           height: 20,
@@ -171,7 +189,7 @@ class _CariPageState extends State<CariPage> {
               ],
             );
           }
-          return const Text("Belum ada Akun yang dicari.");
+          return Text("Loading...");
         },
       ),
     );
