@@ -142,28 +142,62 @@ class _ProfilePageState extends State<ProfilePage> {
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 TextButton(
-                    style: Theme.of(context).textButtonTheme.style,
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/follow',
-                        arguments: user.id,
-                      );
+                  style: Theme.of(context).textButtonTheme.style,
+                  onPressed: () {
+                    setState(() {
+                      _index = 0;
+                    });
+                    Navigator.pushNamed(
+                      context,
+                      '/follow',
+                      arguments: user.id,
+                    );
+                  },
+                  child: FutureBuilder<int>(
+                    future: Provider.of<UserData>(context, listen: false)
+                        .getFollowingsCount(user.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading Followings...");
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        int followingsCount = snapshot.data ?? 0;
+                        return Text("$followingsCount Followings");
+                      }
                     },
-                    child: Text("10" + " Followings")),
+                  ),
+                ),
                 SizedBox(
                   width: 20,
                 ),
                 TextButton(
-                    style: Theme.of(context).textButtonTheme.style,
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/follow',
-                        arguments: user.id,
-                      );
+                  style: Theme.of(context).textButtonTheme.style,
+                  onPressed: () {
+                    setState(() {
+                      _index = 1;
+                    });
+                    Navigator.pushNamed(
+                      context,
+                      '/follow',
+                      arguments: user.id,
+                    );
+                  },
+                  child: FutureBuilder<int>(
+                    future: Provider.of<UserData>(context, listen: false)
+                        .getFollowersCount(user.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading Followers...");
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        int followersCount = snapshot.data ?? 0;
+                        return Text("$followersCount Followers");
+                      }
                     },
-                    child: Text("10" + " Followers")),
+                  ),
+                ),
               ]),
             ),
             DefaultTabController(

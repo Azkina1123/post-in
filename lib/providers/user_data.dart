@@ -182,4 +182,27 @@ class UserData extends ChangeNotifier {
     });
     return users;
   }
+
+  Future<int> getFollowingsCount(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await usersCollection.doc(userId).get();
+      List<dynamic> followings = userDoc['followings'];
+      return followings.length;
+    } catch (e) {
+      print("Error getting followings count: $e");
+      return 0;
+    }
+  }
+
+  Future<int> getFollowersCount(String userId) async {
+    try {
+      QuerySnapshot followersSnapshot = await usersCollection
+          .where("followings", arrayContains: userId)
+          .get();
+      return followersSnapshot.docs.length;
+    } catch (e) {
+      print("Error getting followers count: $e");
+      return 0;
+    }
+  }
 }
