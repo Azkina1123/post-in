@@ -326,7 +326,6 @@ class MyApp extends StatelessWidget {
             // !!!!!!!! NANTI HAPUSS !!!!!!!!,
             "/debug": (ctx) => const DebugPage(),
           },
-          // FirebaseAuth.instance.authStateChanges()
           initialRoute:
               FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
 

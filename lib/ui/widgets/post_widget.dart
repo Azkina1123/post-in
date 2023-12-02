@@ -9,7 +9,6 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
-    bool isLiked = post.likes.contains(authUserId);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,29 +108,7 @@ class PostWidget extends StatelessWidget {
                     // tombol like -------------------------------------------------------
                     SizedBox(
                       width: 70,
-                      child: TextButton.icon(
-                        onPressed: () async {
-                          Provider.of<PostData>(context, listen: false)
-                              .toggleLike(post.id);
-                        },
-                        icon: Icon(
-                          isLiked
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_outline,
-                          color: isLiked
-                              ? colors["soft-pink"]
-                              : Theme.of(context).colorScheme.primary,
-                        ),
-                        style: Theme.of(context).textButtonTheme.style,
-                        label: Text(
-                          post.likes.length.toString(),
-                          style: TextStyle(
-                            color: isLiked
-                                ? colors["soft-pink"]
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
+                      child: LikeBtn(postId: post.id,)
                     ),
 
                     // tombol komentar -------------------------------------------------------
