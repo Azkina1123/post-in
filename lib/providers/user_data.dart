@@ -155,8 +155,8 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<UserAcc>> getFollowings() async {
-    UserAcc authUser = await getUser(FirebaseAuth.instance.currentUser!.uid);
+  Future<List<UserAcc>> getFollowings(String id) async {
+    UserAcc authUser = await getUser(id);
     QuerySnapshot querySnapshot =
         await _usersCollection.where("id", whereIn: authUser!.followings).get();
     List<UserAcc> users = [];
@@ -168,8 +168,8 @@ class UserData extends ChangeNotifier {
     return users;
   }
 
-  Future<List<UserAcc>> getFollowers() async {
-    UserAcc authUser = await getUser(FirebaseAuth.instance.currentUser!.uid);
+  Future<List<UserAcc>> getFollowers(String id) async {
+    UserAcc authUser = await getUser(id);
 
     QuerySnapshot querySnapshot = await _usersCollection
         .where("followings", arrayContains: authUser.id)

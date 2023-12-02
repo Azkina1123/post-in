@@ -9,6 +9,7 @@ class FollowPage extends StatefulWidget {
 
 class _FollowPageState extends State<FollowPage> {
   int _index = 0;
+
   @override
   Widget build(BuildContext context) {
     String userId = ModalRoute.of(context)!.settings.arguments as String;
@@ -37,7 +38,7 @@ class _FollowPageState extends State<FollowPage> {
       ),
       body: DefaultTabController(
         length: 2,
-        child: Column(
+        child: ListView(
           children: [
             TabBar(
               tabs: const [Tab(text: "Followings"), Tab(text: "Followers")],
@@ -58,76 +59,38 @@ class _FollowPageState extends State<FollowPage> {
             if (_index == 0)
               FutureBuilder<List<UserAcc>>(
                   future: Provider.of<UserData>(context, listen: false)
-                      .getFollowings(),
+                      .getFollowings(userId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<UserAcc> users = snapshot.data!;
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/profile",
-                            arguments: user!,
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            for (int i = 0; i < users.length; i++)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, top: 10),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          Image.network(users[i].foto ?? "")
-                                              .image,
-                                    ),
-                                    SizedBox(width: 15),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          users[i].username ?? "",
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                        Text(
-                                          users[i].namaLengkap ?? "",
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    PopupMenuButton(itemBuilder: (context) {
-                                      return [
-                                        PopupMenuItem(
-                                          value: 'delete',
-                                          child: const Text('Delete'),
-                                          onTap: () {},
-                                        )
-                                      ];
-                                    }),
-                                  ],
+                      return Column(
+                        children: [
+                          for (int i = 0; i < users.length; i++)
+                            Column(
+                              children: [
+                                AkunWidget(
+                                  user: users[i],
+                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
-                              ),
-                          ],
-                        ),
+
+                                // kasih pembatas antar akun --------------------------------------
+                                if (i != users.length - 1)
+                                  Divider(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.5),
+                                    indent: 10,
+                                    endIndent: 10,
+                                  )
+                                // di akun terakhir tidak perlu pembatas -------------------------
+                                else
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                              ],
+                            )
+                        ],
                       );
                     }
                     return Text("");
@@ -135,76 +98,38 @@ class _FollowPageState extends State<FollowPage> {
             else
               FutureBuilder<List<UserAcc>>(
                   future: Provider.of<UserData>(context, listen: false)
-                      .getFollowers(),
+                      .getFollowers(userId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<UserAcc> users = snapshot.data!;
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            "/profile",
-                            arguments: user!,
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            for (int i = 0; i < users.length; i++)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, top: 10),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          Image.network(users[i].foto ?? "")
-                                              .image,
-                                    ),
-                                    SizedBox(width: 15),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          users[i].username ?? "",
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                        Text(
-                                          users[i].namaLengkap ?? "",
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .fontSize,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Spacer(),
-                                    PopupMenuButton(itemBuilder: (context) {
-                                      return [
-                                        PopupMenuItem(
-                                          value: 'delete',
-                                          child: const Text('Delete'),
-                                          onTap: () {},
-                                        )
-                                      ];
-                                    }),
-                                  ],
+                      return Column(
+                        children: [
+                          for (int i = 0; i < users.length; i++)
+                            Column(
+                              children: [
+                                AkunWidget(
+                                  user: users[i],
+                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
-                              ),
-                          ],
-                        ),
+
+                                // kasih pembatas antar akun --------------------------------------
+                                if (i != users.length - 1)
+                                  Divider(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.5),
+                                    indent: 10,
+                                    endIndent: 10,
+                                  )
+                                // di akun terakhir tidak perlu pembatas -------------------------
+                                else
+                                  const SizedBox(
+                                    height: 20,
+                                  )
+                              ],
+                            )
+                        ],
                       );
                     }
                     return Text("");
