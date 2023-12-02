@@ -1,12 +1,5 @@
 Halaman home & post target
 -. Bug pas open Snackbar bru ke halaman lain
--. angka di like komentar
--. Snackbar berhasil menambahkan post
--. Snackbar berhasil menambahkan komentar
--. Snackbar berhasil menambahkan like
--. Posting dengan kamera
-
-
 
 
  di sign up

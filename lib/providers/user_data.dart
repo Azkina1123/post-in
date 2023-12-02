@@ -87,6 +87,71 @@ class UserData extends ChangeNotifier {
     usersCollection
         .doc(authUserId)
         .update({"followings": followings, "totalLike": followings.length});
+  }
+
+ void delete(String userId) async {
+    // hapus semua post user dari collection posts -----------------------
+    QuerySnapshot postsDocs = await PostData()
+        ._postsCollection
+        .where("userId", isEqualTo: userId)
+        .get();
+
+    // hapus semua post user dari collection users
+    postsDocs.docs.forEach((post) {
+      PostData().delete(post.id);
+    });
+
+    // hapus semua komentar user dari collection komentars -----------------------
+    QuerySnapshot komentarsDocs = await KomentarData()
+        ._komentarsCollection
+        .where("userId", isEqualTo: userId)
+        .get();
+    List<String> komentarIds = [];
+    komentarsDocs.docs.forEach((komentar) async {
+      // simpan id komentar user
+      komentarIds.add(komentar.id);
+      // hapus semua komentar dari collection komentars
+      KomentarData()._komentarsCollection.doc(komentar.id).delete();
+    });
+
+    // perbarui komentar di semua post -----------------
+    postsDocs = await PostData()._postsCollection.get();
+    postsDocs.docs.forEach((post) {
+      List<String> komentars = [];
+      komentars = List<String>.from(post.get("komentars"));
+
+      komentars.forEach(
+        (id) {
+          if (komentarIds.contains(id)) {
+            komentars.remove(id);
+          }
+        },
+      );
+      PostData()
+          .postsCollection
+          .doc(post.id)
+          .update({"komentars": komentars, "totalKomentar": komentars.length});
+    });
+
+    // perbarui semua like komentar ----------------------------------
+    komentarsDocs = await KomentarData()._komentarsCollection.get();
+    komentarsDocs.docs.forEach((komentar) {
+      List<String> likes = [];
+      likes = List<String>.from(komentar.get("likes"));
+
+      likes.removeWhere(
+        (userIdLike) => userIdLike == userId,
+      );
+      KomentarData()
+          .komentarsCollection
+          .doc(userId)
+          .update({"likes": likes, "totalLike": likes.length});
+    });
+
+    // taruh fungsi hapus user dari users collection di sini
+    await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).delete();
+    await FirebaseAuth.instance.currentUser!.delete();
+
     notifyListeners();
   }
 

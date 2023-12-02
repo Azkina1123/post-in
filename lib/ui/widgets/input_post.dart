@@ -101,7 +101,8 @@ class _InputPostState extends State<InputPost> {
                             iconSize: 40,
                           ),
                           ElevatedButton(
-                            onPressed: _kontenCon.text.isNotEmpty
+                            onPressed: _kontenCon.text.isNotEmpty &&
+                                    !isSpace(_kontenCon.text)
                                 ? () {
                                     Provider.of<PostData>(context,
                                             listen: false)
@@ -147,5 +148,9 @@ class _InputPostState extends State<InputPost> {
       imgPath = pickedFile.path;
       _focus.requestFocus();
     }
+  }
+
+    bool isSpace(String str) {
+    return str.trim().isEmpty;
   }
 }

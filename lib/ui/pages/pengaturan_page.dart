@@ -320,13 +320,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return SignIn();
-                                  },
-                                ),
-                              );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return SignIn();
+                                },
+                              ),
+                            );
 
                             // kembalikan ke home page
                             // Provider.of<PageData>(context, listen: false)
@@ -338,14 +338,14 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return SignIn();
-                                  },
-                                ),
-                              );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return SignIn();
+                              },
+                            ),
+                          );
                           // kembalikan ke home page
                           // Provider.of<PageData>(context, listen: false)
                           //     .changeMainPage(0);
@@ -531,9 +531,7 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
           TextButton(
             onPressed: () async {
               String userId = FirebaseAuth.instance.currentUser!.uid;
-              await hapusKomentar(posts, userId);
-              await hapusPost(posts, userId);
-              await hapusData(users, id);
+              Provider.of<UserData>(context, listen: false).delete(userId);
               Navigator.pushReplacementNamed(context, "/sign-in");
             },
             child: Text(
@@ -553,11 +551,6 @@ Future<void> hapusDataAkun(BuildContext context, String id) async {
 Future<void> hapusData(CollectionReference users, String id) async {
   await hapusAkun(users, id);
 }
-
-// Future<void> hapusData(CollectionReference posts, CollectionReference users,
-//     String userId, String id) async {
-//   await hapusAkun(users, id);
-// }
 
 Future<void> hapusAkun(CollectionReference users, String id) async {
   await users.doc(id).delete();
@@ -579,10 +572,8 @@ Future<void> hapusKomentar(CollectionReference posts, String userId) async {
 
 Future<void> hapusPost(CollectionReference posts, String userId) async {
   String userId = FirebaseAuth.instance.currentUser!.uid;
-  CollectionReference postsRef =
-      FirebaseFirestore.instance.collection("posts");
-  QuerySnapshot posts =
-      await postsRef.where("userId", isEqualTo: userId).get();
+  CollectionReference postsRef = FirebaseFirestore.instance.collection("posts");
+  QuerySnapshot posts = await postsRef.where("userId", isEqualTo: userId).get();
 
   posts.docs.forEach((post) {
     postsRef.doc(post.id).delete();
