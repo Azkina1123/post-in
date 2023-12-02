@@ -39,6 +39,7 @@ class PostPage extends StatelessWidget {
                     Post post = Post.fromJson(
                               snapshot.data!.docs[0].data() as Map<String, dynamic>);
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         PostWidget(
                           post: post,

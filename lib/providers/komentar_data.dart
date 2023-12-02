@@ -84,7 +84,7 @@ class KomentarData extends ChangeNotifier {
       // hapus komentar dari collection posts
       komentars.remove(_selectedKomentar[i]);
     }
-    postsCollection.doc(postId).update({"komentars": komentars});
+    postsCollection.doc(postId).update({"komentars": komentars, "totalKomentar": komentars.length});
     _selectedKomentar.clear();
     notifyListeners();
   }

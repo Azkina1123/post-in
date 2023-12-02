@@ -11,7 +11,6 @@ import 'dart:io';
 part 'functions.dart';
 part 'account_button.dart';
 part 'post_widget.dart';
-// part 'bottom_nav_menu.dart';
 part 'input_post.dart';
 part 'text_field_decoration.dart';
 part 'komentar_widget.dart';

@@ -147,7 +147,7 @@ class PostWidget extends StatelessWidget {
                               Navigator.pushNamed(
                                 context,
                                 "/post",
-                                arguments: post,
+                                arguments: post.id,
                               );
                             }
 

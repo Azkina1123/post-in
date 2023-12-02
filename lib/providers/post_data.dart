@@ -1,7 +1,6 @@
 part of "providers.dart";
 
 class PostData extends ChangeNotifier {
-
   final CollectionReference _postsCollection =
       FirebaseFirestore.instance.collection("posts");
 
@@ -96,10 +95,8 @@ class PostData extends ChangeNotifier {
   }
 
   void toggleLike(String id) async {
-QuerySnapshot querySnapshot =
-        await postsCollection
-            .where("id", isEqualTo: id)
-            .get();
+    QuerySnapshot querySnapshot =
+        await postsCollection.where("id", isEqualTo: id).get();
 
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -109,8 +106,6 @@ QuerySnapshot querySnapshot =
       likes.add(authUserId);
     }
 
-    postsCollection
-        .doc(id)
-        .update({"likes": likes, "totalLike": likes.length});
+    postsCollection.doc(id).update({"likes": likes, "totalLike": likes.length});
   }
 }

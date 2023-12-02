@@ -37,7 +37,7 @@ class _SignInState extends State<SignIn> {
     try {
       // Cobalah untuk melakukan login
       await AuthData().login(email, password);
-
+      Provider.of<PageData>(context, listen: false).changeMainPage(0);
       Navigator.popAndPushNamed(context, "/");
     } catch (e) {
       print('Error: $e');
@@ -186,10 +186,10 @@ class _SignInState extends State<SignIn> {
                 padding: EdgeInsets.only(top: 100),
                 height: 200,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/background.png"),
-                    fit: BoxFit.fitHeight,
-                  ),
+                  // image: DecorationImage(
+                  //   image: AssetImage("assets/background.png"),
+                  //   fit: BoxFit.fitHeight,
+                  // ),
                 ),
               )
             ],

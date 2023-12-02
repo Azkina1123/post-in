@@ -6,6 +6,16 @@ class AuthData extends ChangeNotifier {
   // UserAcc get authUser => _authUser!;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<UserAcc> get authUser async {
+     QuerySnapshot querySnapshot = await UserData()
+        .usersCollection
+        .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    final userDoc = querySnapshot.docs[0];
+    UserAcc user = UserAcc.fromJson(userDoc.data() as Map<String, dynamic>);
+    return user;
+  }
+
   String? id_now;
 
   Future<void> regis(String nama, String email, String username,
@@ -53,10 +63,10 @@ class AuthData extends ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-      final user = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      id_now = user.user!.uid;
+    final user = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    id_now = user.user!.uid;
   }
 }

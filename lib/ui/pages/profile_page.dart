@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       snapshot.data!.docs[0].data()
                                           as Map<String, dynamic>);
                                   return Padding(
-                                    padding: const EdgeInsets.only(right: 15),
+                                    padding: const EdgeInsets.only(right: 20),
                                     child: authUser.followings.contains(user.id)
                                         ? OutlinedButton(
                                             onPressed: () {

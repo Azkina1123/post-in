@@ -87,6 +87,5 @@ class UserData extends ChangeNotifier {
     usersCollection
         .doc(authUserId)
         .update({"followings": followings, "totalLike": followings.length});
-    notifyListeners();
   }
 }
