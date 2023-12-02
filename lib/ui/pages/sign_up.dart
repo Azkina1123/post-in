@@ -13,6 +13,9 @@ class _SignUpState extends State<SignUp> {
   bool _isObscure = true;
   List<String> _genderOptions = ["Male", "Female", "Non"];
   String? _profileImagePath;
+  final FocusNode _focus = FocusNode();
+  bool _focused = false;
+  String? imgPath;
 
   // String? _profileImagePath;
   // String? _coverImagePath;
@@ -30,6 +33,17 @@ class _SignUpState extends State<SignUp> {
         content: Text(message),
       ),
     );
+  }
+
+  void _getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      imgPath = pickedFile.path;
+      _focus.requestFocus();
+    }
   }
   //   Future<void> uploadImage() async {
   //   try {
@@ -161,6 +175,10 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(40),
+                          ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nama Lengkap',
@@ -177,6 +195,10 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20),
+                          ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Username',
@@ -197,6 +219,10 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(30),
+                          ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Email',
@@ -240,7 +266,8 @@ class _SignUpState extends State<SignUp> {
                           },
                           keyboardType: TextInputType.phone,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(13),
                           ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -259,6 +286,10 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(25),
+                          ],
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Password',
@@ -280,43 +311,49 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 30),
                   Row(
                     children: [
-                      // Expanded(
-                      //   child: buttonUpload(
-                      //     "Upload Foto Profil",
-                      //     Icons.upload,
-                      //     () async {
-                      //       final pickedFile = await ImagePicker()
-                      //           .getImage(source: ImageSource.gallery);
-                      //       if (pickedFile != null) {
-                      //         setState(() {
-                      //           _profileImagePath = pickedFile.path;
-                      //         });
-                      //         // You can add more logic related to profile image upload here
-                      //         // For example: await AuthData().uploadProfileImage(_profileImagePath!);
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
-                      SizedBox(width: 20),
-                      // Expanded(
-                      //   child: buttonUpload(
-                      //     "Upload Sampul",
-                      //     Icons.upload,
-                      //     () async {
-                      //       final pickedFile = await ImagePicker()
-                      //           .getImage(source: ImageSource.gallery);
-                      //       if (pickedFile != null) {
-                      //         setState(() {
-                      //           _coverImagePath = pickedFile.path;
-                      //         });
-                      //         // You can add more logic related to cover image upload here
-                      //         // For example: await AuthData().uploadCoverImage(_coverImagePath!);
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _getFromGallery();
+                          });
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.upload),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text("Upload foto Profil"),
+                          ],
+                        ),
+                      )),
                     ],
                   ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _getFromGallery();
+                          });
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.upload),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text("Upload foto Sampul"),
+                          ],
+                        ),
+                      )),
+                    ],
+                  )
                 ],
               ),
               Padding(

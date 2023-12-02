@@ -20,13 +20,7 @@ class _FollowPageState extends State<FollowPage> {
             future: Provider.of<UserData>(context, listen: false)
                 .getUser(FirebaseAuth.instance.currentUser!.uid),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  width: width(context),
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasData) {
+              if (snapshot.hasData) {
                 user = snapshot.data!;
               }
               return Padding(

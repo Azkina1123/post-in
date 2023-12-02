@@ -50,16 +50,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back,
-              size: 25, color: Theme.of(context).colorScheme.primary),
-        ),
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -186,11 +177,11 @@ class _SignInState extends State<SignIn> {
                 padding: EdgeInsets.only(top: 100),
                 height: 200,
                 decoration: BoxDecoration(
-                  // image: DecorationImage(
-                  //   image: AssetImage("assets/background.png"),
-                  //   fit: BoxFit.fitHeight,
-                  // ),
-                ),
+                    // image: DecorationImage(
+                    //   image: AssetImage("assets/background.png"),
+                    //   fit: BoxFit.fitHeight,
+                    // ),
+                    ),
               )
             ],
           ),
