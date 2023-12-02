@@ -79,12 +79,66 @@ class _CariPageState extends State<CariPage> {
   }
 
   Widget showPostingan() {
+    // return Expanded(
+    //   child: StreamBuilder(
+    //     stream: Provider.of<PostData>(context, listen: false)
+    //         .postsCollection
+    //         .where("konten", isGreaterThanOrEqualTo: _ctrlCari.text)
+    //         .snapshots(),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return Container(
+    //           width: width(context),
+    //           alignment: Alignment.center,
+    //           child: const CircularProgressIndicator(),
+    //         );
+    //       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+    //         return Padding(
+    //           padding: const EdgeInsets.all(20.0),
+    //           child: Text("Postingan Tidak Ditemukan."),
+    //         );
+    //       } else if (snapshot.hasData) {
+    //         final posts = snapshot.data!.docs;
+    //         return ListView(
+    //           children: [
+    //             for (int i = 0; i < posts.length; i++)
+    //               Column(
+    //                 children: [
+    //                   PostWidget(
+    //                     post: Post.fromJson(
+    //                         posts[i].data() as Map<String, dynamic>),
+    //                   ),
+
+    //                   // kasih pembatas antar post --------------------------------------
+    //                   if (i != posts.length - 1)
+    //                     Divider(
+    //                       color: Theme.of(context)
+    //                           .colorScheme
+    //                           .tertiary
+    //                           .withOpacity(0.5),
+    //                       indent: 10,
+    //                       endIndent: 10,
+    //                     )
+    //                   // di post terakhir tidak perlu pembatas -------------------------
+    //                   else
+    //                     const SizedBox(
+    //                       height: 20,
+    //                     )
+    //                 ],
+    //               )
+    //           ],
+    //         );
+    //       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+    //         return Text("Postingan Tidak Ditemukan.");
+    //       }
+    //       return Text("Loading...");
+    //     },
+    //   ),
+    // );
     return Expanded(
       child: StreamBuilder(
-        stream: Provider.of<PostData>(context, listen: false)
-            .postsCollection
-            .where("konten", isGreaterThanOrEqualTo: _ctrlCari.text)
-            .snapshots(),
+        stream: Stream.fromFuture(Provider.of<PostData>(context, listen: false)
+            .getSearchPosts(_ctrlCari.text)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
@@ -92,24 +146,14 @@ class _CariPageState extends State<CariPage> {
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             );
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text("Postingan Tidak Ditemukan."),
-            );
           } else if (snapshot.hasData) {
-            final posts = snapshot.data!.docs;
+            final posts = snapshot.data!;
             return ListView(
               children: [
                 for (int i = 0; i < posts.length; i++)
                   Column(
                     children: [
-                      PostWidget(
-                        post: Post.fromJson(
-                            posts[i].data() as Map<String, dynamic>),
-                      ),
-
-                      // kasih pembatas antar post --------------------------------------
+                      PostWidget(post: posts[i]),
                       if (i != posts.length - 1)
                         Divider(
                           color: Theme.of(context)
@@ -119,16 +163,15 @@ class _CariPageState extends State<CariPage> {
                           indent: 10,
                           endIndent: 10,
                         )
-                      // di post terakhir tidak perlu pembatas -------------------------
                       else
                         const SizedBox(
                           height: 20,
                         )
                     ],
-                  )
+                  ),
               ],
             );
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          } else if (!snapshot.hasData) {
             return Text("Postingan Tidak Ditemukan.");
           }
           return Text("Loading...");
