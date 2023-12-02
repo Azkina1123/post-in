@@ -13,8 +13,12 @@ class _EditPageState extends State<EditPage> {
   String? _selectedGender;
   List<String> _genderOptions = ["Male", "Female", "Non"];
 
-  // String? _profileImagePath;
-  // String? _coverImagePath;
+  String? _profileImagePath;
+  String? _coverImagePath;
+  String? url;
+  int randomNumber = Random().nextInt(99999999 - 10000000 + 1) + 10000000;
+
+  final FocusNode _focus = FocusNode();
 
   TextEditingController _ctrlNama = TextEditingController();
   TextEditingController _ctrlEmail = TextEditingController();
@@ -49,13 +53,7 @@ class _EditPageState extends State<EditPage> {
           future: Provider.of<UserData>(context, listen: false)
               .getUser(FirebaseAuth.instance.currentUser!.uid),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                width: width(context),
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasData) {
+            if (snapshot.hasData) {
               user = snapshot.data!;
             }
             return SingleChildScrollView(
@@ -72,58 +70,79 @@ class _EditPageState extends State<EditPage> {
                           height: 110,
                           child: ClipRRect(
                             child: Image.network(
-                              user?.sampul ?? "",
+                              url ?? user?.sampul ?? "",
+                              //_coverImagePath?.isNotEmpty ?? false ? url! : user?.sampul?? "",
                               width: lebar,
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        // Positioned(
-                        //     top: 50,
-                        //     child: GestureDetector(
-                        //       onTap: () {},
-                        //     )),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 20.0, top: 40.0),
-                        //   child: Row(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       Container(
-                        //         padding: EdgeInsets.all(5),
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(10),
-                        //           border: Border.all(
-                        //             color: Theme.of(context)
-                        //                 .colorScheme
-                        //                 .primaryContainer,
-                        //             width: 2,
-                        //           ),
-                        //         ),
-                        //         child: Row(
-                        //           children: [
-                        //             Icon(
-                        //               Icons.edit,
-                        //               color: Theme.of(context)
-                        //                   .colorScheme
-                        //                   .onPrimary,
-                        //               size: 16,
-                        //             ),
-                        //             Text("  Ubah Sampul",
-                        //                 style: TextStyle(
-                        //                   fontSize: Theme.of(context)
-                        //                       .textTheme
-                        //                       .titleSmall!
-                        //                       .fontSize,
-                        //                   color: Theme.of(context)
-                        //                       .colorScheme
-                        //                       .onPrimary,
-                        //                 ))
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+                        Positioned(
+                            top: 50,
+                            child: GestureDetector(
+                              onTap: () {},
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0, top: 40.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() async {
+                                _getFromGallery();
+                                if (user?.foto != null) {
+                                  Reference ref = FirebaseStorage.instance
+                                      .ref()
+                                      .child("users/$randomNumber.jpg");
+                                  await ref.putFile(File(user!.foto!));
+                                  url = await ref.getDownloadURL();
+                                } else if (user?.sampul != null) {
+                                  Reference ref = FirebaseStorage.instance
+                                      .ref()
+                                      .child("users/$randomNumber.jpg");
+                                  await ref.putFile(File(_coverImagePath!));
+                                  url = await ref.getDownloadURL();
+                                }
+                              });
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.edit,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                        size: 16,
+                                      ),
+                                      Text("  Ubah Sampul",
+                                          style: TextStyle(
+                                            fontSize: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .fontSize,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Positioned(
                           top: 50,
                           child: Container(
@@ -161,16 +180,14 @@ class _EditPageState extends State<EditPage> {
                         //         padding: EdgeInsets.all(5),
                         //         decoration: BoxDecoration(
                         //           shape: BoxShape.circle,
-                        //             color: Theme.of(context)
-                        //                 .colorScheme
-                        //                 .primaryContainer,
-                          
+                        //           color: Theme.of(context)
+                        //               .colorScheme
+                        //               .primaryContainer,
                         //         ),
                         //         child: Icon(
                         //           Icons.edit,
-                        //           color: Theme.of(context)
-                        //               .colorScheme
-                        //               .onPrimary,
+                        //           color:
+                        //               Theme.of(context).colorScheme.onPrimary,
                         //           size: 16,
                         //         ),
                         //       ),
@@ -184,7 +201,17 @@ class _EditPageState extends State<EditPage> {
                     //     Padding(
                     //       padding: const EdgeInsets.only(top: 5.0, left: 20.0),
                     //       child: ElevatedButton(
-                    //         onPressed: () {},
+                    //         onPressed: () async {
+                    //           _getFromGallery();
+                    //           String id = FirebaseAuth.instance.currentUser!.uid;
+                    //             if (user?.sampul != null) {
+                    //               Reference ref = FirebaseStorage.instance
+                    //                   .ref()
+                    //                   .child("users/$id/sampul_$randomNumber.jpg");
+                    //               await ref.putFile(File(user!.sampul!));
+                    //               url = await ref.getDownloadURL();
+                    //             }
+                    //         },
                     //         child: Row(
                     //           children: [
                     //             Icon(Icons.edit),
@@ -218,6 +245,9 @@ class _EditPageState extends State<EditPage> {
                               border: OutlineInputBorder(),
                               hintText: user?.namaLengkap ?? "",
                             ),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(40),
+                            ],
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
@@ -227,6 +257,9 @@ class _EditPageState extends State<EditPage> {
                               border: OutlineInputBorder(),
                               hintText: user?.email ?? "",
                             ),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30),
+                            ],
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
@@ -235,6 +268,9 @@ class _EditPageState extends State<EditPage> {
                               border: OutlineInputBorder(),
                               hintText: user?.username ?? "",
                             ),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(20),
+                            ],
                           ),
                           SizedBox(height: 20.0),
                           DropdownButtonFormField<String>(
@@ -246,7 +282,7 @@ class _EditPageState extends State<EditPage> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
-                                _selectedGender = value;
+                              _selectedGender = value;
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -258,7 +294,8 @@ class _EditPageState extends State<EditPage> {
                             controller: _ctrlNomor,
                             keyboardType: TextInputType.phone,
                             inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(13),
                             ],
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -268,22 +305,32 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () async {
-                                String id =
-                                    FirebaseAuth.instance.currentUser!.uid;
-                                users.doc(id).update({
-                                  "namaLengkap": _ctrlNama.text.isEmpty
-                                      ? user!.namaLengkap
-                                      : _ctrlNama.text.toString(),
-                                  "username": _ctrlUsername.text.isEmpty
-                                      ? user!.username
-                                      : _ctrlUsername.text.toString(),
-                                  "gender": _selectedGender!.isEmpty
-                                      ? user!.gender
-                                      : _selectedGender,
-                                  "noTelp": _ctrlNomor.text.isEmpty
-                                      ? user!.noTelp
-                                      : _ctrlNomor.text.toString(),
-                                });
+                              String id =
+                                  FirebaseAuth.instance.currentUser!.uid;
+                              users.doc(id).update({
+                                "namaLengkap": _ctrlNama.text.isEmpty
+                                    ? user?.namaLengkap
+                                    : _ctrlNama.text.toString(),
+                                "username": _ctrlUsername.text.isEmpty
+                                    ? user?.username
+                                    : _ctrlUsername.text.toString(),
+                                "gender": _selectedGender!.isEmpty
+                                    ? user?.gender
+                                    : _selectedGender,
+                                "noTelp": _ctrlNomor.text.isEmpty
+                                    ? user?.noTelp
+                                    : _ctrlNomor.text.toString(),
+                                "foto": _profileImagePath == null
+                                    ? url
+                                    : user?.foto,
+                                "sampul": _coverImagePath == null
+                                    ? (url ??
+                                        user?.sampul ??
+                                        "") // Gunakan url jika sudah diambil dari Firebase Storage
+                                    : url ??
+                                        user?.sampul ??
+                                        "", // Gunakan _coverImagePath jika tidak ada url dari Firebase Storage
+                              });
 
                               Navigator.of(context).pop();
                             },
@@ -307,5 +354,22 @@ class _EditPageState extends State<EditPage> {
         ),
       ]),
     );
+  }
+
+  void _getFromGallery() async {
+    XFile? pickedFile;
+    try {
+      pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+
+    if (pickedFile != null) {
+      _profileImagePath = pickedFile.path;
+      _coverImagePath = pickedFile.path;
+      _focus.requestFocus();
+    }
   }
 }
