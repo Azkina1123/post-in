@@ -281,7 +281,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           icon: Icon(Icons.lock,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
-                          onPressed: () {},
+                          onPressed: () {
+                            String id = FirebaseAuth.instance.currentUser!.uid;
+                            ubahPass(context, id);
+                          },
                         ),
                       ),
                       SizedBox(width: 10),
@@ -448,6 +451,9 @@ Future<void> ubahPass(BuildContext context, String id) async {
                   //   },
                   // ),
                 ),
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(25),
+                ],
               );
             } else {
               return Text("Loading . . .");
