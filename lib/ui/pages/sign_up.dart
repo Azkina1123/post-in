@@ -175,7 +175,6 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(40),
                           ],
@@ -195,7 +194,6 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(20),
                           ],
@@ -219,7 +217,6 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(30),
                           ],
@@ -286,7 +283,6 @@ class _SignUpState extends State<SignUp> {
                             }
                             return null;
                           },
-                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(25),
                           ],
