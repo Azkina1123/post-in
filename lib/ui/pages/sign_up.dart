@@ -72,14 +72,15 @@ class _SignUpState extends State<SignUp> {
       String? profileImagePath = _profileImagePath;
       String? coverImagePath = _coverImagePath;
 
-     try {
-   //profil
-    Reference profileImageRef = FirebaseStorage.instance
-        .ref()
-        .child("profile_images/$randomprofileimage.jpg");
-    await profileImageRef.putFile(File(_profileImagePath!));
-    String profileImageUrl = await profileImageRef.getDownloadURL();
+  //    try {
+  //  //profil
+  //   Reference profileImageRef = FirebaseStorage.instance
+  //       .ref()
+  //       .child("profile_images/$randomprofileimage.jpg");
+  //   await profileImageRef.putFile(File(_profileImagePath!));
+  //   String profileImageUrl = await profileImageRef.getDownloadURL();
 
+<<<<<<< HEAD
       //cover
       if (coverImagePath != null) {
         Reference ref = FirebaseStorage.instance
@@ -90,16 +91,33 @@ class _SignUpState extends State<SignUp> {
       }
       setState(() => _loading = false);
       return;
+=======
+  //     //cover
+  //     if (coverImagePath != null) {
+  //       Reference ref = FirebaseStorage.instance
+  //           .ref()
+  //           .child("cover_images/$randomcoverimage.jpg");
+  //       await ref.putFile(File(coverImagePath));
+  //       coverImagePath = await ref.getDownloadURL();
+  //     }
+  //     setState(() => _loading = false);
+  //     return;
+  //   }
+>>>>>>> 4209aaac4f1922738a2a6b4849b91f590c4fc38f
 
       setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor,
         _profileImagePath, _coverImagePath);
 
     setState(() => _loading = false);
+<<<<<<< HEAD
     }
 
     
   }
+=======
+  }}
+>>>>>>> 4209aaac4f1922738a2a6b4849b91f590c4fc38f
 
   Widget buttonUpload(
     String label,
