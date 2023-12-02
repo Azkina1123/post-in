@@ -90,13 +90,15 @@ class _SignUpState extends State<SignUp> {
       }
       setState(() => _loading = false);
       return;
-    }
 
-    setState(() => _loading = true);
+      setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor,
         _profileImagePath, _coverImagePath);
 
     setState(() => _loading = false);
+    }
+
+    
   }
 
   Widget buttonUpload(
