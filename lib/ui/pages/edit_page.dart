@@ -222,6 +222,7 @@ class _EditPageState extends State<EditPage> {
                           SizedBox(height: 20.0),
                           TextFormField(
                             controller: _ctrlEmail,
+                            enabled: false,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: user?.email ?? "",
@@ -273,9 +274,6 @@ class _EditPageState extends State<EditPage> {
                                   "namaLengkap": _ctrlNama.text.isEmpty
                                       ? user!.namaLengkap
                                       : _ctrlNama.text.toString(),
-                                  "email": _ctrlEmail.text.isEmpty
-                                      ? user!.email
-                                      : _ctrlEmail.text.toString(),
                                   "username": _ctrlUsername.text.isEmpty
                                       ? user!.username
                                       : _ctrlUsername.text.toString(),
@@ -287,14 +285,6 @@ class _EditPageState extends State<EditPage> {
                                       : _ctrlNomor.text.toString(),
                                 });
 
-                                //FirebaseAuth
-                                await FirebaseAuth.instance.currentUser!
-                                    .updateDisplayName(
-                                        _ctrlNama.text.toString());
-                                await FirebaseAuth.instance.currentUser!
-                                    .updateEmail(_ctrlEmail.text.toString());
-                                //await FirebaseAuth.instance.currentUser!.updatePhoneNumber(_ctrlNomor.text.toString());
-                              
                               Navigator.of(context).pop();
                             },
                             child: _loading

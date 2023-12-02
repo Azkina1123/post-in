@@ -338,10 +338,17 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
-                          Navigator.popAndPushNamed(context, "/sign-in");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return SignIn();
+                                  },
+                                ),
+                              );
                           // kembalikan ke home page
-                          Provider.of<PageData>(context, listen: false)
-                              .changeMainPage(0);
+                          // Provider.of<PageData>(context, listen: false)
+                          //     .changeMainPage(0);
                         },
                         child: Text(
                           "Keluar Akun",
@@ -468,6 +475,7 @@ Future<void> ubahPass(BuildContext context, String id) async {
                     ? user!.password
                     : _ctrlPass.text.toString(),
               });
+              await ubahPassAuth(users, id);
               Navigator.popAndPushNamed(context, "/pengaturan");
             },
             child: Text(
@@ -567,7 +575,6 @@ Future<void> hapusKomentar(CollectionReference posts, String userId) async {
   komentars.docs.forEach((komentar) {
     komentarsRef.doc(komentar.id).delete();
   });
-  //await posts.doc(userId).delete();
 }
 
 Future<void> hapusPost(CollectionReference posts, String userId) async {
@@ -580,5 +587,8 @@ Future<void> hapusPost(CollectionReference posts, String userId) async {
   posts.docs.forEach((post) {
     postsRef.doc(post.id).delete();
   });
-  //await user.doc(userId).delete();
+}
+
+Future<void> ubahPassAuth(CollectionReference users, String id) async {
+  await FirebaseAuth.instance.currentUser!.updatePassword(_ctrlPass.text);
 }
