@@ -147,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.pushNamed(
                         context,
                         '/follow',
-                        arguments: {'userId': user.id, 'initialTabIndex': 0},
+                        arguments: user.id,
                       );
                     },
                     child: Text("10" + " Followings")),
@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Navigator.pushNamed(
                         context,
                         '/follow',
-                        arguments: {'userId': user.id, 'initialTabIndex': 1},
+                        arguments: user.id,
                       );
                     },
                     child: Text("10" + " Followers")),

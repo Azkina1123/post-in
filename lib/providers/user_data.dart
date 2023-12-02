@@ -89,4 +89,32 @@ class UserData extends ChangeNotifier {
         .update({"followings": followings, "totalLike": followings.length});
     notifyListeners();
   }
+
+  Future<List<UserAcc>> getFollowings() async {
+    UserAcc authUser = await getUser(FirebaseAuth.instance.currentUser!.uid);
+    QuerySnapshot querySnapshot =
+        await _usersCollection.where("id", whereIn: authUser!.followings).get();
+    List<UserAcc> users = [];
+
+    querySnapshot.docs.forEach((doc) {
+      UserAcc user = UserAcc.fromJson(doc.data() as Map<String, dynamic>);
+      users.add(user);
+    });
+    return users;
+  }
+
+  Future<List<UserAcc>> getFollowers() async {
+    UserAcc authUser = await getUser(FirebaseAuth.instance.currentUser!.uid);
+
+    QuerySnapshot querySnapshot = await _usersCollection
+        .where("followings", arrayContains: authUser.id)
+        .get();
+    List<UserAcc> users = [];
+
+    querySnapshot.docs.forEach((doc) {
+      UserAcc user = UserAcc.fromJson(doc.data() as Map<String, dynamic>);
+      users.add(user);
+    });
+    return users;
+  }
 }
