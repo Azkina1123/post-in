@@ -7,7 +7,7 @@ class AuthData extends ChangeNotifier {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<UserAcc> get authUser async {
-     QuerySnapshot querySnapshot = await UserData()
+    QuerySnapshot querySnapshot = await UserData()
         .usersCollection
         .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get();
@@ -18,8 +18,15 @@ class AuthData extends ChangeNotifier {
 
   String? id_now;
 
-  Future<void> regis(String nama, String email, String username,
-      String password, String gender, String nomor) async {
+  Future<void> regis(
+      String nama,
+      String email,
+      String username,
+      String password,
+      String gender,
+      String nomor,
+      String? profileImagePath,
+      String? coverImagePath) async {
     // try {
     final user = await _auth.createUserWithEmailAndPassword(
       email: email,
@@ -50,16 +57,27 @@ class AuthData extends ChangeNotifier {
     id_now = user.user!.uid;
 
     UserAcc userData = UserAcc(
-        id: id_now.toString(),
-        tglDibuat: DateTime.now(),
-        username: username,
-        namaLengkap: nama,
-        email: email,
-        noTelp: nomor,
-        gender: gender,
-        password: password);
+      id: id_now.toString(),
+      tglDibuat: DateTime.now(),
+      username: username,
+      namaLengkap: nama,
+      email: email,
+      noTelp: nomor,
+      gender: gender,
+      password: password,
+      profileImageUrl:
+          profileImagePath != null ? 'profile_images/$id_now.jpg' : null,
+      coverImageUrl: coverImagePath != null ? 'cover_images/$id_now.jpg' : null,
+    );
 
     UserData().add(userData);
+    if (profileImagePath != null) {
+      await uploadProfileImage(profileImagePath);
+    }
+
+    if (coverImagePath != null) {
+      await uploadCoverImage(coverImagePath);
+    }
   }
 
   Future<void> login(String email, String password) async {

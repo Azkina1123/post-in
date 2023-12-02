@@ -26,6 +26,8 @@ class UserAcc {
     required this.password,
     this.foto,
     this.sampul,
+    String? profileImageUrl,
+    String? coverImageUrl,
   });
 
   factory UserAcc.fromJson(Map<String, dynamic> json) {

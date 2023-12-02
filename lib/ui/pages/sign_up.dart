@@ -13,9 +13,9 @@ class _SignUpState extends State<SignUp> {
   bool _isObscure = true;
   List<String> _genderOptions = ["Male", "Female", "Non"];
   String? _profileImagePath;
-  final FocusNode _focus = FocusNode();
-  bool _focused = false;
+  String? _coverImagePath;
   String? imgPath;
+ 
 
   // String? _profileImagePath;
   // String? _coverImagePath;
@@ -42,7 +42,6 @@ class _SignUpState extends State<SignUp> {
 
     if (pickedFile != null) {
       imgPath = pickedFile.path;
-      _focus.requestFocus();
     }
   }
   //   Future<void> uploadImage() async {
@@ -83,25 +82,41 @@ class _SignUpState extends State<SignUp> {
         username.isEmpty ||
         password.isEmpty ||
         gender == null ||
-        nomor.isEmpty) {
+        nomor.isEmpty ||
+        _profileImagePath == null ||
+        _coverImagePath == null) {
       _showSnackBar('Semua field harus diisi');
       return;
     }
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
+
+      String? profileImagePath = _profileImagePath;
+      String? coverImagePath = _coverImagePath;
+
+     try {
+    // Upload profile image
+    Reference profileImageRef = FirebaseStorage.instance
+        .ref()
+        .child("profile_images/$randomprofileimage.jpg");
+    await profileImageRef.putFile(File(_profileImagePath!));
+    String profileImageUrl = await profileImageRef.getDownloadURL();
+
+      if (coverImagePath != null) {
+        Reference ref = FirebaseStorage.instance
+            .ref()
+            .child("cover_images/$randomcoverimage.jpg");
+        await ref.putFile(File(coverImagePath));
+        coverImagePath = await ref.getDownloadURL();
+      }
       setState(() => _loading = false);
       return;
     }
 
     setState(() => _loading = true);
-    await AuthData().regis(nama, email, username, password, gender, nomor);
-    // if (_profileImagePath != null) {
-    //   await AuthData().uploadProfileImage(_profileImagePath!);
-    // }
+    await AuthData().regis(nama, email, username, password, gender, nomor,
+        _profileImagePath, _coverImagePath);
 
-    // if (_coverImagePath != null) {
-    //   await AuthData().uploadCoverImage(_coverImagePath!);
-    // }
     setState(() => _loading = false);
   }
 
