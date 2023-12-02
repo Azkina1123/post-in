@@ -108,4 +108,17 @@ class PostData extends ChangeNotifier {
 
     postsCollection.doc(id).update({"likes": likes, "totalLike": likes.length});
   }
+
+  Future<List<Post>> getSearchPosts(String keyword) async {
+    QuerySnapshot querySnapshot = await postsCollection.get();
+    List<Post> posts = [];
+    querySnapshot.docs.forEach((doc) {
+      posts.add(Post.fromJson(doc.data() as Map<String, dynamic>));
+    });
+    List<Post> searchPosts = posts
+        .where(
+            (post) => post.konten.toLowerCase().contains(keyword.toLowerCase()))
+        .toList();
+    return searchPosts;
+  }
 }

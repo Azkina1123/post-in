@@ -16,3 +16,4 @@ part 'text_field_decoration.dart';
 part 'komentar_widget.dart';
 part 'input_komentar.dart';
 part 'akun_widget.dart';
+part 'like_btn.dart';

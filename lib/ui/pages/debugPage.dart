@@ -8,7 +8,7 @@ class DebugPage extends StatefulWidget {
 }
 
 class _DebugPageState extends State<DebugPage> {
-  TextEditingController _con = TextEditingController();
+  final TextEditingController _con = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,26 +25,25 @@ class _DebugPageState extends State<DebugPage> {
       body: Container(
           // color: Colors.amber,
           alignment: Alignment.center,
-          child: StreamBuilder(
-            stream: Provider.of<PostData>(context, listen: false)
-                .postsCollection
-                .where("konten", isGreaterThanOrEqualTo: _con.text)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final posts = snapshot.data!.docs;
-                return ListView(
-                  children: [
-                    for (int i = 0; i < posts.length; i++)
-                      Text(
-                          Post.fromJson(posts[i].data() as Map<String, dynamic>)
-                              .konten)
-                  ],
-                );
-              }
-              return Text("Loading...");
-            },
-          )),
+          child: _con.text.isEmpty
+              ? Text("Cari dulu")
+              : StreamBuilder(
+                  stream: Stream.fromFuture(
+                      Provider.of<PostData>(context, listen: false)
+                          .getSearchPosts(_con.text)),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final posts = snapshot.data!;
+                      return ListView(
+                        children: [
+                          for (int i = 0; i < posts.length; i++)
+                            PostWidget(post: posts[i])
+                        ],
+                      );
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                )),
     );
   }
 }
