@@ -44,29 +44,7 @@ class _SignUpState extends State<SignUp> {
       imgPath = pickedFile.path;
     }
   }
-  //   Future<void> uploadImage() async {
-  //   try {
-  //     final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
 
-  //     if (pickedFile != null) {
-  //       setState(() {
-  //         _profileImagePath = pickedFile.path;
-  //       });
-
-  //       // Assuming you have a unique identifier like `randomNumber` for the image file
-  //       String randomNumber = "your_unique_identifier_here";
-
-  //       Reference ref = FirebaseStorage.instance.ref().child("posts/$randomNumber.jpg");
-  //       await ref.putFile(File(pickedFile.path));
-  //       String url = await ref.getDownloadURL();
-
-  //       // You can use the `url` for further processing if needed
-  //       print("Image uploaded successfully. Download URL: $url");
-  //     }
-  //   } catch (e) {
-  //     print("Error uploading image: $e");
-  //   }
-  // }
 
   handleSubmit() async {
     // if (!_formKey.currentState!.validate()) return;
@@ -95,13 +73,14 @@ class _SignUpState extends State<SignUp> {
       String? coverImagePath = _coverImagePath;
 
      try {
-    // Upload profile image
+   //profil
     Reference profileImageRef = FirebaseStorage.instance
         .ref()
         .child("profile_images/$randomprofileimage.jpg");
     await profileImageRef.putFile(File(_profileImagePath!));
     String profileImageUrl = await profileImageRef.getDownloadURL();
 
+      //cover
       if (coverImagePath != null) {
         Reference ref = FirebaseStorage.instance
             .ref()
@@ -387,27 +366,7 @@ class _SignUpState extends State<SignUp> {
                           )
                         : Text("Daftar"),
                   ),
-                  // MaterialButton(
-                  //   minWidth: double.infinity,
-                  //   height: 60,
-                  //   onPressed: () {
-                  //     // Navigator.popAndPushNamed(context, "/sign-in");
-
-                  //   },
-                  //   color: Theme.of(context).colorScheme.primary,
-                  //   elevation: 0,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(50),
-                  //   ),
-                  //   child: Text(
-                  //     "Daftar",
-                  //     style: TextStyle(
-                  //       fontWeight: FontWeight.w600,
-                  //       fontSize: 18,
-                  //       color: Theme.of(context).colorScheme.onSecondary,
-                  //     ),
-                  //   ),
-                  // ),
+                 
                 ),
               ),
               Row(
