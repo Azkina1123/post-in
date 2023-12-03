@@ -107,9 +107,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextButton(
                   style: Theme.of(context).textButtonTheme.style,
                   onPressed: () {
-                    setState(() {
-                      _index = 0;
-                    });
+                    Provider.of<PageData>(context, listen: false)
+                        .changefollowTab(0);
                     Navigator.pushNamed(
                       context,
                       '/follow',
@@ -135,9 +134,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextButton(
                   style: Theme.of(context).textButtonTheme.style,
                   onPressed: () {
-                    setState(() {
-                      _index = 1;
-                    });
+                    Provider.of<PageData>(context, listen: false)
+                        .changefollowTab(1);
                     Navigator.pushNamed(
                       context,
                       '/follow',

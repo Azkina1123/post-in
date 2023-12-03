@@ -13,7 +13,6 @@ class _FollowPageState extends State<FollowPage> {
   @override
   Widget build(BuildContext context) {
     String userId = ModalRoute.of(context)!.settings.arguments as String;
-    // UserAcc? user;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +69,6 @@ class _FollowPageState extends State<FollowPage> {
                               children: [
                                 AkunWidget(
                                   user: users[i],
-                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
 
                                 // kasih pembatas antar akun --------------------------------------
@@ -109,7 +107,6 @@ class _FollowPageState extends State<FollowPage> {
                               children: [
                                 AkunWidget(
                                   user: users[i],
-                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
 
                                 // kasih pembatas antar akun --------------------------------------
