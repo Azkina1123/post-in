@@ -163,14 +163,14 @@ class MyApp extends StatelessWidget {
             popupMenuTheme: PopupMenuThemeData(
               surfaceTintColor: colors["milk-white"]!,
             ),
-            // snackBarTheme: SnackBarThemeData(
-            //   backgroundColor: colors["languid-lavender"],
-            //   actionTextColor: colors["sand"],
-            //   contentTextStyle: TextStyle(
-            //     color: colors["dark-jungle-green"],
-            //     fontSize: 16,
-            //   ),
-            // ),
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: colors["old-lavender"],
+              actionTextColor: colors["sand"],
+              contentTextStyle: TextStyle(
+                color: colors["milk-white"],
+                fontSize: 16,
+              ),
+            ),
           ),
 
           // dark mode ==============================================================
@@ -296,14 +296,14 @@ class MyApp extends StatelessWidget {
             popupMenuTheme: PopupMenuThemeData(
               surfaceTintColor: colors["dark-jungle-green"]!,
             ),
-            // snackBarTheme: SnackBarThemeData(
-            //   backgroundColor: colors["old-lavender"]!.withOpacity(0.5),
-            //   actionTextColor: colors["sand"],
-            //   contentTextStyle: TextStyle(
-            //     color: colors["milk-white"],
-            //     fontSize: 16,
-            //   ),
-            // ),
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: colors["old-lavender"],
+              actionTextColor: colors["sand"],
+              contentTextStyle: TextStyle(
+                color: colors["milk-white"],
+                fontSize: 16,
+              ),
+            ),
           ),
 
           // theme yg digunakan ==============================================================
@@ -321,7 +321,7 @@ class MyApp extends StatelessWidget {
             "/profile": (ctx) => const ProfilePage(),
             "/follow": (ctx) => const FollowPage(),
             "/edit": (ctx) => EditPage(),
-            "/pengaturan": (ctx) => PengaturanPage(),
+            "/pengaturan": (ctx) => const PengaturanPage(),
 
             // !!!!!!!! NANTI HAPUSS !!!!!!!!,
             "/debug": (ctx) => const DebugPage(),

@@ -89,23 +89,22 @@ class _SignUpState extends State<SignUp> {
     final email = _ctrlEmail.value.text;
     final username = _ctrlUsername.value.text;
     final password = _ctrlPass.value.text;
-    final gender = _selectedGender ?? "";
+    final gender = _selectedGender;
     final nomor = _ctrlNomor.value.text;
 
-    if (await cekUsername()) {
-      if (nama.isEmpty ||
-          email.isEmpty ||
-          username.isEmpty ||
-          password.isEmpty ||
-          gender == null ||
-          nomor.isEmpty ||
-          _profileImagePath == null ||
-          _coverImagePath == null) {
-        _showSnackBar('Semua field harus diisi');
-        return;
-      }
-      if (password.length < 6) {
-        _showSnackBar('Isi Password minimal 6 karakter');
+    if (nama.isEmpty ||
+        email.isEmpty ||
+        username.isEmpty ||
+        password.isEmpty ||
+        gender == null ||
+        nomor.isEmpty ||
+        _profileImagePath == null ||
+        _coverImagePath == null) {
+      _showSnackBar('Semua field harus diisi');
+      return;
+    }
+    if (password.length < 6) {
+      _showSnackBar('Isi Password minimal 6 karakter');
 
         String? profileImagePath = _profileImagePath;
         String? coverImagePath = _coverImagePath;
