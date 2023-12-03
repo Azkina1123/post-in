@@ -283,7 +283,46 @@ class _EditPageState extends State<EditPage> {
                                   "sampul": urlSampul,
                                 });
 
-                                Navigator.popAndPushNamed(context, "/");
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Informasi",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                      content: Text(
+                                        "Perubahan Berhasil Dilakukan",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.popAndPushNamed(
+                                                context, "/");
+                                          },
+                                          child: Text("Oke"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                             },
                       child: _loading
