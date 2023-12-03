@@ -64,28 +64,34 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   padding: EdgeInsets.only(left: 20, top: 45, right: 20),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        user.username,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize:
-                              Theme.of(context).textTheme.titleLarge!.fontSize,
-                          fontWeight: FontWeight.bold
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user.username,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize:
+                                  Theme.of(context).textTheme.titleLarge!.fontSize,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "(${user.namaLengkap})",
+                            style: TextStyle(
+                              color: colors["old-lavender"],
+                              fontSize:
+                                  Theme.of(context).textTheme.titleSmall!.fontSize,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "(${user.namaLengkap})",
-                        style: TextStyle(
-                          color: colors["old-lavender"],
-                          fontSize:
-                              Theme.of(context).textTheme.titleSmall!.fontSize,
-                        ),
-                      ),
-                      Spacer(),
                       user.id != FirebaseAuth.instance.currentUser!.uid
                           ? IkutiBtn(userId: user.id)
                           : const Text(""),
@@ -191,7 +197,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         } else if (snapshot.hasData) {
                           final posts = snapshot.data!.docs;
 
-                          return Column(
+                          return posts.isEmpty ? Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text("Belum ada post yang ditambahkan.")): Column(
                             children: [
                               for (int i = 0; i < posts.length; i++)
                                 Column(
@@ -243,7 +251,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             final komentars = snapshot.data!.docs;
                             int komentarCount = komentars.length;
                             return komentarCount == 0
-                                ? Text("Belum ada Komentar")
+                                ? Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text("Belum ada komentar yang ditambahkan."))
                                 : Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

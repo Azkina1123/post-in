@@ -117,7 +117,7 @@ class _SignUpState extends State<SignUp> {
 
       setState(() => _loading = false);
     }
-  }
+  
 
   Widget buttonUpload(
     String label,

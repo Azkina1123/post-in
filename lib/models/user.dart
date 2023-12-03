@@ -44,6 +44,7 @@ class UserAcc {
       foto: json["foto"],
     );
     user.followings = List<String>.from(json["followings"]);
+    user.totalFollowing = user.followings.length;
 
     return user;
   }

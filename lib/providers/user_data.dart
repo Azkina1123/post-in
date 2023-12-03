@@ -34,7 +34,8 @@ class UserData extends ChangeNotifier {
       "password": user.password,
       "foto": user.foto,
       "sampul": user.sampul,
-      "followings": user.followings
+      "followings": user.followings,
+      "totalFollowing": user.totalFollowing
     });
     notifyListeners();
   }
@@ -51,11 +52,8 @@ class UserData extends ChangeNotifier {
   }
 
   Future<UserAcc> getUser(String id) async {
-    QuerySnapshot querySnapshot =
-        await _usersCollection.where("id", isEqualTo: id).get();
-
-    final users = querySnapshot.docs;
-    UserAcc? user = UserAcc.fromJson(users[0].data() as Map<String, dynamic>);
+    DocumentSnapshot userDoc = await usersCollection.doc(id).get();
+    UserAcc? user = UserAcc.fromJson(userDoc.data() as Map<String, dynamic>);
 
     return user;
   }
@@ -73,23 +71,33 @@ class UserData extends ChangeNotifier {
 
   void toggleIkuti(String id) async {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
-    QuerySnapshot querySnapshot =
-        await usersCollection.where("id", isEqualTo: authUserId).get();
 
-    List<String> followings =
-        List<String>.from(querySnapshot.docs[0].get("followings"));
+    List<String> followings = (await getUser(authUserId)).followings;
     if (followings.contains(id)) {
       followings.remove(id);
     } else {
       followings.add(id);
     }
 
-    usersCollection
-        .doc(authUserId)
-        .update({"followings": followings, "totalLike": followings.length});
+    usersCollection.doc(authUserId).update(
+        {"followings": followings, "totalFollowing": followings.length});
   }
 
   void delete(String userId) async {
+    // hapus semua following dari user lain yg mengikuti akun ini
+    QuerySnapshot usersDocs =
+        await _usersCollection.where("followings", arrayContains: userId).get();
+
+    // hapus semua follow user dari collection users
+    usersDocs.docs.forEach((user) {
+      List<String> followings = List<String>.from(user.get("followings"));
+      followings.remove(userId);
+      _usersCollection.doc(user.id).update({
+        "followings": followings,
+        "totalFollowing": followings.length,
+      });
+    });
+
     // hapus semua post user dari collection posts -----------------------
     QuerySnapshot postsDocs = await PostData()
         ._postsCollection
@@ -204,5 +212,22 @@ class UserData extends ChangeNotifier {
       print("Error getting followers count: $e");
       return 0;
     }
+  }
+
+  Future<List<UserAcc>> getSearchUsers(String keyword) async {
+    QuerySnapshot querySnapshot = await usersCollection
+        .orderBy("tglDibuat", descending: true)
+        .orderBy("id")
+        .get();
+
+    List<UserAcc> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(UserAcc.fromJson(doc.data() as Map<String, dynamic>));
+    });
+    List<UserAcc> searchusers = users
+        .where((user) =>
+            user.username.toLowerCase().contains(keyword.toLowerCase()))
+        .toList();
+    return searchusers;
   }
 }

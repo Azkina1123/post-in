@@ -46,65 +46,62 @@ class _PengaturanPageState extends State<PengaturanPage> {
               }
               return Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.network(
-                        user?.foto ?? "",
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.popAndPushNamed(context, "/edit",
+                        arguments: user);
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          user?.foto ?? "",
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, top: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user?.username ?? "",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .fontSize,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user?.username ?? "",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .fontSize,
+                              ),
                             ),
-                          ),
-                          Text(
-                            user?.email ?? "",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .fontSize,
+                            Text(
+                              user?.email ?? "",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .fontSize,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 35),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.popAndPushNamed(context, "/edit", arguments: user);
-                            },
-                            child: Icon(
-                              Icons.navigate_next_rounded,
-                              size: 30,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                          )
-                        ],
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 35),
+                        child: Icon(
+                          Icons.navigate_next_rounded,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -121,10 +118,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 ),
               ),
               Divider(
-                height: 20,
-                thickness: 1,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary
+                                                    .withOpacity(0.5)
+                                                
+                                                ,height:20, thickness: 1,
+                                              ),
               SizedBox(height: 10),
               Column(
                 children: [
@@ -254,10 +254,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 ),
               ),
               Divider(
-                height: 20,
-                thickness: 1,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary
+                                                    .withOpacity(0.5)
+                                                
+                                                ,height:20, thickness: 1,
+                                              ),
               SizedBox(height: 10),
               Column(
                 children: [

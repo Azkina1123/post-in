@@ -148,7 +148,10 @@ class _CariPageState extends State<CariPage> {
             );
           } else if (snapshot.hasData) {
             final posts = snapshot.data!;
-            return ListView(
+            return posts.isEmpty ? Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text("Post tidak ditemukan."),
+            ): ListView(
               children: [
                 for (int i = 0; i < posts.length; i++)
                   Column(
@@ -171,9 +174,7 @@ class _CariPageState extends State<CariPage> {
                   ),
               ],
             );
-          } else if (!snapshot.hasData) {
-            return Text("Postingan Tidak Ditemukan.");
-          }
+          } 
           return Text("Loading...");
         },
       ),
@@ -182,12 +183,9 @@ class _CariPageState extends State<CariPage> {
 
   Widget showAkun() {
     return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: Provider.of<UserData>(context, listen: false)
-            .usersCollection
-            .where("username", isEqualTo: _ctrlCari.text)
-            .orderBy("tglDibuat", descending: true)
-            .snapshots(),
+      child: StreamBuilder<List<UserAcc>>(
+        stream: Stream.fromFuture(Provider.of<UserData>(context, listen: false)
+            .getSearchUsers(_ctrlCari.text)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
@@ -195,21 +193,18 @@ class _CariPageState extends State<CariPage> {
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             );
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Padding(
+          }  else if (snapshot.hasData) {
+            final users = snapshot.data!;
+            return users.isEmpty ? Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text("Akun Tidak Ditemukan."),
-            );
-          } else if (snapshot.hasData) {
-            final users = snapshot.data!.docs;
-            return ListView(
+              child: Text("Akun tidak ditemukan."),
+            ) :ListView(
               children: [
                 for (int i = 0; i < users.length; i++)
                   Column(
                     children: [
                       AkunWidget(
-                        user: UserAcc.fromJson(
-                            users[i].data() as Map<String, dynamic>),
+                        user: users[i],
                       ),
 
                       // kasih pembatas antar akun --------------------------------------
