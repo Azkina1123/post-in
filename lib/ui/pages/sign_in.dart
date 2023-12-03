@@ -38,14 +38,14 @@ class _SignInState extends State<SignIn> {
       // Cobalah untuk melakukan login
       await AuthData().login(email, password);
       Provider.of<PageData>(context, listen: false).changeMainPage(0);
+      Duration(seconds: 1);
+            Navigator.popAndPushNamed(context, "/");
     } catch (e) {
       print('Error: $e');
       _showSnackBar('Email atau password tidak valid');
     } finally {
       Duration(seconds: 1);
       setState(() => _loading = false);
-      Duration(seconds: 1);
-      Navigator.popAndPushNamed(context, "/");
     }
   }
 

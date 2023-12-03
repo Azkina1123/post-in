@@ -10,7 +10,7 @@ class landingPage extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           Align(
             alignment: Alignment.topCenter,
             child: Text(
@@ -21,7 +21,7 @@ class landingPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 17),
+          SizedBox(height: 15),
           Text(
             "di Sosial Media Masa Depan",
             style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
@@ -50,7 +50,7 @@ class landingPage extends StatelessWidget {
                   ),
                   child: MaterialButton(
                     minWidth: double.infinity,
-                    height: 60,
+                    height: 50,
                     onPressed: () {
                       Navigator.pushNamed(context, "/sign-in");
                     },
@@ -82,7 +82,7 @@ class landingPage extends StatelessWidget {
                   ),
                   child: MaterialButton(
                     minWidth: double.infinity,
-                    height: 60,
+                    height: 50,
                     onPressed: () {
                       Navigator.pushNamed(context, "/sign-up");
                     },
