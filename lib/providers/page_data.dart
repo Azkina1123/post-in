@@ -14,6 +14,12 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
+  int followTabIndex = 0;
+  void changefollowTab(int index) {
+    followTabIndex = index;
+    notifyListeners();
+  }
+
   // focus tambah komentar ketika buka post page
   bool _komentarFocused = false;
   bool get komentarFocused => _komentarFocused;
