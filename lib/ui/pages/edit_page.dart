@@ -45,12 +45,9 @@ class _EditPageState extends State<EditPage> {
       setState(() {
         _profileImagePath = pickedFile.path;
         print("Cover Image Path: $_profileImagePath");
-
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,53 +125,6 @@ class _EditPageState extends State<EditPage> {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            _getFromGalleryCover();
-                            if (user?.sampul != null) {
-                              String id =
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              Reference ref = FirebaseStorage.instance
-                                  .ref()
-                                  .child("users/sampul_$id.jpg");
-                              await ref.putFile(File(_coverImagePath!));
-                              urlSampul = await ref.getDownloadURL();
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text("Ubah Sampul"),
-                            ],
-                          ),
-                        ),
-                        Spacer(),
-                        ElevatedButton(
-                          onPressed: () async {
-                            _getFromGalleryProfile();
-                            if (user?.foto != null) {
-                              String id =
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              Reference ref = FirebaseStorage.instance
-                                  .ref()
-                                  .child("users/profile_$id.jpg");
-                              await ref.putFile(File(_profileImagePath!));
-                              urlProfile = await ref.getDownloadURL();
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text("Ubah Profil"),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                     SizedBox(height: 40),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -243,11 +193,60 @@ class _EditPageState extends State<EditPage> {
                               hintText: user?.noTelp ?? "",
                             ),
                           ),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  _getFromGalleryCover();
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 8),
+                                    Text("Ubah Sampul"),
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  _getFromGalleryProfile();
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit),
+                                    SizedBox(width: 8),
+                                    Text("Ubah Profil"),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                           SizedBox(height: 20),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               String id =
                                   FirebaseAuth.instance.currentUser!.uid;
+
+                              if (_coverImagePath != null) {
+                                Reference refSampul = FirebaseStorage.instance
+                                    .ref()
+                                    .child("users/sampul_$id.jpg");
+                                await refSampul.putFile(File(_coverImagePath!));
+                                urlSampul = await refSampul.getDownloadURL();
+                              }
+
+                              if (_profileImagePath != null) {
+                                Reference refProfile = FirebaseStorage.instance
+                                    .ref()
+                                    .child("users/profile_$id.jpg");
+                                await refProfile
+                                    .putFile(File(_profileImagePath!));
+                                urlProfile = await refProfile.getDownloadURL();
+                              }
+
+                              Map<String, dynamic> updateProfile = {};
+
                               users.doc(id).update({
                                 "namaLengkap": _ctrlNama.text.isEmpty
                                     ? user?.namaLengkap
@@ -261,10 +260,10 @@ class _EditPageState extends State<EditPage> {
                                 "noTelp": _ctrlNomor.text.isEmpty
                                     ? user?.noTelp
                                     : _ctrlNomor.text.toString(),
-                                "foto": urlProfile != null 
+                                "foto": urlProfile != null
                                     ? urlProfile
                                     : user?.foto,
-                                "sampul": urlSampul != null 
+                                "sampul": urlSampul != null
                                     ? urlSampul
                                     : user?.sampul,
                               });
