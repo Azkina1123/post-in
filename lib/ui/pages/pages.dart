@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:post_in/providers/providers.dart';
 import 'package:post_in/ui/widgets/widgets.dart';
 import 'package:post_in/models/models.dart';

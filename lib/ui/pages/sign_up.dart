@@ -18,8 +18,6 @@ class _SignUpState extends State<SignUp> {
   String? urlProfile;
   String? urlSampul;
 
-  // String? _profileImagePath;
-  // String? _coverImagePath;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _ctrlNama = TextEditingController();
@@ -62,8 +60,19 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Silakan Masukkan Email Anda';
+    } else if (!EmailValidator.validate(value)) {
+      return 'Email tidak valid';
+    } else if (!value.endsWith('@gmail.com')) {
+      return 'Email harus diakhiri dengan @gmail.com';
+    }
+    return null;
+  }
+
   Future<bool> cekUsername() async {
-    String username = _ctrlUsername.text.toLowerCase();
+    String username = _ctrlUsername.text;
 
     QuerySnapshot query = await FirebaseFirestore.instance
         .collection('users')
@@ -76,12 +85,47 @@ class _SignUpState extends State<SignUp> {
           content: Text("Username Sudah Ada, Harap Memilih Username Lain"),
         ),
       );
-      _ctrlUsername.text = user?.username?.toLowerCase() ?? "";
+      _ctrlUsername.text = user?.username ?? "";
       return false;
     } else {
       return true;
     }
   }
+
+  // handleSubmit() async {
+  //   // if (!_formKey.currentState!.validate()) return;
+  //   final nama = _ctrlNama.value.text;
+  //   final email = _ctrlEmail.value.text;
+  //   final username = _ctrlUsername.value.text;
+  //   final password = _ctrlPass.value.text;
+  //   final gender = _selectedGender;
+  //   final nomor = _ctrlNomor.value.text;
+
+  //   if (nama.isEmpty ||
+  //       email.isEmpty ||
+  //       username.isEmpty ||
+  //       password.isEmpty ||
+  //       gender == null ||
+  //       nomor.isEmpty ||
+  //       _profileImagePath == null ||
+  //       _coverImagePath == null) {
+  //     _showSnackBar('Semua field harus diisi');
+  //     return;
+  //   }
+  //   if (password.length < 6) {
+  //     _showSnackBar('Isi Password minimal 6 karakter');
+
+  //     String? profileImagePath = _profileImagePath;
+  //     String? coverImagePath = _coverImagePath;
+
+  //     return;
+  //   }
+  //   setState(() => _loading = true);
+  //   await AuthData().regis(nama, email, username, password, gender, nomor,
+  //       _profileImagePath, _coverImagePath);
+
+  //   setState(() => _loading = false);
+  // }
 
   handleSubmit() async {
     // if (!_formKey.currentState!.validate()) return;
@@ -106,15 +150,34 @@ class _SignUpState extends State<SignUp> {
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
 
-        String? profileImagePath = _profileImagePath;
-        String? coverImagePath = _coverImagePath;
+      String? profileImagePath = _profileImagePath;
+      String? coverImagePath = _coverImagePath;
 
-        return;
-      }
-      setState(() => _loading = true);
-      await AuthData().regis(nama, email, username, password, gender, nomor,
-          _profileImagePath, _coverImagePath);
+      return;
+    }
 
+    setState(() => _loading = true);
+
+    try {
+      await AuthData().regis(
+        nama,
+        email,
+        username,
+        password,
+        gender,
+        nomor,
+        _profileImagePath,
+        _coverImagePath,
+      );
+
+      _showSnackBar('Registrasi berhasil');
+
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.popAndPushNamed(context, "/sign-in");
+      });
+    } catch (error) {
+      _showSnackBar("Registrasi Gagal, coba lagi !");
+    } finally {
       setState(() => _loading = false);
     }
   }
@@ -205,12 +268,20 @@ class _SignUpState extends State<SignUp> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Silakan Masukkan Username Anda';
+                            } else if (value.contains(' ')) {
+                              return "Username Tidak Boleh Mengandung Spasi !";
                             }
                             return null;
                           },
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(20),
                           ],
+                          onChanged: (value) {
+                            setState(() {
+                              _ctrlUsername.text = value.replaceAll(' ', '');
+                              _ctrlUsername.text = value.toLowerCase();
+                            });
+                          },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Username',
@@ -225,12 +296,7 @@ class _SignUpState extends State<SignUp> {
                       Expanded(
                         child: TextFormField(
                           controller: _ctrlEmail,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Silakan Masukkan Email Anda';
-                            }
-                            return null;
-                          },
+                          validator: _validateEmail,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(30),
                           ],

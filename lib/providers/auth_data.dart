@@ -38,7 +38,7 @@ class AuthData extends ChangeNotifier {
     Future<void> uploadProfileImage(String imagePath) async {
       try {
         Reference storageReference =
-            FirebaseStorage.instance.ref().child('profile_images/$id_now.jpg');
+            FirebaseStorage.instance.ref().child('users/profile_$id_now.jpg');
         UploadTask uploadTask = storageReference.putFile(File(imagePath));
         await uploadTask.whenComplete(() => print('Profile image uploaded'));
         url_profile = await storageReference.getDownloadURL();
@@ -50,7 +50,7 @@ class AuthData extends ChangeNotifier {
     Future<void> uploadCoverImage(String imagePath) async {
       try {
         Reference storageReference =
-            FirebaseStorage.instance.ref().child('cover_images/$id_now.jpg');
+            FirebaseStorage.instance.ref().child('users/cover_$id_now.jpg');
         UploadTask uploadTask = storageReference.putFile(File(imagePath));
         await uploadTask.whenComplete(() => print('Cover image uploaded'));
         url_cover = await storageReference.getDownloadURL();
