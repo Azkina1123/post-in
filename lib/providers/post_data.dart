@@ -58,7 +58,12 @@ class PostData extends ChangeNotifier {
   }
 
   void delete(String id) async {
-    // Post post = await getPost(id);
+    Post post = await getPost(id);
+
+    // hapus foto post
+    if (post.img != null) {
+      FirebaseStorage.instance.refFromURL(post.img!).delete();
+    }
 
     // hapus post
     _postsCollection.doc(id).delete();

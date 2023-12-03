@@ -102,6 +102,7 @@ class HomePage extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
+                        padding: EdgeInsets.all(20),
                         width: width(context),
                         alignment: Alignment.center,
                         child: const CircularProgressIndicator(),
@@ -146,7 +147,6 @@ class HomePage extends StatelessWidget {
                               ],
                             );
                     }
-
                     return const Text("Belum ada post yang ditambahkan.");
                   })
             ],

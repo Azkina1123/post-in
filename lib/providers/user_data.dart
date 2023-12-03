@@ -156,7 +156,15 @@ class UserData extends ChangeNotifier {
           .update({"likes": likes, "totalLike": likes.length});
     });
 
-    // taruh fungsi hapus user dari users collection di sini
+    UserAcc user = await getUser(userId);
+    // hapus foto post
+    if (user.foto != null) {
+      FirebaseStorage.instance.refFromURL(user.foto!).delete();
+    }
+    if (user.sampul != null) {
+      FirebaseStorage.instance.refFromURL(user.sampul!).delete();
+    }
+
     await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).delete();
     await FirebaseAuth.instance.currentUser!.delete();
 
