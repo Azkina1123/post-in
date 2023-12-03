@@ -34,7 +34,8 @@ class UserData extends ChangeNotifier {
       "password": user.password,
       "foto": user.foto,
       "sampul": user.sampul,
-      "followings": user.followings
+      "followings": user.followings,
+      "totalFollowing": user.totalFollowing
     });
     notifyListeners();
   }
@@ -51,11 +52,8 @@ class UserData extends ChangeNotifier {
   }
 
   Future<UserAcc> getUser(String id) async {
-    QuerySnapshot querySnapshot =
-        await _usersCollection.where("id", isEqualTo: id).get();
-
-    final users = querySnapshot.docs;
-    UserAcc? user = UserAcc.fromJson(users[0].data() as Map<String, dynamic>);
+    DocumentSnapshot userDoc = await usersCollection.doc(id).get();
+    UserAcc? user = UserAcc.fromJson(userDoc.data() as Map<String, dynamic>);
 
     return user;
   }
@@ -73,82 +71,98 @@ class UserData extends ChangeNotifier {
 
   void toggleIkuti(String id) async {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
-    QuerySnapshot querySnapshot =
-        await usersCollection.where("id", isEqualTo: authUserId).get();
 
-    List<String> followings =
-        List<String>.from(querySnapshot.docs[0].get("followings"));
+    List<String> followings = (await getUser(authUserId)).followings;
     if (followings.contains(id)) {
       followings.remove(id);
     } else {
       followings.add(id);
     }
 
-    usersCollection
-        .doc(authUserId)
-        .update({"followings": followings, "totalLike": followings.length});
+    usersCollection.doc(authUserId).update(
+        {"followings": followings, "totalFollowing": followings.length});
   }
 
   void delete(String userId) async {
-    // hapus semua post user dari collection posts -----------------------
-    QuerySnapshot postsDocs = await PostData()
-        ._postsCollection
-        .where("userId", isEqualTo: userId)
-        .get();
+    // ambil semua user yang mengikuti akun -------------------------------
+    QuerySnapshot usersDocs =
+        await _usersCollection.where("followings", arrayContains: userId).get();
 
-    // hapus semua post user dari collection users
-    postsDocs.docs.forEach((post) {
-      PostData().delete(post.id);
+    // hapus semua follower akun user
+    usersDocs.docs.forEach((userDoc) {
+      List<String> followings = List<String>.from(userDoc.get("followings"));
+      followings.remove(userId);
+      _usersCollection.doc(userDoc.id).update({
+        "followings": followings,
+        "totalFollowing": followings.length,
+      });
     });
 
-    // hapus semua komentar user dari collection komentars -----------------------
-    QuerySnapshot komentarsDocs = await KomentarData()
-        ._komentarsCollection
-        .where("userId", isEqualTo: userId)
-        .get();
     List<String> komentarIds = [];
-    komentarsDocs.docs.forEach((komentar) async {
-      // simpan id komentar user
-      komentarIds.add(komentar.id);
-      // hapus semua komentar dari collection komentars
-      KomentarData()._komentarsCollection.doc(komentar.id).delete();
+    // ambil semua komentar -------------
+    QuerySnapshot komentarsSnapshot =
+        await KomentarData()._komentarsCollection.get();
+    komentarsSnapshot.docs.forEach((komentarDoc) {
+      Komentar komentar =
+          Komentar.fromJson(komentarDoc.data() as Map<String, dynamic>);
+
+      // hapus komentar
+      if (komentarDoc.get("userId") == userId) {
+        komentarIds.add(komentarDoc.id);
+        KomentarData().komentarsCollection.doc(komentarDoc.id).delete();
+
+        // hapus like yang dibuat user
+      } else if (komentar.likes.contains(userId)) {
+        komentar.likes.remove(userId);
+
+        KomentarData().komentarsCollection.doc(komentar.id).update({
+          "likes": komentar.likes,
+          "totalLike": komentar.likes.length
+        });
+      }
     });
 
-    // perbarui komentar di semua post -----------------
-    postsDocs = await PostData()._postsCollection.get();
-    postsDocs.docs.forEach((post) {
-      List<String> komentars = [];
-      komentars = List<String>.from(post.get("komentars"));
+    // ambil semua post -----------------
+    QuerySnapshot postsDocs = await PostData()._postsCollection.get();
+    postsDocs.docs.forEach((postDoc) async {
+      Post post = await PostData().getPost(postDoc.id);
 
-      komentars.forEach(
-        (id) {
-          if (komentarIds.contains(id)) {
-            komentars.remove(id);
-          }
-        },
-      );
-      PostData()
-          .postsCollection
-          .doc(post.id)
-          .update({"komentars": komentars, "totalKomentar": komentars.length});
+      // hapus semua post yang dibuat user
+      if (postDoc.get("userId") == userId) {
+        PostData().delete(postDoc.id);
+
+        // hapus like yang dibuat user
+      } else if (post.likes.contains(userId)) {
+        post.likes.remove(userId);
+
+        // komentar yang akan dihapus
+        List<String> deleteKomentars = post.komentars
+            // komentar yang mana id komentar nya ada di dalam list komentar milik akun
+            .where((komentar) => komentarIds.contains(komentar))
+            .toList();
+
+        deleteKomentars.forEach((komentar) {
+          post.komentars.remove(komentar);
+        });
+
+        PostData().postsCollection.doc(post.id).update({
+          "likes": post.likes,
+          "totalLike": post.likes.length,
+          "komentars": post.komentars,
+          "totalKomentar": post.komentars.length,
+        });
+      }
     });
 
-    // perbarui semua like komentar ----------------------------------
-    komentarsDocs = await KomentarData()._komentarsCollection.get();
-    komentarsDocs.docs.forEach((komentar) {
-      List<String> likes = [];
-      likes = List<String>.from(komentar.get("likes"));
+    UserAcc user = await getUser(userId);
+    // hapus foto post
+    if (user.foto != null) {
+      FirebaseStorage.instance.refFromURL(user.foto!).delete();
+    }
+    if (user.sampul != null) {
+      FirebaseStorage.instance.refFromURL(user.sampul!).delete();
+    }
 
-      likes.removeWhere(
-        (userIdLike) => userIdLike == userId,
-      );
-      KomentarData()
-          .komentarsCollection
-          .doc(userId)
-          .update({"likes": likes, "totalLike": likes.length});
-    });
-
-    // taruh fungsi hapus user dari users collection di sini
     await usersCollection.doc(FirebaseAuth.instance.currentUser!.uid).delete();
     await FirebaseAuth.instance.currentUser!.delete();
 
@@ -204,5 +218,22 @@ class UserData extends ChangeNotifier {
       print("Error getting followers count: $e");
       return 0;
     }
+  }
+
+  Future<List<UserAcc>> getSearchUsers(String keyword) async {
+    QuerySnapshot querySnapshot = await usersCollection
+        .orderBy("tglDibuat", descending: true)
+        .orderBy("id")
+        .get();
+
+    List<UserAcc> users = [];
+    querySnapshot.docs.forEach((doc) {
+      users.add(UserAcc.fromJson(doc.data() as Map<String, dynamic>));
+    });
+    List<UserAcc> searchusers = users
+        .where((user) =>
+            user.username.toLowerCase().contains(keyword.toLowerCase()))
+        .toList();
+    return searchusers;
   }
 }

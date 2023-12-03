@@ -1,19 +1,11 @@
 part of 'pages.dart';
 
-class FollowPage extends StatefulWidget {
+class FollowPage extends StatelessWidget {
   const FollowPage({super.key});
-
-  @override
-  State<FollowPage> createState() => _FollowPageState();
-}
-
-class _FollowPageState extends State<FollowPage> {
-  int _index = 0;
 
   @override
   Widget build(BuildContext context) {
     String userId = ModalRoute.of(context)!.settings.arguments as String;
-    // UserAcc? user;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,6 +29,7 @@ class _FollowPageState extends State<FollowPage> {
             }),
       ),
       body: DefaultTabController(
+        initialIndex: Provider.of<PageData>(context).followTabIndex,
         length: 2,
         child: ListView(
           children: [
@@ -51,12 +44,11 @@ class _FollowPageState extends State<FollowPage> {
               dividerColor:
                   Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
               onTap: (i) {
-                setState(() {
-                  _index = i;
-                });
+                  Provider.of<PageData>(context, listen: false)
+                      .changeFollowTab(i);
               },
             ),
-            if (_index == 0)
+            if (Provider.of<PageData>(context).followTabIndex == 0)
               FutureBuilder<List<UserAcc>>(
                   future: Provider.of<UserData>(context, listen: false)
                       .getFollowings(userId),
@@ -70,7 +62,6 @@ class _FollowPageState extends State<FollowPage> {
                               children: [
                                 AkunWidget(
                                   user: users[i],
-                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
 
                                 // kasih pembatas antar akun --------------------------------------
@@ -109,7 +100,6 @@ class _FollowPageState extends State<FollowPage> {
                               children: [
                                 AkunWidget(
                                   user: users[i],
-                                  // UserAcc(users[i] as Map<String, dynamic>),
                                 ),
 
                                 // kasih pembatas antar akun --------------------------------------

@@ -8,9 +8,15 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
-  int homeIndex = 0;
-  void changeHomePage(int index) {
-    homeIndex = index;
+  int homeTabIndex = 0;
+  void changeHomeTab(int index) {
+    homeTabIndex = index;
+    notifyListeners();
+  }
+
+  int followTabIndex = 0;
+  void changeFollowTab(int index) {
+    followTabIndex = index;
     notifyListeners();
   }
 

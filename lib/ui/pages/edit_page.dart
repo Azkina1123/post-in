@@ -12,7 +12,7 @@ class _EditPageState extends State<EditPage> {
   bool _loading = false;
   bool _isUsernameAvailable = true;
   String? _selectedGender;
-  List<String> _genderOptions = ["Male", "Female", "Non"];
+  List<String> _genderOptions = ["Male", "Female"];
 
   String? _profileImagePath;
   String? _coverImagePath;
@@ -145,6 +145,11 @@ class _EditPageState extends State<EditPage> {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(40),
                       ],
+                      onChanged: (value) {
+                        setState(() {
+                          
+                        });
+                      },
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
@@ -157,6 +162,9 @@ class _EditPageState extends State<EditPage> {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
                       ],
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
@@ -184,7 +192,10 @@ class _EditPageState extends State<EditPage> {
                         );
                       }).toList(),
                       onChanged: (String? value) {
+                        setState(() {
                         _selectedGender = value;
+                          
+                        });
                       },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -203,6 +214,9 @@ class _EditPageState extends State<EditPage> {
                         border: OutlineInputBorder(),
                         hintText: user?.noTelp ?? "",
                       ),
+                      onChanged: (value) {
+                        setState(() {});
+                      },
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -283,7 +297,46 @@ class _EditPageState extends State<EditPage> {
                                   "sampul": urlSampul,
                                 });
 
-                                Navigator.popAndPushNamed(context, "/");
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Informasi",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                      content: Text(
+                                        "Perubahan Berhasil Dilakukan",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          fontSize: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .fontSize,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.popAndPushNamed(
+                                                context, "/");
+                                          },
+                                          child: Text("Oke"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                             },
                       child: _loading
@@ -306,11 +359,11 @@ class _EditPageState extends State<EditPage> {
   }
 
   bool isEmpty() {
-    if (_ctrlNama.text.isEmpty ||
-        _ctrlUsername.text.isEmpty ||
-        _ctrlNomor.text.isEmpty ||
-        _coverImagePath == null ||
-        _profileImagePath == null ||
+    if (_ctrlNama.text.isEmpty &&
+        _ctrlUsername.text.isEmpty &&
+        _ctrlNomor.text.isEmpty &&
+        _coverImagePath == null &&
+        _profileImagePath == null &&
         _selectedGender == null) {
       return true;
     }

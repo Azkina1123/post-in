@@ -153,31 +153,12 @@ class _SignUpState extends State<SignUp> {
       String? profileImagePath = _profileImagePath;
       String? coverImagePath = _coverImagePath;
 
-      return;
-    }
+        return;
+      }
+      setState(() => _loading = true);
+      await AuthData().regis(nama, email, username, password, gender, nomor,
+          _profileImagePath, _coverImagePath);
 
-    setState(() => _loading = true);
-
-    try {
-      await AuthData().regis(
-        nama,
-        email,
-        username,
-        password,
-        gender,
-        nomor,
-        _profileImagePath,
-        _coverImagePath,
-      );
-
-      _showSnackBar('Registrasi berhasil');
-
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.popAndPushNamed(context, "/sign-in");
-      });
-    } catch (error) {
-      _showSnackBar("Registrasi Gagal, coba lagi !");
-    } finally {
       setState(() => _loading = false);
     }
   }
@@ -207,7 +188,7 @@ class _SignUpState extends State<SignUp> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, "/landing");
           },
           icon: Icon(Icons.arrow_back,
               size: 25, color: Theme.of(context).colorScheme.primary),
