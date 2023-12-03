@@ -89,7 +89,7 @@ class UserData extends ChangeNotifier {
         .update({"followings": followings, "totalLike": followings.length});
   }
 
- void delete(String userId) async {
+  void delete(String userId) async {
     // hapus semua post user dari collection posts -----------------------
     QuerySnapshot postsDocs = await PostData()
         ._postsCollection
