@@ -114,10 +114,6 @@ class UserData extends ChangeNotifier {
         // hapus like yang dibuat user
       } else if (komentar.likes.contains(userId)) {
         komentar.likes.remove(userId);
-        print("MASUKK UYYY");
-        print(komentar.likes.contains(userId));
-        print(komentar.likes.length);
-        print(komentar.likes.toString());
 
         KomentarData().komentarsCollection.doc(komentar.id).update({
           "likes": komentar.likes,
