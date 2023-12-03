@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 part of "pages.dart";
 
 class PengaturanPage extends StatefulWidget {
@@ -7,9 +9,10 @@ class PengaturanPage extends StatefulWidget {
   State<PengaturanPage> createState() => _PengaturanPageState();
 }
 
-//bool _isObscure = true;
+bool _isObscure = true;
 UserAcc? user;
-TextEditingController _ctrlPass = TextEditingController();
+TextEditingController _ctrlOldPass = TextEditingController();
+TextEditingController _ctrlNewPass = TextEditingController();
 
 class _PengaturanPageState extends State<PengaturanPage> {
   @override
@@ -118,13 +121,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 ),
               ),
               Divider(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .tertiary
-                                                    .withOpacity(0.5)
-                                                
-                                                ,height:20, thickness: 1,
-                                              ),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
+                height: 20,
+                thickness: 1,
+              ),
               SizedBox(height: 10),
               Column(
                 children: [
@@ -254,13 +254,10 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 ),
               ),
               Divider(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .tertiary
-                                                    .withOpacity(0.5)
-                                                
-                                                ,height:20, thickness: 1,
-                                              ),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
+                height: 20,
+                thickness: 1,
+              ),
               SizedBox(height: 10),
               Column(
                 children: [
@@ -395,179 +392,245 @@ class _PengaturanPageState extends State<PengaturanPage> {
       ),
     );
   }
-}
 
-Future<void> ubahPass(BuildContext context, String id) async {
-  await Provider.of<UserData>(context, listen: false)
-      .getUser(FirebaseAuth.instance.currentUser!.uid);
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference users = firestore.collection("users");
+  // void _validatePassword() {
+  //   String enteredPassword = _ctrlOldPass.text;
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text(
-          "Ubah Password",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
+  //   if (enteredPassword == snapshot.data?.password) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Konfirmasi Password Berhasil !"),
+  //       ),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("Konfirmasi Password Gagal !"),
+  //       ),
+  //     );
+  //   }
+
+  //   Navigator.popAndPushNamed(context, "/");
+  // }
+
+  Future<void> ubahPass(BuildContext context, String id) async {
+    await Provider.of<UserData>(context, listen: false)
+        .getUser(FirebaseAuth.instance.currentUser!.uid);
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection("users");
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Ubah Password",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
+            ),
           ),
-        ),
-        content: FutureBuilder(
-          future: Provider.of<UserData>(context, listen: false)
-              .getUser(FirebaseAuth.instance.currentUser!.uid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return TextFormField(
-                controller: _ctrlPass,
-                //obscureText: _isObscure,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: snapshot.data?.password ?? "",
-                  // suffixIcon: IconButton(
-                  //   icon: Icon(
-                  //       _isObscure ? Icons.visibility : Icons.visibility_off),
-                  //   onPressed: () {
-                  //     _isObscure = !_isObscure;
-                  //   },
-                  // ),
+          content: FutureBuilder(
+            future: Provider.of<UserData>(context, listen: false)
+                .getUser(FirebaseAuth.instance.currentUser!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Container(
+                  width: 80,
+                  height: 130,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _ctrlOldPass,
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "Old Password",
+                          // suffixIcon: IconButton(
+                          //   icon: Icon(_isObscure
+                          //       ? Icons.visibility
+                          //       : Icons.visibility_off),
+                          //   onPressed: () {
+                          //     _isObscure = !_isObscure;
+                          //   },
+                          // ),
+                        ),
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(25),
+                        ],
+                        onEditingComplete: () {
+                          String enteredPassword = _ctrlOldPass.text;
+
+                          if (enteredPassword == snapshot.data?.password) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Konfirmasi Password Berhasil !"),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Konfirmasi Password Gagal !"),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: _ctrlNewPass,
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: "New Password",
+                          // suffixIcon: IconButton(
+                          //   icon: Icon(_isObscure
+                          //       ? Icons.visibility
+                          //       : Icons.visibility_off),
+                          //   onPressed: () {
+                          //     _isObscure = !_isObscure;
+                          //   },
+                          // ),
+                        ),
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(25),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Text("Loading . . .");
+              }
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Batal",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(25),
-                ],
-              );
-            } else {
-              return Text("Loading . . .");
-            }
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Batal",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
               ),
             ),
-          ),
-          TextButton(
-            onPressed: () async {
-              String id = FirebaseAuth.instance.currentUser!.uid;
-              await users.doc(id).update({
-                "password": _ctrlPass.text.isEmpty
-                    ? user!.password
-                    : _ctrlPass.text.toString(),
-              });
-              await ubahPassAuth(users, id);
-              Navigator.popAndPushNamed(context, "/pengaturan");
-            },
-            child: Text(
-              "Yakin",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+            TextButton(
+              onPressed: () async {
+                String id = FirebaseAuth.instance.currentUser!.uid;
+                await users.doc(id).update({
+                  "password": _ctrlNewPass.text.toString(),
+                });
+                await ubahPassAuth(users, id);
+                Navigator.popAndPushNamed(context, "/pengaturan");
+              },
+              child: Text(
+                "Yakin",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                ),
               ),
             ),
-          ),
-        ],
-      );
-    },
-  );
-}
+          ],
+        );
+      },
+    );
+  }
 
-Future<void> hapusDataAkun(BuildContext context, String id) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference users = firestore.collection("users");
-  CollectionReference posts = firestore.collection("posts");
+  Future<void> hapusDataAkun(BuildContext context, String id) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection("users");
+    CollectionReference posts = firestore.collection("posts");
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text(
-          "Hapus Akun",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
-          ),
-        ),
-        content: Text(
-          "Yakin akan menghapus akun ?",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Batal",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              ),
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Hapus Akun",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: Theme.of(context).textTheme.titleLarge!.fontSize,
             ),
           ),
-          TextButton(
-            onPressed: () async {
-              String userId = FirebaseAuth.instance.currentUser!.uid;
-              Provider.of<UserData>(context, listen: false).delete(userId);
-              Navigator.pushReplacementNamed(context, "/sign-in");
-            },
-            child: Text(
-              "Yakin",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-              ),
+          content: Text(
+            "Yakin akan menghapus akun ?",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
             ),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Batal",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                String userId = FirebaseAuth.instance.currentUser!.uid;
+                Provider.of<UserData>(context, listen: false).delete(userId);
+                Navigator.pushReplacementNamed(context, "/sign-in");
+              },
+              child: Text(
+                "Yakin",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-Future<void> hapusData(CollectionReference users, String id) async {
-  await hapusAkun(users, id);
-}
+  Future<void> hapusData(CollectionReference users, String id) async {
+    await hapusAkun(users, id);
+  }
 
-Future<void> hapusAkun(CollectionReference users, String id) async {
-  await users.doc(id).delete();
-  await FirebaseAuth.instance.currentUser!.delete();
-}
+  Future<void> hapusAkun(CollectionReference users, String id) async {
+    await users.doc(id).delete();
+    await FirebaseAuth.instance.currentUser!.delete();
+  }
 
-Future<void> hapusKomentar(CollectionReference posts, String userId) async {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  CollectionReference komentarsRef =
-      FirebaseFirestore.instance.collection("komentars");
-  QuerySnapshot komentars =
-      await komentarsRef.where("userId", isEqualTo: userId).get();
+  Future<void> hapusKomentar(CollectionReference posts, String userId) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference komentarsRef =
+        FirebaseFirestore.instance.collection("komentars");
+    QuerySnapshot komentars =
+        await komentarsRef.where("userId", isEqualTo: userId).get();
 
-  // hapus semua komentar yang mengomentari post
-  komentars.docs.forEach((komentar) {
-    komentarsRef.doc(komentar.id).delete();
-  });
-}
+    // hapus semua komentar yang mengomentari post
+    komentars.docs.forEach((komentar) {
+      komentarsRef.doc(komentar.id).delete();
+    });
+  }
 
-Future<void> hapusPost(CollectionReference posts, String userId) async {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  CollectionReference postsRef = FirebaseFirestore.instance.collection("posts");
-  QuerySnapshot posts = await postsRef.where("userId", isEqualTo: userId).get();
+  Future<void> hapusPost(CollectionReference posts, String userId) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    CollectionReference postsRef =
+        FirebaseFirestore.instance.collection("posts");
+    QuerySnapshot posts =
+        await postsRef.where("userId", isEqualTo: userId).get();
 
-  posts.docs.forEach((post) {
-    postsRef.doc(post.id).delete();
-  });
-}
+    posts.docs.forEach((post) {
+      postsRef.doc(post.id).delete();
+    });
+  }
 
-Future<void> ubahPassAuth(CollectionReference users, String id) async {
-  await FirebaseAuth.instance.currentUser!.updatePassword(_ctrlPass.text);
+  Future<void> ubahPassAuth(CollectionReference users, String id) async {
+    await FirebaseAuth.instance.currentUser!.updatePassword(_ctrlNewPass.text);
+  }
 }
