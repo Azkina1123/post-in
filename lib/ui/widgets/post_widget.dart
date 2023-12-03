@@ -73,17 +73,22 @@ class PostWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 post.img != null
-                    ? Container(
-                        width: width(context),
-                        height: 200,
-                        margin: const EdgeInsets.only(bottom: 15),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(post.img!),
-                            fit: BoxFit.cover,
+                    ? InkWell(
+                      onTap: ModalRoute.of(context)!.settings.name == "/" ? null : () {
+                        
+                      },
+                      child: Container(
+                          width: width(context),
+                          height: 200,
+                          margin: const EdgeInsets.only(bottom: 15),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(post.img!),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      )
+                    )
                     : const Text(""),
 
                 ModalRoute.of(context)!.settings.name == "/post"

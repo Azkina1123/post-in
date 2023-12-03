@@ -106,18 +106,17 @@ class _SignUpState extends State<SignUp> {
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
 
-        String? profileImagePath = _profileImagePath;
-        String? coverImagePath = _coverImagePath;
+      String? profileImagePath = _profileImagePath;
+      String? coverImagePath = _coverImagePath;
 
-        return;
-      }
-      setState(() => _loading = true);
-      await AuthData().regis(nama, email, username, password, gender, nomor,
-          _profileImagePath, _coverImagePath);
-
-      setState(() => _loading = false);
+      return;
     }
-  
+    setState(() => _loading = true);
+    await AuthData().regis(nama, email, username, password, gender, nomor,
+        _profileImagePath, _coverImagePath);
+
+    setState(() => _loading = false);
+  }
 
   Widget buttonUpload(
     String label,
@@ -144,7 +143,7 @@ class _SignUpState extends State<SignUp> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, "/landing");
           },
           icon: Icon(Icons.arrow_back,
               size: 25, color: Theme.of(context).colorScheme.primary),
