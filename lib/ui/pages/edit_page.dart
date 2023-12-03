@@ -307,7 +307,7 @@ class _EditPageState extends State<EditPage> {
     if (query.docs.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Username Telah Digunakan, Perubahan Dibatalkan"),
+          content: Text("Username Tidak Diterima, Perubahan Username Dibatalkan"),
         ),
       );
       _ctrlUsername.text = user?.username ?? "";
