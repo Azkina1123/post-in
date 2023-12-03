@@ -153,14 +153,13 @@ class _SignUpState extends State<SignUp> {
       String? profileImagePath = _profileImagePath;
       String? coverImagePath = _coverImagePath;
 
-        return;
-      }
-      setState(() => _loading = true);
-      await AuthData().regis(nama, email, username, password, gender, nomor,
-          _profileImagePath, _coverImagePath);
-
-      setState(() => _loading = false);
+      return;
     }
+    setState(() => _loading = true);
+    await AuthData().regis(nama, email, username, password, gender, nomor,
+        _profileImagePath, _coverImagePath);
+
+    setState(() => _loading = false);
   }
 
   Widget buttonUpload(
