@@ -306,11 +306,11 @@ class _EditPageState extends State<EditPage> {
   }
 
   bool isEmpty() {
-    if (_ctrlNama.text.isEmpty ||
-        _ctrlUsername.text.isEmpty ||
-        _ctrlNomor.text.isEmpty ||
-        _coverImagePath == null ||
-        _profileImagePath == null ||
+    if (_ctrlNama.text.isEmpty &&
+        _ctrlUsername.text.isEmpty &&
+        _ctrlNomor.text.isEmpty &&
+        _coverImagePath == null &&
+        _profileImagePath == null &&
         _selectedGender == null) {
       return true;
     }

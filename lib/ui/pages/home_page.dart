@@ -1,28 +1,17 @@
 part of "pages.dart";
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _index = 0;
   List<String> _followedUserIds = [];
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    getFollowedUserIds();
+    getFollowedUserIds(context);
 
     return Consumer<PostData>(builder: (ctx, postData, child) {
       return DefaultTabController(
+        initialIndex: Provider.of<PageData>(context).homeTabIndex,
         length: 3,
         child: Scaffold(
           // app bar ========================================================================
@@ -94,9 +83,7 @@ class _HomePageState extends State<HomePage> {
               labelPadding: EdgeInsets.only(left: 10, right: 10),
               dividerColor: Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
               onTap: (i) {
-                setState(() {
-                  _index = i;
-                });
+                Provider.of<PageData>(context, listen:false).changeHomeTab(i);
               },
             ),
           ),
@@ -107,11 +94,11 @@ class _HomePageState extends State<HomePage> {
               // tab bar ---------------------------------------------------------------------
 
               // input postingan baru ------------------------------------------------------
-              InputPost(tabIndex: _index),
+              InputPost(tabIndex: Provider.of<PageData>(context).homeTabIndex),
 
               // daftar postingan ----------------------------------------------------------
               StreamBuilder<QuerySnapshot>(
-                  stream: _getSnapshot(),
+                  stream: _getSnapshot(context),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -122,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                     } else if (snapshot.hasData) {
                       final posts = snapshot.data!.docs;
 
-                      return (_index == 2 && posts.isEmpty)
+                      return (Provider.of<PageData>(context).homeTabIndex == 2 && posts.isEmpty)
                           ? Container(
                               height: height(context) / 2,
                               alignment: Alignment.center,
@@ -169,8 +156,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Stream<QuerySnapshot<Object?>> _getSnapshot() {
-    switch (_index) {
+  Stream<QuerySnapshot<Object?>> _getSnapshot(BuildContext context) {
+    switch (Provider.of<PageData>(context).homeTabIndex) {
       case 0:
         return Provider.of<PostData>(context)
             .postsCollection
@@ -187,15 +174,17 @@ class _HomePageState extends State<HomePage> {
       default:
         return Provider.of<PostData>(context)
             .postsCollection
-            .where("userId", whereIn: _followedUserIds.isNotEmpty ?  _followedUserIds.toList() : [-1])
+            .where("userId",
+                whereIn: _followedUserIds.isNotEmpty
+                    ? _followedUserIds.toList()
+                    : [-1])
             .snapshots();
     }
   }
 
-  void getFollowedUserIds() async {
-
+  void getFollowedUserIds(BuildContext context) async {
     UserAcc authUser = await Provider.of<UserData>(context)
         .getUser(FirebaseAuth.instance.currentUser!.uid);
-_followedUserIds = authUser.followings;
+    _followedUserIds = authUser.followings;
   }
 }
