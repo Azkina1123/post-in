@@ -11,7 +11,7 @@ class _SignUpState extends State<SignUp> {
   bool _loading = false;
   String? _selectedGender;
   bool _isObscure = true;
-  List<String> _genderOptions = ["Male", "Female", "Non"];
+  List<String> _genderOptions = ["Male", "Female"];
   String? imgPath;
   String? _profileImagePath;
   String? _coverImagePath;
@@ -62,6 +62,27 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  Future<bool> cekUsername() async {
+    String username = _ctrlUsername.text.toLowerCase();
+
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username Sudah Ada, Harap Memilih Username Lain"),
+        ),
+      );
+      _ctrlUsername.text = user?.username?.toLowerCase() ?? "";
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   handleSubmit() async {
     // if (!_formKey.currentState!.validate()) return;
     final nama = _ctrlNama.value.text;
@@ -82,12 +103,19 @@ class _SignUpState extends State<SignUp> {
       _showSnackBar('Semua field harus diisi');
       return;
     }
-    
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
 
-      String? profileImagePath = _profileImagePath;
-      String? coverImagePath = _coverImagePath;
+        String? profileImagePath = _profileImagePath;
+        String? coverImagePath = _coverImagePath;
+
+        return;
+      }
+      setState(() => _loading = true);
+      await AuthData().regis(nama, email, username, password, gender, nomor,
+          _profileImagePath, _coverImagePath);
+
+      setState(() => _loading = false);
     }
   }
 

@@ -32,12 +32,16 @@ class AuthData extends ChangeNotifier {
       email: email,
       password: password,
     );
+    String? url_profile;
+    String? url_cover;
+
     Future<void> uploadProfileImage(String imagePath) async {
       try {
         Reference storageReference =
             FirebaseStorage.instance.ref().child('profile_images/$id_now.jpg');
         UploadTask uploadTask = storageReference.putFile(File(imagePath));
         await uploadTask.whenComplete(() => print('Profile image uploaded'));
+        url_profile = await storageReference.getDownloadURL();
       } catch (e) {
         print('Error uploading profile image: $e');
       }
@@ -49,6 +53,7 @@ class AuthData extends ChangeNotifier {
             FirebaseStorage.instance.ref().child('cover_images/$id_now.jpg');
         UploadTask uploadTask = storageReference.putFile(File(imagePath));
         await uploadTask.whenComplete(() => print('Cover image uploaded'));
+        url_cover = await storageReference.getDownloadURL();
       } catch (e) {
         print('Error uploading cover image: $e');
       }
@@ -56,6 +61,15 @@ class AuthData extends ChangeNotifier {
 
     id_now = user.user!.uid;
 
+    if (profileImagePath != null) {
+      await uploadProfileImage(profileImagePath);
+    }
+
+    if (coverImagePath != null) {
+      await uploadCoverImage(coverImagePath);
+    }
+
+    print(url_profile);
     UserAcc userData = UserAcc(
       id: id_now.toString(),
       tglDibuat: DateTime.now(),
@@ -65,19 +79,11 @@ class AuthData extends ChangeNotifier {
       noTelp: nomor,
       gender: gender,
       password: password,
-      profileImageUrl:
-          profileImagePath != null ? 'profile_images/$id_now.jpg' : null,
-      coverImageUrl: coverImagePath != null ? 'cover_images/$id_now.jpg' : null,
+      foto: url_profile,
+      sampul: url_cover,
     );
 
     UserData().add(userData);
-    if (profileImagePath != null) {
-      await uploadProfileImage(profileImagePath);
-    }
-
-    if (coverImagePath != null) {
-      await uploadCoverImage(coverImagePath);
-    }
   }
 
   Future<void> login(String email, String password) async {
