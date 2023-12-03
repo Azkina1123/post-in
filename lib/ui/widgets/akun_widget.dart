@@ -23,6 +23,9 @@ class AkunWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.titleMedium),
       subtitle: Text(user?.username ?? "",
           style: Theme.of(context).textTheme.bodySmall),
+      trailing: user!.id != FirebaseAuth.instance.currentUser!.uid
+          ? IkutiBtn(userId: user!.id)
+          : const Text(""),
     );
   }
 }
