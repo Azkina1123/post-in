@@ -62,75 +62,32 @@ class _ProfilePageState extends State<ProfilePage> {
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(left: 20, top: 40),
+                  padding: EdgeInsets.only(left: 20, top: 45, right: 20),
                   child: Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.username,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .fontSize,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            user.namaLengkap,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .fontSize,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        user.username,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize:
+                              Theme.of(context).textTheme.titleLarge!.fontSize,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "(${user.namaLengkap})",
+                        style: TextStyle(
+                          color: colors["old-lavender"],
+                          fontSize:
+                              Theme.of(context).textTheme.titleSmall!.fontSize,
+                        ),
                       ),
                       Spacer(),
                       user.id != FirebaseAuth.instance.currentUser!.uid
-                          ? StreamBuilder<QuerySnapshot>(
-                              stream:
-                                  Provider.of<UserData>(context, listen: false)
-                                      .usersCollection
-                                      .where("id",
-                                          isEqualTo: FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                      .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  UserAcc authUser = UserAcc.fromJson(
-                                      snapshot.data!.docs[0].data()
-                                          as Map<String, dynamic>);
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 20),
-                                    child: authUser.followings.contains(user.id)
-                                        ? OutlinedButton(
-                                            onPressed: () {
-                                              Provider.of<UserData>(context,
-                                                      listen: false)
-                                                  .toggleIkuti(user.id);
-                                            },
-                                            child: const Text("Followed"),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: () {
-                                              Provider.of<UserData>(context,
-                                                      listen: false)
-                                                  .toggleIkuti(user.id);
-                                            },
-                                            child: const Text("Follow"),
-                                          ),
-                                  );
-                                }
-                                return const Text("");
-                              })
+                          ? IkutiBtn(userId: user.id)
                           : const Text(""),
                     ],
                   ),
@@ -157,9 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     future: Provider.of<UserData>(context, listen: false)
                         .getFollowingsCount(user.id),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading Followings...");
-                      } else if (snapshot.hasError) {
+                      if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
                       } else {
                         int followingsCount = snapshot.data ?? 0;
@@ -187,9 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     future: Provider.of<UserData>(context, listen: false)
                         .getFollowersCount(user.id),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading Followers...");
-                      } else if (snapshot.hasError) {
+                      if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
                       } else {
                         int followersCount = snapshot.data ?? 0;
