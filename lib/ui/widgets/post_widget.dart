@@ -10,6 +10,13 @@ class PostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
 
+    bool onUserProfilePage = false;
+    if (ModalRoute.of(context)!.settings.name == "/profile") {
+      onUserProfilePage =
+          (ModalRoute.of(context)!.settings.arguments as UserAcc).id ==
+              post.userId;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,13 +28,15 @@ class PostWidget extends StatelessWidget {
               user = snapshot.data!;
             }
             return ListTile(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  "/profile",
-                  arguments: user!,
-                );
-              },
+              onTap: onUserProfilePage
+                  ? null
+                  : () {
+                      Navigator.pushNamed(
+                        context,
+                        "/profile",
+                        arguments: user!,
+                      );
+                    },
               splashColor: Colors.transparent,
               leading: AccountButton(
                 onPressed: null,
@@ -74,10 +83,11 @@ class PostWidget extends StatelessWidget {
               children: [
                 post.img != null
                     ? InkWell(
-                      onTap: ModalRoute.of(context)!.settings.name == "/" ? null : () {
-                        
-                      },
-                      child: Container(
+                        onTap: ModalRoute.of(context)!.settings.name == "/" ||
+                                post.img == null
+                            ? null
+                            : () => showImgDialog(context),
+                        child: Container(
                           width: width(context),
                           height: 200,
                           margin: const EdgeInsets.only(bottom: 15),
@@ -88,7 +98,7 @@ class PostWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                    )
+                      )
                     : const Text(""),
 
                 ModalRoute.of(context)!.settings.name == "/post"
@@ -97,7 +107,7 @@ class PostWidget extends StatelessWidget {
                       )
                     : Text(
                         post.konten,
-                        maxLines: 3,
+                        maxLines: 5,
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -112,9 +122,10 @@ class PostWidget extends StatelessWidget {
                   children: [
                     // tombol like -------------------------------------------------------
                     SizedBox(
-                      width: 70,
-                      child: LikeBtn(postId: post.id,)
-                    ),
+                        width: 70,
+                        child: LikeBtn(
+                          postId: post.id,
+                        )),
 
                     // tombol komentar -------------------------------------------------------
                     SizedBox(
@@ -174,6 +185,24 @@ class PostWidget extends StatelessWidget {
                       const SnackBar(content: Text("Post berhasil dihapus!")));
                 },
                 child: const Text("Ya"),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<dynamic> showImgDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Image.network(post.img!),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Tutup"),
               ),
             ],
           );

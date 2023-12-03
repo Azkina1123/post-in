@@ -53,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image.network(user.foto!,
-                          width: 100, height: 100, fit: BoxFit.fill),
+                          width: 100, height: 100, fit: BoxFit.cover),
                     ),
                   ),
                 ),

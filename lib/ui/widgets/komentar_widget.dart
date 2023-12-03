@@ -20,6 +20,13 @@ class _KomentarWidgetState extends State<KomentarWidget> {
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
     bool isLiked = widget.komentar.likes.contains(authUserId);
 
+        bool onUserProfilePage = false;
+    if (ModalRoute.of(context)!.settings.name == "/profile") {
+      onUserProfilePage =
+          (ModalRoute.of(context)!.settings.arguments as UserAcc).id ==
+              widget.komentar.userId;
+    }
+
     return InkWell(
       // jika menekan komentar, muncul snackbar ===========================================================
       onTap: widget.komentar.userId == authUserId
@@ -90,7 +97,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       child: Column(
                         children: [
                           AccountButton(
-                            onPressed: () {
+                            onPressed: onUserProfilePage ? null : () {
                               Navigator.pushNamed(
                                 context,
                                 "/profile",

@@ -73,6 +73,7 @@ class PostPage extends StatelessWidget {
             StreamBuilder<QuerySnapshot>(
                 stream: komentarData.komentarsCollection
                     .where("postId", isEqualTo: postId)
+                    .orderBy("totalLike", descending: true)
                     .orderBy("tglDibuat", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {

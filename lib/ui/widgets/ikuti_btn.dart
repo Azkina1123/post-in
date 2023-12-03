@@ -19,21 +19,21 @@ class IkutiBtn extends StatelessWidget {
             UserAcc authUser = UserAcc.fromJson(
                 snapshot.data!.docs[0].data() as Map<String, dynamic>);
             return SizedBox(
-              width: 110,
+              width: 115,
               child: authUser.followings.contains(userId)
                   ? OutlinedButton(
                       onPressed: () {
                         Provider.of<UserData>(context, listen: false)
                             .toggleIkuti(userId);
                       },
-                      child: const Text("Followed"),
+                      child: const Text("Diikuti"),
                     )
                   : ElevatedButton(
                       onPressed: () {
                         Provider.of<UserData>(context, listen: false)
                             .toggleIkuti(userId);
                       },
-                      child: const Text("Follow"),
+                      child: const Text("Mengikuti"),
                     ),
             );
           }
