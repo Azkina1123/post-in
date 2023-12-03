@@ -68,7 +68,7 @@ class _SignUpState extends State<SignUp> {
     final email = _ctrlEmail.value.text;
     final username = _ctrlUsername.value.text;
     final password = _ctrlPass.value.text;
-    final gender = _selectedGender ?? "";
+    final gender = _selectedGender;
     final nomor = _ctrlNomor.value.text;
 
     if (nama.isEmpty ||
@@ -82,6 +82,7 @@ class _SignUpState extends State<SignUp> {
       _showSnackBar('Semua field harus diisi');
       return;
     }
+    
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
 

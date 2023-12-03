@@ -30,7 +30,9 @@ class _EditPageState extends State<EditPage> {
     );
 
     if (pickedFile != null) {
-      _coverImagePath = pickedFile.path;
+      setState(() {
+        _coverImagePath = pickedFile.path;
+      });
       print("Cover Image Path: $_coverImagePath");
     }
   }
@@ -41,7 +43,9 @@ class _EditPageState extends State<EditPage> {
     );
 
     if (pickedFile != null) {
-      _profileImagePath = pickedFile.path;
+      setState(() {
+        _profileImagePath = pickedFile.path;
+      });
       print("Cover Image Path: $_profileImagePath");
     }
   }
@@ -49,6 +53,7 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
+    UserAcc user = ModalRoute.of(context)!.settings.arguments as UserAcc;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection("users");
     return Scaffold(
@@ -56,10 +61,9 @@ class _EditPageState extends State<EditPage> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, "/");
           },
-          icon: Icon(Icons.arrow_back,
-              size: 25, color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.arrow_back),
         ),
         title: Text(
           "Edit Profile",
@@ -69,168 +73,172 @@ class _EditPageState extends State<EditPage> {
           ),
         ),
       ),
-      body: ListView(children: [
-        FutureBuilder<UserAcc>(
-          future: Provider.of<UserData>(context, listen: false)
-              .getUser(FirebaseAuth.instance.currentUser!.uid),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              user = snapshot.data!;
-            } else {
-              return Container(
-                width: width(context),
+      body: SingleChildScrollView(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
                 alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
-            }
-            return SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: lebar,
-                          height: 110,
-                          child: ClipRRect(
-                            child: Image.network(
-                              urlSampul ?? user?.sampul ?? "",
+                children: [
+                  Container(
+                    width: lebar,
+                    height: 110,
+                    child: ClipRRect(
+                      child: _coverImagePath != null
+                          ? Image.file(
+                              File(_coverImagePath!),
+                              width: lebar,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              user?.sampul ?? "",
                               width: lebar,
                               fit: BoxFit.cover,
                             ),
-                          ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.background,
+                          width: 3,
                         ),
-                        Positioned(
-                          top: 50,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: Theme.of(context).colorScheme.background,
-                                width: 3,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                urlProfile ?? user?.foto ?? "",
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: _profileImagePath != null
+                            ? Image.file(
+                                File(_profileImagePath!),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                user.foto ?? "",
                                 width: 100,
                                 height: 100,
                                 fit: BoxFit.cover,
                               ),
-                            ),
-                          ),
-                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _ctrlNama,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: user.namaLengkap ?? "",
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(40),
                       ],
                     ),
-                    SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
+                    SizedBox(height: 20.0),
+                    TextFormField(
+                      controller: _ctrlEmail,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: user.email,
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(30),
+                      ],
+                    ),
+                    SizedBox(height: 20.0),
+                    TextFormField(
+                      controller: _ctrlUsername,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: user.username,
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(20),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _ctrlUsername.text = value.toLowerCase();
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20.0),
+                    DropdownButtonFormField<String>(
+                      value: _selectedGender,
+                      items: _genderOptions.map((String gender) {
+                        return DropdownMenuItem<String>(
+                          value: gender,
+                          child: Text(gender),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        _selectedGender = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: user.gender,
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    TextFormField(
+                      controller: _ctrlNomor,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(13),
+                      ],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: user?.noTelp ?? "",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        _getFromGalleryCover();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
-                            controller: _ctrlNama,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: user?.namaLengkap ?? "",
-                            ),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(40),
-                            ],
-                          ),
-                          SizedBox(height: 20.0),
-                          TextFormField(
-                            controller: _ctrlEmail,
-                            enabled: false,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: user?.email ?? "",
-                            ),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(30),
-                            ],
-                          ),
-                          SizedBox(height: 20.0),
-                          TextFormField(
-                            controller: _ctrlUsername,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: user?.username ?? "",
-                            ),
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(20),
-                            ],
-                          ),
-                          SizedBox(height: 20.0),
-                          DropdownButtonFormField<String>(
-                            value: _selectedGender,
-                            items: _genderOptions.map((String gender) {
-                              return DropdownMenuItem<String>(
-                                value: gender,
-                                child: Text(gender),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) {
-                              _selectedGender = value;
-                            },
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: user?.gender ?? "",
-                            ),
-                          ),
-                          SizedBox(height: 20.0),
-                          TextFormField(
-                            controller: _ctrlNomor,
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(13),
-                            ],
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: user?.noTelp ?? "",
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () async {
-                              _getFromGalleryCover();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.upload),
-                                SizedBox(width: 8),
-                                Text("Ubah Sampul"),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: () async {
-                              _getFromGalleryProfile();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.upload),
-                                SizedBox(width: 8),
-                                Text("Ubah Foto Profil"),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                          ElevatedButton(
-                            onPressed: () async {
+                          Icon(Icons.upload),
+                          SizedBox(width: 8),
+                          Text("Ubah Sampul"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        _getFromGalleryProfile();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.upload),
+                          SizedBox(width: 8),
+                          Text("Ubah Foto Profil"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ElevatedButton(
+                      onPressed: isEmpty()
+                          ? null
+                          : () async {
                               String id =
                                   FirebaseAuth.instance.currentUser!.uid;
-
-                              await cekUsername();
 
                               if (_coverImagePath != null) {
                                 Reference refSampul = FirebaseStorage.instance
@@ -238,6 +246,8 @@ class _EditPageState extends State<EditPage> {
                                     .child("users/sampul_$id.jpg");
                                 await refSampul.putFile(File(_coverImagePath!));
                                 urlSampul = await refSampul.getDownloadURL();
+                              } else {
+                                urlSampul = user.sampul;
                               }
 
                               if (_profileImagePath != null) {
@@ -247,76 +257,92 @@ class _EditPageState extends State<EditPage> {
                                 await refProfile
                                     .putFile(File(_profileImagePath!));
                                 urlProfile = await refProfile.getDownloadURL();
+                              } else {
+                                urlProfile = user.foto;
                               }
 
-                              Map<String, dynamic> updateProfile = {};
+                              if (_selectedGender != null) {
+                                user.gender = _selectedGender!;
+                              }
 
-                              users.doc(id).update({
-                                "namaLengkap": _ctrlNama.text.isEmpty
-                                    ? user?.namaLengkap
-                                    : _ctrlNama.text.toString(),
-                                "username": _ctrlUsername.text.isEmpty
-                                    ? user?.username
-                                    : _ctrlUsername.text.toString(),
-                                "gender": _selectedGender!.isEmpty
-                                    ? user?.gender
-                                    : _selectedGender,
-                                "noTelp": _ctrlNomor.text.isEmpty
-                                    ? user?.noTelp
-                                    : _ctrlNomor.text.toString(),
-                                "foto": urlProfile != null
-                                    ? urlProfile
-                                    : user?.foto,
-                                "sampul": urlSampul != null
-                                    ? urlSampul
-                                    : user?.sampul,
-                              });
+                              if (!await cekUsername()) {
+                                users.doc(id).update({
+                                  "namaLengkap": _ctrlNama.text.isEmpty
+                                      ? user.namaLengkap
+                                      : _ctrlNama.text.toString(),
+                                  "username": _ctrlUsername.text.isEmpty
+                                      ? user.username.toLowerCase()
+                                      : _ctrlUsername.text
+                                          .toString()
+                                          .toLowerCase(),
+                                  "gender": user.gender,
+                                  "noTelp": _ctrlNomor.text.isEmpty
+                                      ? user.noTelp
+                                      : _ctrlNomor.text.toString(),
+                                  "foto": urlProfile,
+                                  "sampul": urlSampul,
+                                });
 
-                              Navigator.of(context).pop();
+                                Navigator.popAndPushNamed(context, "/");
+                              }
                             },
-                            child: _loading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text("Simpan Perubahan"),
-                          ),
-                        ],
-                      ),
+                      child: _loading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text("Simpan Perubahan"),
                     ),
-                  ]),
-            );
-          },
-        ),
-      ]),
+                  ],
+                ),
+              ),
+            ]),
+      ),
     );
   }
 
-  Future<void> cekUsername() async {
-    String username = _ctrlUsername.text;
-
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: username)
-        .get();
-
-    if (query.docs.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Username Tidak Diterima, Perubahan Username Dibatalkan"),
-        ),
-      );
-      _ctrlUsername.text = user?.username ?? "";
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Username Tersedia dan Berhasil Diubah"),
-        ),
-      );
+  bool isEmpty() {
+    if (_ctrlNama.text.isEmpty ||
+        _ctrlUsername.text.isEmpty ||
+        _ctrlNomor.text.isEmpty ||
+        _coverImagePath == null ||
+        _profileImagePath == null ||
+        _selectedGender == null) {
+      return true;
     }
+    return false;
+  }
+
+  Future<bool> cekUsername() async {
+    if (_ctrlUsername.text.isNotEmpty) {
+      String username = _ctrlUsername.text;
+
+      QuerySnapshot query = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
+
+      if (query.docs.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text("Username Tidak Diterima, Perubahan Username Dibatalkan"),
+          ),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Username Tersedia dan Berhasil Diubah"),
+          ),
+        );
+        return false;
+      }
+    }
+    return false;
   }
 }

@@ -93,14 +93,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return EditPage();
-                                  },
-                                ),
-                              );
+                              Navigator.popAndPushNamed(context, "/edit", arguments: user);
                             },
                             child: Icon(
                               Icons.navigate_next_rounded,
@@ -322,14 +315,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                               size: 30),
                           onPressed: () {
                             FirebaseAuth.instance.signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return SignIn();
-                                },
-                              ),
-                            );
+                            Navigator.popAndPushNamed(context, "/landing");
 
                             // kembalikan ke home page
                             // Provider.of<PageData>(context, listen: false)
@@ -341,14 +327,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return SignIn();
-                              },
-                            ),
-                          );
+                          Navigator.popAndPushNamed(context, "/landing");
                           // kembalikan ke home page
                           // Provider.of<PageData>(context, listen: false)
                           //     .changeMainPage(0);
