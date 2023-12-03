@@ -10,6 +10,7 @@ class EditPage extends StatefulWidget {
 class _EditPageState extends State<EditPage> {
   UserAcc? user;
   bool _loading = false;
+  bool _isUsernameAvailable = true;
   String? _selectedGender;
   List<String> _genderOptions = ["Male", "Female", "Non"];
 
@@ -29,10 +30,8 @@ class _EditPageState extends State<EditPage> {
     );
 
     if (pickedFile != null) {
-      setState(() {
-        _coverImagePath = pickedFile.path;
-        print("Cover Image Path: $_coverImagePath");
-      });
+      _coverImagePath = pickedFile.path;
+      print("Cover Image Path: $_coverImagePath");
     }
   }
 
@@ -42,10 +41,8 @@ class _EditPageState extends State<EditPage> {
     );
 
     if (pickedFile != null) {
-      setState(() {
-        _profileImagePath = pickedFile.path;
-        print("Cover Image Path: $_profileImagePath");
-      });
+      _profileImagePath = pickedFile.path;
+      print("Cover Image Path: $_profileImagePath");
     }
   }
 
@@ -79,6 +76,12 @@ class _EditPageState extends State<EditPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               user = snapshot.data!;
+            } else {
+              return Container(
+                width: width(context),
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
+              );
             }
             return SingleChildScrollView(
               child: Column(
@@ -193,40 +196,41 @@ class _EditPageState extends State<EditPage> {
                               hintText: user?.noTelp ?? "",
                             ),
                           ),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  _getFromGalleryCover();
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.edit),
-                                    SizedBox(width: 8),
-                                    Text("Ubah Sampul"),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  _getFromGalleryProfile();
-                                },
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.edit),
-                                    SizedBox(width: 8),
-                                    Text("Ubah Profil"),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () async {
+                              _getFromGalleryCover();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.upload),
+                                SizedBox(width: 8),
+                                Text("Ubah Sampul"),
+                              ],
+                            ),
                           ),
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () async {
+                              _getFromGalleryProfile();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.upload),
+                                SizedBox(width: 8),
+                                Text("Ubah Foto Profil"),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          ElevatedButton(
+                            onPressed: () async {
                               String id =
                                   FirebaseAuth.instance.currentUser!.uid;
+
+                              await cekUsername();
 
                               if (_coverImagePath != null) {
                                 Reference refSampul = FirebaseStorage.instance
@@ -290,5 +294,29 @@ class _EditPageState extends State<EditPage> {
         ),
       ]),
     );
+  }
+
+  Future<void> cekUsername() async {
+    String username = _ctrlUsername.text;
+
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username Telah Digunakan, Perubahan Dibatalkan"),
+        ),
+      );
+      _ctrlUsername.text = user?.username ?? "";
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username Tersedia dan Berhasil Diubah"),
+        ),
+      );
+    }
   }
 }
