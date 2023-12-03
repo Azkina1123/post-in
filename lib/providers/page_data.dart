@@ -9,9 +9,8 @@ class PageData extends ChangeNotifier {
   }
 
 
-
   int followTabIndex = 0;
-  void changefollowTab(int index) {
+  void changeFollowTab(int index) {
     followTabIndex = index;
     notifyListeners();
   }
