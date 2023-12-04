@@ -31,9 +31,9 @@ class landingPage extends StatelessWidget {
             height: 40,
           ),
           Image.asset(
-            'assets/landing(1).png',
-            width: 400,
-            height: 380,
+            'assets/landing1.png',
+            width: 250,
+            height: 360,
             fit: BoxFit.cover,
           ),
           SizedBox(
