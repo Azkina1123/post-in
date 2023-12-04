@@ -134,12 +134,14 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Provider.of<ThemeModeData>(context, listen: false)
+                          shape: BoxShape.circle,
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
                                           .themeMode ==
                                       ThemeMode.system
                                   ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.outline,),
+                                  : Theme.of(context).colorScheme.outline,
+                        ),
                         child: IconButton(
                           icon: Icon(Icons.phone_android_rounded,
                               color: Theme.of(context).colorScheme.onPrimary,
@@ -221,7 +223,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Provider.of<ThemeModeData>(context, listen: false)
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
                                           .themeMode ==
                                       ThemeMode.dark
                                   ? Theme.of(context).colorScheme.primary
@@ -472,23 +475,9 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(25),
                         ],
-                        onEditingComplete: () {
-                          String enteredPassword = _ctrlOldPass.text;
+                        // onEditingComplete: () {
 
-                          if (enteredPassword == snapshot.data?.password) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Konfirmasi Password Berhasil !"),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Konfirmasi Password Gagal !"),
-                              ),
-                            );
-                          }
-                        },
+                        // },
                       ),
                       SizedBox(height: 20),
                       TextFormField(
@@ -534,12 +523,31 @@ class _PengaturanPageState extends State<PengaturanPage> {
             ),
             TextButton(
               onPressed: () async {
+                UserAcc user =
+                    await Provider.of<UserData>(context, listen: false)
+                        .getUser(FirebaseAuth.instance.currentUser!.uid);
+                String enteredPassword = _ctrlOldPass.text;
+
+                if (enteredPassword != user.password) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Konfirmasi Password Gagal !"),
+                    ),
+                  );
+                  return;
+                }
+                
                 String id = FirebaseAuth.instance.currentUser!.uid;
                 await users.doc(id).update({
                   "password": _ctrlNewPass.text.toString(),
                 });
                 await ubahPassAuth(users, id);
-                Navigator.popAndPushNamed(context, "/pengaturan");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Ubah Password Berhasil !"),
+                  ),
+                );
+                Navigator.of(context).pop();
               },
               child: Text(
                 "Yakin",
@@ -610,7 +618,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
       },
     );
   }
-
 
   Future<void> ubahPassAuth(CollectionReference users, String id) async {
     await FirebaseAuth.instance.currentUser!.updatePassword(_ctrlNewPass.text);
