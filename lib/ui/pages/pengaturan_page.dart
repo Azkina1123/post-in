@@ -134,8 +134,14 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).colorScheme.outline),
+                          shape: BoxShape.circle,
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.system
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
+                        ),
                         child: IconButton(
                           icon: Icon(Icons.phone_android_rounded,
                               color: Theme.of(context).colorScheme.onPrimary,
@@ -173,7 +179,12 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.outline,
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.light
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
                           icon: Icon(Icons.sunny,
@@ -212,7 +223,12 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.outline,
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
                           icon: Icon(Icons.nightlight_round,
@@ -445,7 +461,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         obscureText: _isObscure,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "Old Password",
+                          hintText: "Password Lama",
+                          labelText: "Password Lama",
                           // suffixIcon: IconButton(
                           //   icon: Icon(_isObscure
                           //       ? Icons.visibility
@@ -458,23 +475,9 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(25),
                         ],
-                        onEditingComplete: () {
-                          String enteredPassword = _ctrlOldPass.text;
+                        // onEditingComplete: () {
 
-                          if (enteredPassword == snapshot.data?.password) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Konfirmasi Password Berhasil !"),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text("Konfirmasi Password Gagal !"),
-                              ),
-                            );
-                          }
-                        },
+                        // },
                       ),
                       SizedBox(height: 20),
                       TextFormField(
@@ -482,7 +485,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         obscureText: _isObscure,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "New Password",
+                          hintText: "Password Baru",
+                          labelText: "Password Baru",
                           // suffixIcon: IconButton(
                           //   icon: Icon(_isObscure
                           //       ? Icons.visibility
@@ -519,12 +523,31 @@ class _PengaturanPageState extends State<PengaturanPage> {
             ),
             TextButton(
               onPressed: () async {
+                UserAcc user =
+                    await Provider.of<UserData>(context, listen: false)
+                        .getUser(FirebaseAuth.instance.currentUser!.uid);
+                String enteredPassword = _ctrlOldPass.text;
+
+                if (enteredPassword != user.password) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Konfirmasi Password Gagal !"),
+                    ),
+                  );
+                  return;
+                }
+                
                 String id = FirebaseAuth.instance.currentUser!.uid;
                 await users.doc(id).update({
                   "password": _ctrlNewPass.text.toString(),
                 });
                 await ubahPassAuth(users, id);
-                Navigator.popAndPushNamed(context, "/pengaturan");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Ubah Password Berhasil !"),
+                  ),
+                );
+                Navigator.of(context).pop();
               },
               child: Text(
                 "Yakin",
@@ -594,40 +617,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
         );
       },
     );
-  }
-
-  Future<void> hapusData(CollectionReference users, String id) async {
-    await hapusAkun(users, id);
-  }
-
-  Future<void> hapusAkun(CollectionReference users, String id) async {
-    await users.doc(id).delete();
-    await FirebaseAuth.instance.currentUser!.delete();
-  }
-
-  Future<void> hapusKomentar(CollectionReference posts, String userId) async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    CollectionReference komentarsRef =
-        FirebaseFirestore.instance.collection("komentars");
-    QuerySnapshot komentars =
-        await komentarsRef.where("userId", isEqualTo: userId).get();
-
-    // hapus semua komentar yang mengomentari post
-    komentars.docs.forEach((komentar) {
-      komentarsRef.doc(komentar.id).delete();
-    });
-  }
-
-  Future<void> hapusPost(CollectionReference posts, String userId) async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    CollectionReference postsRef =
-        FirebaseFirestore.instance.collection("posts");
-    QuerySnapshot posts =
-        await postsRef.where("userId", isEqualTo: userId).get();
-
-    posts.docs.forEach((post) {
-      postsRef.doc(post.id).delete();
-    });
   }
 
   Future<void> ubahPassAuth(CollectionReference users, String id) async {

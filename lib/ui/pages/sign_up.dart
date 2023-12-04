@@ -158,6 +158,8 @@ class _SignUpState extends State<SignUp> {
     setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor,
         _profileImagePath, _coverImagePath);
+    _showSnackBar('Proses registrasi berhasil!');
+    Navigator.popAndPushNamed(context, "/sign-in");
 
     setState(() => _loading = false);
   }
@@ -238,6 +240,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nama Lengkap',
+                          labelText: "Nama Lengkap",
                           ),
                         ),
                       ),
@@ -265,6 +268,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Username',
+                          labelText: "Username",
                           ),
                         ),
                       ),
@@ -283,6 +287,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Email',
+                          labelText: "Email",
                           ),
                         ),
                       ),
@@ -304,6 +309,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Gender',
+                          labelText: "Gender",
                           ),
                         ),
                       ),
@@ -329,6 +335,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nomor Telepon',
+                          labelText: "Nomor Telepon",
                           ),
                         ),
                       ),
@@ -349,6 +356,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Password',
+                          labelText: "Password",
                             suffixIcon: IconButton(
                               icon: Icon(_isObscure
                                   ? Icons.visibility
@@ -365,6 +373,9 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   SizedBox(height: 30),
+                  _profileImagePath != null ? Image.file(File(_profileImagePath!), width: 100, height: 100, fit: BoxFit.cover, ) :  SizedBox(
+                          height: 0,
+                        ),
                   Row(
                     children: [
                       Expanded(
@@ -386,6 +397,15 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 5),
+                                    _coverImagePath != null
+                      ? Image.file(
+                          File(_coverImagePath!),
+                          width: width(context),
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : SizedBox(height: 0,),
+
                   Row(
                     children: [
                       Expanded(

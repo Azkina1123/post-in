@@ -159,6 +159,14 @@ class MyApp extends StatelessWidget {
               hintStyle: TextStyle(
                 color: colors["dark-jungle-green"]!.withOpacity(0.5),
               ),
+                            labelStyle: TextStyle(
+                  color: colors["dark-jungle-green"]!.withOpacity(0.5),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+              floatingLabelStyle: TextStyle(
+                color: colors["sand"],
+                fontSize: 16,
+              ),
             ),
             popupMenuTheme: PopupMenuThemeData(
               surfaceTintColor: colors["milk-white"]!,
@@ -291,6 +299,15 @@ class MyApp extends StatelessWidget {
               focusColor: colors["sand!"],
               hintStyle: TextStyle(
                 color: colors["milk-white"]!.withOpacity(0.5),
+              ),
+              labelStyle: TextStyle(
+                color: colors["milk-white"]!.withOpacity(0.5),
+                fontSize: 16,
+                fontWeight: FontWeight.bold
+              ),
+              floatingLabelStyle: TextStyle(
+                color: colors["sand"],
+                fontSize: 16,
               ),
             ),
             popupMenuTheme: PopupMenuThemeData(

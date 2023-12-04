@@ -122,9 +122,13 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           Row(
                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                _user!.username,
-                                style: Theme.of(context).textTheme.titleMedium,
+                              Container(
+                                width: width(context) - 80 - 60 - 135,
+                                child: Text(
+                                  _user!.username,
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               Text(
                                 " • ${DateFormat('dd MMM yyyy HH.mm').format(widget.komentar.tglDibuat)}",

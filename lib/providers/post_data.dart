@@ -54,7 +54,7 @@ class PostData extends ChangeNotifier {
       "totalLike": post.totalLike,
       "totalKomentar": post.totalKomentar,
     });
-    // notifyListeners();
+    notifyListeners();
   }
 
   void delete(String id) async {
