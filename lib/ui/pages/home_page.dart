@@ -1,9 +1,15 @@
 part of "pages.dart";
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   List<String> _followedUserIds = [];
+  
 
   @override
   Widget build(BuildContext context) {
@@ -89,67 +95,74 @@ class HomePage extends StatelessWidget {
           ),
 
           // konten halaman ===============================================================
-          body: ListView(
-            children: [
-              // tab bar ---------------------------------------------------------------------
-
-              // input postingan baru ------------------------------------------------------
-              InputPost(tabIndex: Provider.of<PageData>(context).homeTabIndex),
-
-              // daftar postingan ----------------------------------------------------------
-              FutureBuilder<QuerySnapshot>(
-                  future: _getSnapshot(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        padding: EdgeInsets.all(20),
-                        width: width(context),
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasData) {
-                      final posts = snapshot.data!.docs;
-
-                      return (Provider.of<PageData>(context).homeTabIndex == 2 && posts.isEmpty)
-                          ? Container(
-                              height: height(context) / 2,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                  "User yang Anda ikuti belum membuat post."),
-                            )
-                          : Column(
-                              children: [
-                                for (int i = 0; i < posts.length; i++)
-                                  Column(
-                                    children: [
-                                      PostWidget(
-                                        post: Post.fromJson(posts[i].data()
-                                            as Map<String, dynamic>),
-                                      ),
-
-                                      // kasih pembatas antar post --------------------------------------
-                                      if (i != posts.length - 1)
-                                        Divider(
-                                          color: Theme.of(ctx)
-                                              .colorScheme
-                                              .tertiary
-                                              .withOpacity(0.5),
-                                          indent: 10,
-                                          endIndent: 10,
-                                        )
-                                      // di post terakhir tidak perlu pembatas -------------------------
-                                      else
-                                        const SizedBox(
-                                          height: 20,
-                                        )
-                                    ],
-                                  )
-                              ],
-                            );
-                    }
-                    return const Text("Belum ada post yang ditambahkan.");
-                  })
-            ],
+          body: RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                
+              });
+            },
+            child: ListView(
+              children: [
+                // tab bar ---------------------------------------------------------------------
+          
+                // input postingan baru ------------------------------------------------------
+                InputPost(),
+          
+                // daftar postingan ----------------------------------------------------------
+                FutureBuilder<QuerySnapshot>(
+                    future: _getSnapshot(context),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          padding: EdgeInsets.all(20),
+                          width: width(context),
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasData) {
+                        final posts = snapshot.data!.docs;
+          
+                        return (Provider.of<PageData>(context).homeTabIndex == 2 && posts.isEmpty)
+                            ? Container(
+                                height: height(context) / 2,
+                                alignment: Alignment.center,
+                                child: const Text(
+                                    "User yang Anda ikuti belum membuat post."),
+                              )
+                            : Column(
+                                children: [
+                                  for (int i = 0; i < posts.length; i++)
+                                    Column(
+                                      children: [
+                                        PostWidget(
+                                          post: Post.fromJson(posts[i].data()
+                                              as Map<String, dynamic>),
+                                        ),
+          
+                                        // kasih pembatas antar post --------------------------------------
+                                        if (i != posts.length - 1)
+                                          Divider(
+                                            color: Theme.of(ctx)
+                                                .colorScheme
+                                                .tertiary
+                                                .withOpacity(0.5),
+                                            indent: 10,
+                                            endIndent: 10,
+                                          )
+                                        // di post terakhir tidak perlu pembatas -------------------------
+                                        else
+                                          const SizedBox(
+                                            height: 20,
+                                          )
+                                      ],
+                                    )
+                                ],
+                              );
+                      }
+                      return const Text("Belum ada post yang ditambahkan.");
+                    })
+              ],
+            ),
           ),
         ),
       );

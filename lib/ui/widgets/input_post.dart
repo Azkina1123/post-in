@@ -1,8 +1,7 @@
 part of "widgets.dart";
 
 class InputPost extends StatefulWidget {
-  int tabIndex;
-  InputPost({super.key, required this.tabIndex});
+  InputPost({super.key});
   @override
   State<InputPost> createState() => _InputPostState();
 }
@@ -150,7 +149,7 @@ class _InputPostState extends State<InputPost> {
     }
   }
 
-    bool isSpace(String str) {
+  bool isSpace(String str) {
     return str.trim().isEmpty;
   }
 }

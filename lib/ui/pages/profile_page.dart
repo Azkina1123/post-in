@@ -30,6 +30,12 @@ class _ProfilePageState extends State<ProfilePage> {
           title: Text(_user!.id == FirebaseAuth.instance.currentUser!.uid
               ? "My Profile"
               : "Profile"),
+              leading: IconButton(
+            onPressed: () {
+              Navigator.popAndPushNamed(context, "/");
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
         ),
         body: RefreshIndicator(
           onRefresh: () async {
