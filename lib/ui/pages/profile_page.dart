@@ -220,6 +220,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         stream: Provider.of<PostData>(context)
                             .postsCollection
                             .where("userId", isEqualTo: _user!.id)
+                            .orderBy("tglDibuat", descending: true)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==

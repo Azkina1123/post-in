@@ -14,7 +14,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
   UserAcc? _user;
   bool _selected = false;
   bool _successDelete = false;
-    SnackBar? sn;
+  SnackBar? sn;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +127,9 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width: width(context) - 80 - 60 - 135,
+                                width: _user!.username.length > 14
+                                    ? width(context) - 80 - 60 - 135
+                                    : null,
                                 child: Text(
                                   _user!.username,
                                   style:
@@ -136,7 +138,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                 ),
                               ),
                               Text(
-                                " • ${DateFormat('dd MMM yyyy HH.mm').format(widget.komentar.tglDibuat)}",
+                                " • ${getDifferenceTime()}",
                                 style: TextStyle(
                                     fontSize: Theme.of(context)
                                         .textTheme
@@ -199,5 +201,21 @@ class _KomentarWidgetState extends State<KomentarWidget> {
             }),
       ),
     );
+  }
+
+  String getDifferenceTime() {
+    int detik = widget.komentar.tglDibuat.difference(DateTime.now()).inSeconds.abs();
+
+    if (detik < 60) {
+      return "$detik detik yang lalu";
+    } else if (detik < 3600) {
+      int menit = (detik / 60).floor();
+      return "$menit menit yang lalu";
+    } else if (detik < 3600 * 24) {
+      int jam = (detik / 3600).floor();
+      return "$jam jam yang lalu";
+    } else {
+      return DateFormat('dd MMM yyyy HH.mm').format(widget.komentar.tglDibuat);
+    }
   }
 }

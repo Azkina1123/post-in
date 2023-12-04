@@ -30,11 +30,14 @@ class landingPage extends StatelessWidget {
           SizedBox(
             height: 40,
           ),
-          Image.asset(
-            'assets/landing1.png',
-            width: 250,
-            height: 360,
-            fit: BoxFit.cover,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Image.asset(
+              'assets/landing1.png',
+              width: 250,
+              height: 360,
+              fit: BoxFit.cover,
+            ),
           ),
           SizedBox(
             height: 70,
@@ -71,7 +74,7 @@ class landingPage extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),

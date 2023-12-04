@@ -48,7 +48,8 @@ class PostWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               subtitle: Text(
-                DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
+                // DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
+                getDifferenceTime(),
                 style: TextStyle(
                   color:
                       Theme.of(context).colorScheme.secondary.withOpacity(0.5),
@@ -208,7 +209,7 @@ class PostWidget extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Peringatan!"),
+            title: const Text("Pemberitahuan!"),
             content: const Text("Apakah Anda yakin ingin menghapus post ini?"),
             actions: [
               OutlinedButton(
@@ -248,5 +249,22 @@ class PostWidget extends StatelessWidget {
             ],
           );
         });
+  }
+
+    String getDifferenceTime() {
+    int detik =
+        post.tglDibuat.difference(DateTime.now()).inSeconds.abs();
+
+    if (detik < 60) {
+      return "$detik detik yang lalu";
+    } else if (detik < 3600) {
+      int menit = (detik / 60).floor();
+      return "$menit menit yang lalu";
+    } else if (detik < 3600 * 24) {
+      int jam = (detik / 3600).floor();
+      return "$jam jam yang lalu";
+    } else {
+      return DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat);
+    }
   }
 }

@@ -115,7 +115,11 @@ class PostData extends ChangeNotifier {
   }
 
   Future<List<Post>> getSearchPosts(String keyword) async {
-    QuerySnapshot querySnapshot = await postsCollection.get();
+    QuerySnapshot querySnapshot = await postsCollection
+    .orderBy("totalLike", descending: true)
+            .orderBy("totalKomentar", descending: true)
+            .orderBy("tglDibuat", descending: true)
+            .get();
     List<Post> posts = [];
     querySnapshot.docs.forEach((doc) {
       posts.add(Post.fromJson(doc.data() as Map<String, dynamic>));
