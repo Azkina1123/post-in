@@ -458,7 +458,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         obscureText: _isObscure,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "Old Password",
+                          hintText: "Password Lama",
+                          labelText: "Password Lama",
                           // suffixIcon: IconButton(
                           //   icon: Icon(_isObscure
                           //       ? Icons.visibility
@@ -495,7 +496,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         obscureText: _isObscure,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "New Password",
+                          hintText: "Password Baru",
+                          labelText: "Password Baru",
                           // suffixIcon: IconButton(
                           //   icon: Icon(_isObscure
                           //       ? Icons.visibility
@@ -609,39 +611,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
     );
   }
 
-  Future<void> hapusData(CollectionReference users, String id) async {
-    await hapusAkun(users, id);
-  }
-
-  Future<void> hapusAkun(CollectionReference users, String id) async {
-    await users.doc(id).delete();
-    await FirebaseAuth.instance.currentUser!.delete();
-  }
-
-  Future<void> hapusKomentar(CollectionReference posts, String userId) async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    CollectionReference komentarsRef =
-        FirebaseFirestore.instance.collection("komentars");
-    QuerySnapshot komentars =
-        await komentarsRef.where("userId", isEqualTo: userId).get();
-
-    // hapus semua komentar yang mengomentari post
-    komentars.docs.forEach((komentar) {
-      komentarsRef.doc(komentar.id).delete();
-    });
-  }
-
-  Future<void> hapusPost(CollectionReference posts, String userId) async {
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    CollectionReference postsRef =
-        FirebaseFirestore.instance.collection("posts");
-    QuerySnapshot posts =
-        await postsRef.where("userId", isEqualTo: userId).get();
-
-    posts.docs.forEach((post) {
-      postsRef.doc(post.id).delete();
-    });
-  }
 
   Future<void> ubahPassAuth(CollectionReference users, String id) async {
     await FirebaseAuth.instance.currentUser!.updatePassword(_ctrlNewPass.text);

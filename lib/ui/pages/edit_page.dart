@@ -141,6 +141,7 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: user.namaLengkap ?? "",
+                        labelText: "Nama Lengkap"
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(40),
@@ -158,6 +159,7 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: user.email,
+                        labelText: "Email"
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
@@ -172,6 +174,7 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: user.username,
+                        labelText: "Username",
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(20),
@@ -200,6 +203,7 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: user.gender,
+                        labelText: "Gender",
                       ),
                     ),
                     SizedBox(height: 20.0),
@@ -213,6 +217,7 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: user?.noTelp ?? "",
+                        labelText: "Nomor Telepon"
                       ),
                       onChanged: (value) {
                         setState(() {});

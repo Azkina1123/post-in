@@ -91,6 +91,7 @@ class _SignInState extends State<SignIn> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Email',
+                        labelText: "Email"
                       ),
                     ),
                     SizedBox(
@@ -108,6 +109,7 @@ class _SignInState extends State<SignIn> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Password',
+                        labelText: "Password",
                         suffixIcon: IconButton(
                           icon: Icon(_isObscure
                               ? Icons.visibility
