@@ -3,10 +3,8 @@ part of "pages.dart";
 class PostPage extends StatelessWidget {
   const PostPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-  
     String postId = ModalRoute.of(context)!.settings.arguments as String;
     return Consumer<KomentarData>(builder: (context, komentarData, child) {
       return Scaffold(
@@ -15,6 +13,8 @@ class PostPage extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               ScaffoldMessenger.of(context).clearSnackBars();
+              Provider.of<KomentarData>(context, listen: false)
+                  .resetSelectedKomentar();
               Navigator.of(context).pop();
             },
           ),
@@ -37,7 +37,7 @@ class PostPage extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     Post post = Post.fromJson(
-                              snapshot.data!.docs[0].data() as Map<String, dynamic>);
+                        snapshot.data!.docs[0].data() as Map<String, dynamic>);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

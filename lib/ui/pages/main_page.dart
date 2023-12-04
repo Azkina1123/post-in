@@ -17,12 +17,6 @@ class _MainPageState extends State<MainPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    
-  }
-
-  @override
   Widget build(BuildContext context) {
     
     return Consumer<PageData>(builder: (context, pageProvider, child) {

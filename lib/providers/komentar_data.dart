@@ -89,6 +89,11 @@ class KomentarData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetSelectedKomentar() {
+        _selectedKomentar.clear();
+    notifyListeners();
+  }
+
   Future<List<Komentar>> getKomentars({String? postId, String? userId}) async {
     QuerySnapshot? querySnapshot =
         await _komentarsCollection.where("postId", isEqualTo: postId).get();

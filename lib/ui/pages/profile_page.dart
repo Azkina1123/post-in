@@ -12,7 +12,16 @@ class _ProfilePageState extends State<ProfilePage> {
   UserAcc? _user;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+    Provider.of<KomentarData>(context, listen: false).resetSelectedKomentar();
+    
     var lebar = MediaQuery.of(context).size.width;
     _user = ModalRoute.of(context)!.settings.arguments as UserAcc;
 

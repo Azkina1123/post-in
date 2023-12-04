@@ -14,13 +14,17 @@ class _KomentarWidgetState extends State<KomentarWidget> {
   UserAcc? _user;
   bool _selected = false;
   bool _successDelete = false;
+    SnackBar? sn;
 
   @override
   Widget build(BuildContext context) {
+    final komentarData = Provider.of<KomentarData>(context, listen: false);
+    _selected = komentarData.selectedKomentar.contains(widget.komentar.id);
+
     String authUserId = FirebaseAuth.instance.currentUser!.uid;
     bool isLiked = widget.komentar.likes.contains(authUserId);
 
-        bool onUserProfilePage = false;
+    bool onUserProfilePage = false;
     if (ModalRoute.of(context)!.settings.name == "/profile") {
       onUserProfilePage =
           (ModalRoute.of(context)!.settings.arguments as UserAcc).id ==
@@ -31,8 +35,6 @@ class _KomentarWidgetState extends State<KomentarWidget> {
       // jika menekan komentar, muncul snackbar ===========================================================
       onTap: widget.komentar.userId == authUserId
           ? () {
-              final komentarData =
-                  Provider.of<KomentarData>(context, listen: false);
               setState(() {
                 komentarData.toggleSelectKomentar(widget.komentar.id);
                 _selected =
@@ -97,13 +99,15 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                       child: Column(
                         children: [
                           AccountButton(
-                            onPressed: onUserProfilePage ? null : () {
-                              Navigator.pushNamed(
-                                context,
-                                "/profile",
-                                arguments: _user!,
-                              );
-                            },
+                            onPressed: onUserProfilePage
+                                ? null
+                                : () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/profile",
+                                      arguments: _user!,
+                                    );
+                                  },
                             image: NetworkImage(_user?.foto ?? ""),
                           ),
                         ],
@@ -126,7 +130,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                                 width: width(context) - 80 - 60 - 135,
                                 child: Text(
                                   _user!.username,
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -162,7 +167,6 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           onPressed: () async {
                             Provider.of<KomentarData>(context, listen: false)
                                 .toggleLike(widget.komentar.id);
-
                           },
                           icon: Icon(
                             isLiked
