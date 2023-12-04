@@ -44,10 +44,10 @@ class UserData extends ChangeNotifier {
     QuerySnapshot querySnapshot = await _usersCollection.get();
     List<UserAcc> users = [];
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       UserAcc user = UserAcc.fromJson(doc.data() as Map<String, dynamic>);
       users.add(user);
-    });
+    }
     return users;
   }
 
@@ -63,9 +63,9 @@ class UserData extends ChangeNotifier {
         await _usersCollection.where("followings", arrayContains: id).get();
     List<String> userIds = [];
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       userIds.add(doc.get("id"));
-    });
+    }
     return userIds;
   }
 
@@ -89,20 +89,20 @@ class UserData extends ChangeNotifier {
         await _usersCollection.where("followings", arrayContains: userId).get();
 
     // hapus semua follower akun user
-    usersDocs.docs.forEach((userDoc) {
+    for (var userDoc in usersDocs.docs) {
       List<String> followings = List<String>.from(userDoc.get("followings"));
       followings.remove(userId);
       _usersCollection.doc(userDoc.id).update({
         "followings": followings,
         "totalFollowing": followings.length,
       });
-    });
+    }
 
     List<String> komentarIds = [];
     // ambil semua komentar -------------
     QuerySnapshot komentarsSnapshot =
         await KomentarData()._komentarsCollection.get();
-    komentarsSnapshot.docs.forEach((komentarDoc) {
+    for (var komentarDoc in komentarsSnapshot.docs) {
       Komentar komentar =
           Komentar.fromJson(komentarDoc.data() as Map<String, dynamic>);
 
@@ -120,7 +120,7 @@ class UserData extends ChangeNotifier {
           "totalLike": komentar.likes.length
         });
       }
-    });
+    }
 
     // ambil semua post -----------------
     QuerySnapshot postsDocs = await PostData()._postsCollection.get();
@@ -141,9 +141,9 @@ class UserData extends ChangeNotifier {
             .where((komentar) => komentarIds.contains(komentar))
             .toList();
 
-        deleteKomentars.forEach((komentar) {
+        for (var komentar in deleteKomentars) {
           post.komentars.remove(komentar);
-        });
+        }
 
         PostData().postsCollection.doc(post.id).update({
           "likes": post.likes,
@@ -175,10 +175,10 @@ class UserData extends ChangeNotifier {
         await _usersCollection.where("id", whereIn: authUser!.followings).get();
     List<UserAcc> users = [];
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       UserAcc user = UserAcc.fromJson(doc.data() as Map<String, dynamic>);
       users.add(user);
-    });
+    }
     return users;
   }
 
@@ -190,10 +190,10 @@ class UserData extends ChangeNotifier {
         .get();
     List<UserAcc> users = [];
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       UserAcc user = UserAcc.fromJson(doc.data() as Map<String, dynamic>);
       users.add(user);
-    });
+    }
     return users;
   }
 
@@ -227,9 +227,9 @@ class UserData extends ChangeNotifier {
         .get();
 
     List<UserAcc> users = [];
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       users.add(UserAcc.fromJson(doc.data() as Map<String, dynamic>));
-    });
+    }
     List<UserAcc> searchusers = users
         .where((user) =>
             user.username.toLowerCase().contains(keyword.toLowerCase()))

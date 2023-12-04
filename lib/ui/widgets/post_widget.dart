@@ -141,58 +141,53 @@ class PostWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           // tombol like -------------------------------------------------------
-                          SizedBox(
-                            width: 70,
-                            child: TextButton.icon(
-                              onPressed: () {
-                                Provider.of<PostData>(context, listen: false)
-                                    .toggleLike(getPost!.id);
-                              },
-                              icon: Icon(
-                                isLiked
-                                    ? Icons.favorite_rounded
-                                    : Icons.favorite_outline,
+                          TextButton.icon(
+                            onPressed: () {
+                              Provider.of<PostData>(context, listen: false)
+                                  .toggleLike(getPost!.id);
+                            },
+                            icon: Icon(
+                              isLiked
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_outline,
+                              color: isLiked
+                                  ? colors["soft-pink"]
+                                  : Theme.of(context).colorScheme.primary,
+                            ),
+                            style: Theme.of(context).textButtonTheme.style,
+                            label: Text(
+                              (getPost != null ? getPost.totalLike : "").toString(),
+                              style: TextStyle(
                                 color: isLiked
                                     ? colors["soft-pink"]
                                     : Theme.of(context).colorScheme.primary,
-                              ),
-                              style: Theme.of(context).textButtonTheme.style,
-                              label: Text(
-                                (getPost != null ? getPost.totalLike : "").toString(),
-                                style: TextStyle(
-                                  color: isLiked
-                                      ? colors["soft-pink"]
-                                      : Theme.of(context).colorScheme.primary,
-                                ),
                               ),
                             ),
                           ),
 
                           // tombol komentar -------------------------------------------------------
-                          SizedBox(
-                              width: 70,
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  // jika berada di halaman home,
-                                  // jike tekan tombol komentar, maka akan dialihkan ke
-                                  // halaman post dan textfield komentar dalam mode focus,
-                                  if (ModalRoute.of(context)!.settings.name !=
-                                      "/post") {
-                                    Navigator.pushNamed(
-                                      context,
-                                      "/post",
-                                      arguments: getPost!.id,
-                                    );
-                                  }
+                          TextButton.icon(
+                            onPressed: () {
+                              // jika berada di halaman home,
+                              // jike tekan tombol komentar, maka akan dialihkan ke
+                              // halaman post dan textfield komentar dalam mode focus,
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  "/post") {
+                                Navigator.pushNamed(
+                                  context,
+                                  "/post",
+                                  arguments: getPost!.id,
+                                );
+                              }
 
-                                  // focus kan komentar
-                                  Provider.of<PageData>(context, listen: false)
-                                      .changeKomentarFocus(true);
-                                },
-                                icon: const Icon(Icons.mode_comment_outlined),
-                                style: Theme.of(context).textButtonTheme.style,
-                                label: Text(getPost != null ? getPost!.totalKomentar.toString() : ""),
-                              )),
+                              // focus kan komentar
+                              Provider.of<PageData>(context, listen: false)
+                                  .changeKomentarFocus(true);
+                            },
+                            icon: const Icon(Icons.mode_comment_outlined),
+                            style: Theme.of(context).textButtonTheme.style,
+                            label: Text(getPost != null ? getPost!.totalKomentar.toString() : ""),
+                          ),
                         ],
                       );
                     })

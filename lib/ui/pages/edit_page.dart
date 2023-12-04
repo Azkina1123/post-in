@@ -1,7 +1,7 @@
 part of "pages.dart";
 
 class EditPage extends StatefulWidget {
-  EditPage({super.key});
+  const EditPage({super.key});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -9,20 +9,19 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   UserAcc? user;
-  bool _loading = false;
-  bool _isUsernameAvailable = true;
+  final bool _loading = false;
   String? _selectedGender;
-  List<String> _genderOptions = ["Male", "Female"];
+  final List<String> _genderOptions = ["Male", "Female"];
 
   String? _profileImagePath;
   String? _coverImagePath;
   String? urlProfile;
   String? urlSampul;
 
-  TextEditingController _ctrlNama = TextEditingController();
-  TextEditingController _ctrlEmail = TextEditingController();
-  TextEditingController _ctrlUsername = TextEditingController();
-  TextEditingController _ctrlNomor = TextEditingController();
+  final TextEditingController _ctrlNama = TextEditingController();
+  final TextEditingController _ctrlEmail = TextEditingController();
+  final TextEditingController _ctrlUsername = TextEditingController();
+  final TextEditingController _ctrlNomor = TextEditingController();
 
   void _getFromGalleryCover() async {
     XFile? pickedFile = await ImagePicker().pickImage(
@@ -63,7 +62,7 @@ class _EditPageState extends State<EditPage> {
           onPressed: () {
             Navigator.popAndPushNamed(context, "/");
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
         title: Text(
           "Edit Profile",
@@ -131,7 +130,7 @@ class _EditPageState extends State<EditPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -139,7 +138,7 @@ class _EditPageState extends State<EditPage> {
                     TextFormField(
                       controller: _ctrlNama,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: user.namaLengkap ?? "",
                         labelText: "Nama Lengkap"
                       ),
@@ -152,12 +151,12 @@ class _EditPageState extends State<EditPage> {
                         });
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     TextFormField(
                       controller: _ctrlEmail,
                       enabled: false,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: user.email,
                         labelText: "Email"
                       ),
@@ -168,11 +167,11 @@ class _EditPageState extends State<EditPage> {
                         setState(() {});
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     TextFormField(
                       controller: _ctrlUsername,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: user.username,
                         labelText: "Username",
                       ),
@@ -185,7 +184,7 @@ class _EditPageState extends State<EditPage> {
                         });
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     DropdownButtonFormField<String>(
                       value: _selectedGender,
                       items: _genderOptions.map((String gender) {
@@ -201,12 +200,12 @@ class _EditPageState extends State<EditPage> {
                         });
                       },
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: user.gender,
                         labelText: "Gender",
                       ),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     TextFormField(
                       controller: _ctrlNomor,
                       keyboardType: TextInputType.phone,
@@ -215,7 +214,7 @@ class _EditPageState extends State<EditPage> {
                         LengthLimitingTextInputFormatter(13),
                       ],
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         hintText: user?.noTelp ?? "",
                         labelText: "Nomor Telepon"
                       ),
@@ -223,12 +222,12 @@ class _EditPageState extends State<EditPage> {
                         setState(() {});
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
                         _getFromGalleryCover();
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.upload),
@@ -237,12 +236,12 @@ class _EditPageState extends State<EditPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () async {
                         _getFromGalleryProfile();
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.upload),
@@ -251,7 +250,7 @@ class _EditPageState extends State<EditPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: isEmpty()
                           ? null
@@ -336,7 +335,7 @@ class _EditPageState extends State<EditPage> {
                                             Navigator.popAndPushNamed(
                                                 context, "/");
                                           },
-                                          child: Text("Oke"),
+                                          child: const Text("Oke"),
                                         ),
                                       ],
                                     );
@@ -353,7 +352,7 @@ class _EditPageState extends State<EditPage> {
                                 strokeWidth: 2,
                               ),
                             )
-                          : Text("Simpan Perubahan"),
+                          : const Text("Simpan Perubahan"),
                     ),
                   ],
                 ),
@@ -386,7 +385,7 @@ class _EditPageState extends State<EditPage> {
 
       if (query.docs.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content:
                 Text("Username Tidak Diterima, Perubahan Username Dibatalkan"),
           ),
@@ -394,7 +393,7 @@ class _EditPageState extends State<EditPage> {
         return true;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Username Tersedia dan Berhasil Diubah"),
           ),
         );

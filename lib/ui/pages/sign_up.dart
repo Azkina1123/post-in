@@ -81,7 +81,7 @@ class _SignUpState extends State<SignUp> {
 
     if (query.docs.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Username Sudah Ada, Harap Memilih Username Lain"),
         ),
       );
@@ -176,7 +176,7 @@ class _SignUpState extends State<SignUp> {
           icon: Icon(icon),
           label: Text(label),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -197,7 +197,7 @@ class _SignUpState extends State<SignUp> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
           height: MediaQuery.of(context).size.height - 50,
           width: double.infinity,
           child: Column(
@@ -205,14 +205,14 @@ class _SignUpState extends State<SignUp> {
             children: [
               Column(
                 children: [
-                  Text(
+                  const Text(
                     "Daftar",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Text(
@@ -237,14 +237,14 @@ class _SignUpState extends State<SignUp> {
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(40),
                           ],
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nama Lengkap',
                           labelText: "Nama Lengkap",
                           ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: TextFormField(
                           controller: _ctrlUsername,
@@ -265,7 +265,7 @@ class _SignUpState extends State<SignUp> {
                               _ctrlUsername.text = value.toLowerCase();
                             });
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Username',
                           labelText: "Username",
@@ -274,7 +274,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -284,14 +284,14 @@ class _SignUpState extends State<SignUp> {
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(30),
                           ],
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Email',
                           labelText: "Email",
                           ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           value: _selectedGender,
@@ -306,7 +306,7 @@ class _SignUpState extends State<SignUp> {
                               _selectedGender = value;
                             });
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Gender',
                           labelText: "Gender",
@@ -315,7 +315,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -332,14 +332,14 @@ class _SignUpState extends State<SignUp> {
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(13),
                           ],
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nomor Telepon',
                           labelText: "Nomor Telepon",
                           ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Expanded(
                         child: TextFormField(
                           controller: _ctrlPass,
@@ -354,7 +354,7 @@ class _SignUpState extends State<SignUp> {
                             LengthLimitingTextInputFormatter(25),
                           ],
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             hintText: 'Password',
                           labelText: "Password",
                             suffixIcon: IconButton(
@@ -372,8 +372,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
-                  _profileImagePath != null ? Image.file(File(_profileImagePath!), width: 100, height: 100, fit: BoxFit.cover, ) :  SizedBox(
+                  const SizedBox(height: 30),
+                  _profileImagePath != null ? Image.file(File(_profileImagePath!), width: 100, height: 100, fit: BoxFit.cover, ) :  const SizedBox(
                           height: 0,
                         ),
                   Row(
@@ -383,11 +383,11 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () async {
                           _getFromGalleryProfile();
                         },
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.upload),
-                            const SizedBox(
+                            SizedBox(
                               width: 8,
                             ),
                             Text("Upload foto Profil"),
@@ -404,7 +404,7 @@ class _SignUpState extends State<SignUp> {
                           height: 100,
                           fit: BoxFit.cover,
                         )
-                      : SizedBox(height: 0,),
+                      : const SizedBox(height: 0,),
 
                   Row(
                     children: [
@@ -413,11 +413,11 @@ class _SignUpState extends State<SignUp> {
                         onPressed: () async {
                           _getFromGalleryCover();
                         },
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.upload),
-                            const SizedBox(
+                            SizedBox(
                               width: 8,
                             ),
                             Text("Upload foto Sampul"),
@@ -429,9 +429,9 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Container(
-                  padding: EdgeInsets.only(top: 3, left: 3),
+                  padding: const EdgeInsets.only(top: 3, left: 3),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
                   ),
@@ -446,7 +446,7 @@ class _SignUpState extends State<SignUp> {
                               strokeWidth: 2,
                             ),
                           )
-                        : Text("Daftar"),
+                        : const Text("Daftar"),
                   ),
                 ),
               ),

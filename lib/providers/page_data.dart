@@ -20,6 +20,10 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void pageRefresh() {
+    notifyListeners();
+  }
+
   // focus tambah komentar ketika buka post page
   bool _komentarFocused = false;
   bool get komentarFocused => _komentarFocused;

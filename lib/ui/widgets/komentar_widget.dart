@@ -186,6 +186,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                               ? widget.komentar.likes.length.toString()
                               : "",
                           style: const TextStyle(fontSize: 12),
+                          overflow: TextOverflow.visible,
                         )
                       ],
                     ),

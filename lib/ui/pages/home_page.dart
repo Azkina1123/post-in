@@ -1,15 +1,9 @@
 part of "pages.dart";
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   List<String> _followedUserIds = [];
-  
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               labelPadding: EdgeInsets.only(left: 10, right: 10),
               dividerColor: Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
               onTap: (i) {
-                Provider.of<PageData>(context, listen:false).changeHomeTab(i);
+                Provider.of<PageData>(context, listen: false).changeHomeTab(i);
               },
             ),
           ),
@@ -97,17 +91,15 @@ class _HomePageState extends State<HomePage> {
           // konten halaman ===============================================================
           body: RefreshIndicator(
             onRefresh: () async {
-              setState(() {
-                
-              });
+              Provider.of<PageData>(context, listen: false).pageRefresh();
             },
             child: ListView(
               children: [
                 // tab bar ---------------------------------------------------------------------
-          
+
                 // input postingan baru ------------------------------------------------------
                 InputPost(),
-          
+
                 // daftar postingan ----------------------------------------------------------
                 FutureBuilder<QuerySnapshot>(
                     future: _getSnapshot(context),
@@ -121,8 +113,10 @@ class _HomePageState extends State<HomePage> {
                         );
                       } else if (snapshot.hasData) {
                         final posts = snapshot.data!.docs;
-          
-                        return (Provider.of<PageData>(context).homeTabIndex == 2 && posts.isEmpty)
+
+                        return (Provider.of<PageData>(context).homeTabIndex ==
+                                    2 &&
+                                posts.isEmpty)
                             ? Container(
                                 height: height(context) / 2,
                                 alignment: Alignment.center,
@@ -138,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                                           post: Post.fromJson(posts[i].data()
                                               as Map<String, dynamic>),
                                         ),
-          
+
                                         // kasih pembatas antar post --------------------------------------
                                         if (i != posts.length - 1)
                                           Divider(

@@ -32,7 +32,7 @@ class _CariPageState extends State<CariPage> {
               });
             },
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               hintText: 'Cari',
               hintStyle: Theme.of(context).inputDecorationTheme.hintStyle!,
             ),
@@ -79,62 +79,6 @@ class _CariPageState extends State<CariPage> {
   }
 
   Widget showPostingan() {
-    // return Expanded(
-    //   child: StreamBuilder(
-    //     stream: Provider.of<PostData>(context, listen: false)
-    //         .postsCollection
-    //         .where("konten", isGreaterThanOrEqualTo: _ctrlCari.text)
-    //         .snapshots(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return Container(
-    //           width: width(context),
-    //           alignment: Alignment.center,
-    //           child: const CircularProgressIndicator(),
-    //         );
-    //       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    //         return Padding(
-    //           padding: const EdgeInsets.all(20.0),
-    //           child: Text("Postingan Tidak Ditemukan."),
-    //         );
-    //       } else if (snapshot.hasData) {
-    //         final posts = snapshot.data!.docs;
-    //         return ListView(
-    //           children: [
-    //             for (int i = 0; i < posts.length; i++)
-    //               Column(
-    //                 children: [
-    //                   PostWidget(
-    //                     post: Post.fromJson(
-    //                         posts[i].data() as Map<String, dynamic>),
-    //                   ),
-
-    //                   // kasih pembatas antar post --------------------------------------
-    //                   if (i != posts.length - 1)
-    //                     Divider(
-    //                       color: Theme.of(context)
-    //                           .colorScheme
-    //                           .tertiary
-    //                           .withOpacity(0.5),
-    //                       indent: 10,
-    //                       endIndent: 10,
-    //                     )
-    //                   // di post terakhir tidak perlu pembatas -------------------------
-    //                   else
-    //                     const SizedBox(
-    //                       height: 20,
-    //                     )
-    //                 ],
-    //               )
-    //           ],
-    //         );
-    //       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    //         return Text("Postingan Tidak Ditemukan.");
-    //       }
-    //       return Text("Loading...");
-    //     },
-    //   ),
-    // );
     return Expanded(
       child: StreamBuilder(
         stream: Stream.fromFuture(Provider.of<PostData>(context, listen: false)
@@ -148,8 +92,8 @@ class _CariPageState extends State<CariPage> {
             );
           } else if (snapshot.hasData) {
             final posts = snapshot.data!;
-            return posts.isEmpty ? Padding(
-              padding: const EdgeInsets.all(20.0),
+            return posts.isEmpty ? const Padding(
+              padding: EdgeInsets.all(20.0),
               child: Text("Post tidak ditemukan."),
             ): ListView(
               children: [
@@ -175,7 +119,7 @@ class _CariPageState extends State<CariPage> {
               ],
             );
           } 
-          return Text("Loading...");
+          return const Text("Loading...");
         },
       ),
     );
@@ -195,8 +139,8 @@ class _CariPageState extends State<CariPage> {
             );
           }  else if (snapshot.hasData) {
             final users = snapshot.data!;
-            return users.isEmpty ? Padding(
-              padding: const EdgeInsets.all(20.0),
+            return users.isEmpty ? const Padding(
+              padding: EdgeInsets.all(20.0),
               child: Text("Akun tidak ditemukan."),
             ) :ListView(
               children: [
@@ -227,7 +171,7 @@ class _CariPageState extends State<CariPage> {
               ],
             );
           }
-          return Text("Loading...");
+          return const Text("Loading...");
         },
       ),
     );

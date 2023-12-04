@@ -94,7 +94,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(top: 35),
                         child: Icon(
@@ -125,7 +125,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 height: 20,
                 thickness: 1,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   Row(
@@ -152,7 +152,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
                           Provider.of<ThemeModeData>(context, listen: false)
@@ -171,7 +171,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -196,7 +196,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
                           Provider.of<ThemeModeData>(context, listen: false)
@@ -215,7 +215,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -240,7 +240,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
                           Provider.of<ThemeModeData>(context, listen: false)
@@ -261,7 +261,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "AKUN",
                 style: TextStyle(
@@ -274,7 +274,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 height: 20,
                 thickness: 1,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Column(
                 children: [
                   Row(
@@ -296,7 +296,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
                           String id = FirebaseAuth.instance.currentUser!.uid;
@@ -315,7 +315,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -339,7 +339,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () {
                           FirebaseAuth.instance.signOut();
@@ -361,7 +361,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Container(
@@ -381,7 +381,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       TextButton(
                         onPressed: () async {
                           String id = FirebaseAuth.instance.currentUser!.uid;
@@ -459,7 +459,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                       TextFormField(
                         controller: _ctrlOldPass,
                         obscureText: _isObscure,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Password Lama",
                           labelText: "Password Lama",
@@ -479,11 +479,11 @@ class _PengaturanPageState extends State<PengaturanPage> {
 
                         // },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         controller: _ctrlNewPass,
                         obscureText: _isObscure,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: "Password Baru",
                           labelText: "Password Baru",
@@ -504,7 +504,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                   ),
                 );
               } else {
-                return Text("Loading . . .");
+                return const Text("Loading . . .");
               }
             },
           ),
@@ -530,7 +530,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
 
                 if (enteredPassword != user.password) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text("Konfirmasi Password Gagal !"),
                     ),
                   );
@@ -543,7 +543,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                 });
                 await ubahPassAuth(users, id);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text("Ubah Password Berhasil !"),
                   ),
                 );
@@ -564,9 +564,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
   }
 
   Future<void> hapusDataAkun(BuildContext context, String id) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference users = firestore.collection("users");
-    CollectionReference posts = firestore.collection("posts");
 
     return showDialog(
       context: context,

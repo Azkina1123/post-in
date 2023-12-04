@@ -33,7 +33,7 @@ class _InputKomentarState extends State<InputKomentar> {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: FutureBuilder<UserAcc>(
           future: Provider.of<UserData>(context, listen: false)
               .getUser(FirebaseAuth.instance.currentUser!.uid),
@@ -73,7 +73,7 @@ class _InputKomentarState extends State<InputKomentar> {
                           : null,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   if (_kontenCon.text.isNotEmpty)
