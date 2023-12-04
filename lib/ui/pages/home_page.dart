@@ -97,8 +97,8 @@ class HomePage extends StatelessWidget {
               InputPost(tabIndex: Provider.of<PageData>(context).homeTabIndex),
 
               // daftar postingan ----------------------------------------------------------
-              StreamBuilder<QuerySnapshot>(
-                  stream: _getSnapshot(context),
+              FutureBuilder<QuerySnapshot>(
+                  future: _getSnapshot(context),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -156,20 +156,20 @@ class HomePage extends StatelessWidget {
     });
   }
 
-  Stream<QuerySnapshot<Object?>> _getSnapshot(BuildContext context) {
+  Future<QuerySnapshot<Object?>> _getSnapshot(BuildContext context) {
     switch (Provider.of<PageData>(context).homeTabIndex) {
       case 0:
         return Provider.of<PostData>(context)
             .postsCollection
             .orderBy("tglDibuat", descending: true)
-            .snapshots();
+            .get();
       case 1:
         return Provider.of<PostData>(context)
             .postsCollection
             .orderBy("totalLike", descending: true)
             .orderBy("totalKomentar", descending: true)
             .orderBy("tglDibuat", descending: true)
-            .snapshots();
+            .get();
 
       default:
         return Provider.of<PostData>(context)
@@ -178,7 +178,7 @@ class HomePage extends StatelessWidget {
                 whereIn: _followedUserIds.isNotEmpty
                     ? _followedUserIds.toList()
                     : [-1])
-            .snapshots();
+            .get();
     }
   }
 

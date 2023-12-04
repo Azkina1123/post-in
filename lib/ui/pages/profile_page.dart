@@ -9,262 +9,232 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _index = 0;
+  UserAcc? _user;
 
   @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
-    UserAcc user = ModalRoute.of(context)!.settings.arguments
-        as UserAcc; // profile user yg sedang dilihat
+    _user = ModalRoute.of(context)!.settings.arguments as UserAcc;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(user.id == FirebaseAuth.instance.currentUser!.uid
+          title: Text(_user!.id == FirebaseAuth.instance.currentUser!.uid
               ? "My Profile"
               : "Profile"),
         ),
-        body: ListView(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: lebar,
-                  height: 110,
-                  child: ClipRRect(
-                    child: Image.network(
-                      user.sampul!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 50,
-                  left: 10,
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.background,
-                        width: 3,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(user.foto!,
-                          width: 100, height: 100, fit: BoxFit.cover),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(left: 20, top: 45, right: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.username,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize:
-                                  Theme.of(context).textTheme.titleLarge!.fontSize,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "(${user.namaLengkap})",
-                            style: TextStyle(
-                              color: colors["old-lavender"],
-                              fontSize:
-                                  Theme.of(context).textTheme.titleSmall!.fontSize,
-                            ),
-                          ),
-                        ],
-                      ),
-                      user.id != FirebaseAuth.instance.currentUser!.uid
-                          ? IkutiBtn(userId: user.id)
-                          : const Text(""),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                TextButton(
-                  style: Theme.of(context).textButtonTheme.style,
-                  onPressed: () {
-                    Provider.of<PageData>(context, listen: false)
-                        .changeFollowTab(0);
-                    Navigator.pushNamed(
-                      context,
-                      '/follow',
-                      arguments: user.id,
-                    );
-                  },
-                  child: FutureBuilder<int>(
-                    future: Provider.of<UserData>(context, listen: false)
-                        .getFollowingsCount(user.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        int followingsCount = snapshot.data ?? 0;
-                        return Text("$followingsCount Followings");
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                TextButton(
-                  style: Theme.of(context).textButtonTheme.style,
-                  onPressed: () {
-                    Provider.of<PageData>(context, listen: false)
-                        .changeFollowTab(1);
-                    Navigator.pushNamed(
-                      context,
-                      '/follow',
-                      arguments: user.id,
-                    );
-                  },
-                  child: FutureBuilder<int>(
-                    future: Provider.of<UserData>(context, listen: false)
-                        .getFollowersCount(user.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        int followersCount = snapshot.data ?? 0;
-                        return Text("$followersCount Followers");
-                      }
-                    },
-                  ),
-                ),
-              ]),
-            ),
-            DefaultTabController(
-              length: 2,
-              child: Column(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              
+            });
+          },
+          child: ListView(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  TabBar(
-                    tabs: const [Tab(text: "Postingan"), Tab(text: "Komentar")],
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize:
-                          Theme.of(context).textTheme.titleMedium!.fontSize,
-                      fontWeight: FontWeight.bold,
+                  InkWell(
+                    onTap: () => showImgDialog(context, _user!.sampul!),
+                    child: Container(
+                      width: lebar,
+                      height: 110,
+                      child: ClipRRect(
+                        child: Image.network(
+                          _user!.sampul!,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                    labelPadding: EdgeInsets.only(left: 10, right: 10),
-                    dividerColor:
-                        Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
-                    onTap: (i) {
-                      setState(() {
-                        _index = i;
-                      });
-                    },
                   ),
-                  if (_index == 0)
-                    StreamBuilder<QuerySnapshot>(
-                      stream: Provider.of<PostData>(context)
-                          .postsCollection
-                          .where("userId", isEqualTo: user.id)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                            width: width(context),
-                            alignment: Alignment.center,
-                            child: const CircularProgressIndicator(),
+                  Positioned(
+                    top: 50,
+                    left: 10,
+                    child: InkWell(
+                      onTap: () => showImgDialog(context, _user!.foto!),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.background,
+                            width: 3,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(_user!.foto!,
+                              width: 100, height: 100, fit: BoxFit.cover),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 20, top: 45, right: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _user!.username,
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  fontSize: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .fontSize,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "(${_user!.namaLengkap})",
+                              style: TextStyle(
+                                color: colors["old-lavender"],
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .fontSize,
+                              ),
+                            ),
+                          ],
+                        ),
+                        _user!.id != FirebaseAuth.instance.currentUser!.uid
+                            ? IkutiBtn(userId: _user!.id)
+                            : const Text(""),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 5),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                        style: Theme.of(context).textButtonTheme.style,
+                        onPressed: () {
+                          Provider.of<PageData>(context, listen: false)
+                              .changeFollowTab(0);
+                          Navigator.pushNamed(
+                            context,
+                            '/follow',
+                            arguments: _user!.id,
                           );
-                        } else if (snapshot.hasData) {
-                          final posts = snapshot.data!.docs;
-
-                          return posts.isEmpty ? Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text("Belum ada post yang ditambahkan.")): Column(
-                            children: [
-                              for (int i = 0; i < posts.length; i++)
-                                Column(
-                                  children: [
-                                    PostWidget(
-                                      post: Post.fromJson(posts[i].data()
-                                          as Map<String, dynamic>),
-                                    ),
-                                    // Kasih pembatas antar post --------------------------------------
-                                    if (i != posts.length - 1)
-                                      Divider(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary
-                                            .withOpacity(0.5),
-                                        indent: 10,
-                                        endIndent: 10,
-                                      )
-                                    // Di post terakhir tidak perlu pembatas -------------------------
-                                    else
-                                      const SizedBox(
-                                        height: 20,
-                                      )
-                                  ],
-                                )
-                            ],
+                        },
+                        child: FutureBuilder<int>(
+                          future: Provider.of<UserData>(context, listen: false)
+                              .getFollowingsCount(_user!.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            } else {
+                              int followingsCount = snapshot.data ?? 0;
+                              return Text("$followingsCount Diikuti");
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      TextButton(
+                        style: Theme.of(context).textButtonTheme.style,
+                        onPressed: () {
+                          Provider.of<PageData>(context, listen: false)
+                              .changeFollowTab(1);
+                          Navigator.pushNamed(
+                            context,
+                            '/follow',
+                            arguments: _user!.id,
                           );
-                        }
-                        return const Text("Anda belum menambahkan post.");
+                        },
+                        child: FutureBuilder<int>(
+                          future: Provider.of<UserData>(context, listen: false)
+                              .getFollowersCount(_user!.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            } else {
+                              int followersCount = snapshot.data ?? 0;
+                              return Text("$followersCount Pengikut");
+                            }
+                          },
+                        ),
+                      ),
+                    ]),
+              ),
+              DefaultTabController(
+                length: 2,
+                child: Column(
+                  children: [
+                    TabBar(
+                      tabs: const [
+                        Tab(text: "Postingan"),
+                        Tab(text: "Komentar")
+                      ],
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize:
+                            Theme.of(context).textTheme.titleMedium!.fontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      labelPadding: EdgeInsets.only(left: 10, right: 10),
+                      dividerColor: Theme.of(context)
+                          .colorScheme
+                          .tertiary
+                          .withOpacity(0.5),
+                      onTap: (i) {
+                        setState(() {
+                          _index = i;
+                        });
                       },
-                    )
-                  else
-                    StreamBuilder<QuerySnapshot>(
-                        stream: Provider.of<KomentarData>(context)
-                            .komentarsCollection
-                            .where("userId", isEqualTo: user.id)
-                            .orderBy("tglDibuat", descending: true)
-                            .orderBy("totalLike", descending: true)
+                    ),
+                    if (_index == 0)
+                      StreamBuilder<QuerySnapshot>(
+                        stream: Provider.of<PostData>(context)
+                            .postsCollection
+                            .where("userId", isEqualTo: _user!.id)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Container(
-                              width: width(context),
-                              alignment: Alignment.center,
-                              child: const CircularProgressIndicator(),
-                            );
+                            width: width(context),
+                            padding: EdgeInsets.all(20),
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(),
+                          );
                           } else if (snapshot.hasData) {
-                            final komentars = snapshot.data!.docs;
-                            int komentarCount = komentars.length;
-                            return komentarCount == 0
+                            final posts = snapshot.data!.docs;
+
+                            return posts.isEmpty
                                 ? Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text("Belum ada komentar yang ditambahkan."))
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(
+                                        "Belum ada post yang ditambahkan."))
                                 : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      for (int i = 0; i < komentarCount; i++)
+                                      for (int i = 0; i < posts.length; i++)
                                         Column(
                                           children: [
-                                            KomentarWidget(
-                                              komentar: Komentar.fromJson(
-                                                  komentars[i].data()
+                                            PostWidget(
+                                              post: Post.fromJson(
+                                                  posts[i].data()
                                                       as Map<String, dynamic>),
                                             ),
-                                            if (i != komentarCount - 1)
+                                            // Kasih pembatas antar post --------------------------------------
+                                            if (i != posts.length - 1)
                                               Divider(
                                                 color: Theme.of(context)
                                                     .colorScheme
@@ -273,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 indent: 10,
                                                 endIndent: 10,
                                               )
-                                            // di post terakhir tidak perlu pembatas -------------------------
+                                            // Di post terakhir tidak perlu pembatas -------------------------
                                             else
                                               const SizedBox(
                                                 height: 20,
@@ -283,16 +253,100 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ],
                                   );
                           }
-
-                          return const Text(
-                            "Tidak dapat tersambung.",
-                            textAlign: TextAlign.center,
+                          return Container(
+                            width: width(context),
+                            padding: EdgeInsets.all(20),
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(),
                           );
-                        }),
-                ],
+                        },
+                      )
+                    else
+                      StreamBuilder<QuerySnapshot>(
+                          stream: Provider.of<KomentarData>(context)
+                              .komentarsCollection
+                              .where("userId", isEqualTo: _user!.id)
+                              .orderBy("tglDibuat", descending: true)
+                              .orderBy("totalLike", descending: true)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                width: width(context),
+                                alignment: Alignment.center,
+                                child: const CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.hasData) {
+                              final komentars = snapshot.data!.docs;
+                              int komentarCount = komentars.length;
+                              return komentarCount == 0
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Text(
+                                          "Belum ada komentar yang ditambahkan."))
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        for (int i = 0; i < komentarCount; i++)
+                                          Column(
+                                            children: [
+                                              KomentarWidget(
+                                                komentar: Komentar.fromJson(
+                                                    komentars[i].data() as Map<
+                                                        String, dynamic>),
+                                              ),
+                                              if (i != komentarCount - 1)
+                                                Divider(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .tertiary
+                                                      .withOpacity(0.5),
+                                                  indent: 10,
+                                                  endIndent: 10,
+                                                )
+                                              // di post terakhir tidak perlu pembatas -------------------------
+                                              else
+                                                const SizedBox(
+                                                  height: 20,
+                                                )
+                                            ],
+                                          )
+                                      ],
+                                    );
+                            }
+
+                            return Container(
+                            width: width(context),
+                            padding: EdgeInsets.all(20),
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(),
+                          );
+                          }),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
+  }
+
+  Future<dynamic> showImgDialog(BuildContext context, String img) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Image.network(img),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Tutup"),
+              ),
+            ],
+          );
+        });
   }
 }

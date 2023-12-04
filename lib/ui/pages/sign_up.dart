@@ -158,6 +158,8 @@ class _SignUpState extends State<SignUp> {
     setState(() => _loading = true);
     await AuthData().regis(nama, email, username, password, gender, nomor,
         _profileImagePath, _coverImagePath);
+    _showSnackBar('Proses registrasi berhasil!');
+    Navigator.popAndPushNamed(context, "/sign-in");
 
     setState(() => _loading = false);
   }

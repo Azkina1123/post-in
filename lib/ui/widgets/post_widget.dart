@@ -42,8 +42,11 @@ class PostWidget extends StatelessWidget {
                 onPressed: null,
                 image: NetworkImage(user?.foto ?? ""),
               ),
-              title: Text(user?.username ?? "",
-                  style: Theme.of(context).textTheme.titleMedium),
+              title: Text(
+                user?.username ?? "",
+                style: Theme.of(context).textTheme.titleMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
               subtitle: Text(
                 DateFormat('dd MMM yyyy HH.mm').format(post.tglDibuat),
                 style: TextStyle(
@@ -71,11 +74,11 @@ class PostWidget extends StatelessWidget {
           }),
         ),
         InkWell(
-          onTap: ModalRoute.of(context)!.settings.name == "/"
-              ? () {
+          onTap: ModalRoute.of(context)!.settings.name == "/post"
+              ? null
+              : () {
                   Navigator.pushNamed(context, "/post", arguments: post.id);
-                }
-              : null,
+                },
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
@@ -83,10 +86,11 @@ class PostWidget extends StatelessWidget {
               children: [
                 post.img != null
                     ? InkWell(
-                        onTap: ModalRoute.of(context)!.settings.name == "/" ||
-                                post.img == null
-                            ? null
-                            : () => showImgDialog(context),
+                        onTap:
+                            ModalRoute.of(context)!.settings.name == "/post" &&
+                                    post.img != null
+                                ? () => showImgDialog(context)
+                                : null,
                         child: Container(
                           width: width(context),
                           height: 200,
@@ -117,43 +121,80 @@ class PostWidget extends StatelessWidget {
                 ),
 
                 // like dan komentar ----------------------------------------------------------
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // tombol like -------------------------------------------------------
-                    SizedBox(
-                        width: 70,
-                        child: LikeBtn(
-                          postId: post.id,
-                        )),
+                StreamBuilder<QuerySnapshot>(
+                    stream: Provider.of<PostData>(context, listen: false)
+                        .postsCollection
+                        .where("id", isEqualTo: post.id)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      Post? getPost = !snapshot.hasData
+                          ? null
+                          : Post.fromJson(snapshot.data!.docs[0].data()
+                              as Map<String, dynamic>);
+                      bool isLiked = getPost == null
+                          ? false
+                          : getPost.likes
+                              .contains(FirebaseAuth.instance.currentUser!.uid);
 
-                    // tombol komentar -------------------------------------------------------
-                    SizedBox(
-                        width: 70,
-                        child: TextButton.icon(
-                          onPressed: () {
-                            // jika berada di halaman home,
-                            // jike tekan tombol komentar, maka akan dialihkan ke
-                            // halaman post dan textfield komentar dalam mode focus,
-                            if (ModalRoute.of(context)!.settings.name !=
-                                "/post") {
-                              Navigator.pushNamed(
-                                context,
-                                "/post",
-                                arguments: post.id,
-                              );
-                            }
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // tombol like -------------------------------------------------------
+                          SizedBox(
+                            width: 70,
+                            child: TextButton.icon(
+                              onPressed: () {
+                                Provider.of<PostData>(context, listen: false)
+                                    .toggleLike(getPost!.id);
+                              },
+                              icon: Icon(
+                                isLiked
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_outline,
+                                color: isLiked
+                                    ? colors["soft-pink"]
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                              style: Theme.of(context).textButtonTheme.style,
+                              label: Text(
+                                (getPost != null ? getPost.totalLike : "").toString(),
+                                style: TextStyle(
+                                  color: isLiked
+                                      ? colors["soft-pink"]
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
 
-                            // focus kan komentar
-                            Provider.of<PageData>(context, listen: false)
-                                .changeKomentarFocus(true);
-                          },
-                          icon: const Icon(Icons.mode_comment_outlined),
-                          style: Theme.of(context).textButtonTheme.style,
-                          label: Text(post.komentars.length.toString()),
-                        )),
-                  ],
-                )
+                          // tombol komentar -------------------------------------------------------
+                          SizedBox(
+                              width: 70,
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  // jika berada di halaman home,
+                                  // jike tekan tombol komentar, maka akan dialihkan ke
+                                  // halaman post dan textfield komentar dalam mode focus,
+                                  if (ModalRoute.of(context)!.settings.name !=
+                                      "/post") {
+                                    Navigator.pushNamed(
+                                      context,
+                                      "/post",
+                                      arguments: getPost!.id,
+                                    );
+                                  }
+
+                                  // focus kan komentar
+                                  Provider.of<PageData>(context, listen: false)
+                                      .changeKomentarFocus(true);
+                                },
+                                icon: const Icon(Icons.mode_comment_outlined),
+                                style: Theme.of(context).textButtonTheme.style,
+                                label: Text(getPost != null ? getPost!.totalKomentar.toString() : ""),
+                              )),
+                        ],
+                      );
+                    })
               ],
             ),
           ),

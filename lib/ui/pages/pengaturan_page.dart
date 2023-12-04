@@ -135,7 +135,11 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Theme.of(context).colorScheme.outline),
+                            color: Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.system
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,),
                         child: IconButton(
                           icon: Icon(Icons.phone_android_rounded,
                               color: Theme.of(context).colorScheme.onPrimary,
@@ -173,7 +177,12 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.outline,
+                          color:
+                              Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.light
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
                           icon: Icon(Icons.sunny,
@@ -212,7 +221,11 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         height: 50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.outline,
+                          color: Provider.of<ThemeModeData>(context, listen: false)
+                                          .themeMode ==
+                                      ThemeMode.dark
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
                           icon: Icon(Icons.nightlight_round,
