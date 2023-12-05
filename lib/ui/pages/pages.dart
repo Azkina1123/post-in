@@ -23,18 +23,6 @@ part 'introduction_page.dart';
 part 'landing_page.dart';
 part 'sign_in.dart';
 part 'sign_up.dart';
-part 'debugPage.dart';
 part 'follow_page.dart';
 part 'edit_page.dart';
 
-
-
-// KomentarWidget(
-//                                 komentar: Komentar(
-//                                   id: e.get("id"), 
-//                                   tglDibuat: e.get("tglDibuat"), 
-//                                   konten: e.get("konten"), 
-//                                   postId: e.get("postId"), 
-//                                   userId: e.get("userId"),
-//                                   ),
-//                               ),

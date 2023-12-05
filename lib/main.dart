@@ -339,9 +339,6 @@ class MyApp extends StatelessWidget {
             "/follow": (ctx) => const FollowPage(),
             "/edit": (ctx) => EditPage(),
             "/pengaturan": (ctx) => const PengaturanPage(),
-
-            // !!!!!!!! NANTI HAPUSS !!!!!!!!,
-            "/debug": (ctx) => const DebugPage(),
           },
           initialRoute:
               FirebaseAuth.instance.currentUser != null ? "/" : "/intro",
