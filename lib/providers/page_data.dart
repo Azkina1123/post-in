@@ -24,6 +24,11 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
+  String keywordCari = "";
+  void cari(String keyword) {
+    keywordCari = keyword;
+  }
+
   // focus tambah komentar ketika buka post page
   bool _komentarFocused = false;
   bool get komentarFocused => _komentarFocused;

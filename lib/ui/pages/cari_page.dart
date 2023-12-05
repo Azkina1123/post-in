@@ -22,6 +22,10 @@ class _CariPageState extends State<CariPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_ctrlCari.text.isEmpty) {
+    _ctrlCari.text = Provider.of<PageData>(context, listen: false).keywordCari;
+
+    }
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -34,6 +38,7 @@ class _CariPageState extends State<CariPage> {
               setState(() {
                 _ctrlCari.text = value;
                 _search = true;
+                Provider.of<PageData>(context, listen: false).cari(value);
                 //getPostingan();
               });
             },

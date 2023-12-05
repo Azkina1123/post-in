@@ -337,7 +337,7 @@ class MyApp extends StatelessWidget {
             "/post": (ctx) => const PostPage(),
             "/profile": (ctx) => const ProfilePage(),
             "/follow": (ctx) => const FollowPage(),
-            "/edit": (ctx) => EditPage(),
+            "/edit": (ctx) => const EditPage(),
             "/pengaturan": (ctx) => const PengaturanPage(),
           },
           initialRoute:
