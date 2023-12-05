@@ -84,8 +84,10 @@ class _KomentarWidgetState extends State<KomentarWidget> {
             future: Provider.of<UserData>(context, listen: false)
                 .getUser(widget.komentar.userId),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                _user = snapshot.data!;
+              // if (snapshot.hasData) {
+
+              // }
+                _user = snapshot.data;
 
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,12 +128,13 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                           Row(
                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                width: _user!.username.length > 14
+
+                              SizedBox(
+                                width: (_user?.username.length ?? 0) > 14
                                     ? width(context) - 80 - 60 - 135
                                     : null,
                                 child: Text(
-                                  _user!.username,
+                                  _user?.username ?? "",
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                   overflow: TextOverflow.ellipsis,
@@ -197,7 +200,8 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                               padding: EdgeInsets.zero,
                             ),
                             Text(
-                              getKomentar!.likes.isNotEmpty
+                              getKomentar != null &&
+                              getKomentar.likes.isNotEmpty
                                   ? getKomentar.likes.length.toString()
                                   : "",
                               style: const TextStyle(fontSize: 12),
@@ -207,15 +211,11 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                         );
                       }
                     ),
+                  
                   ],
                 );
-              }
-
-              return Container(
-                width: width(context),
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              );
+              
+              // return Text("");
             }),
       ),
     );

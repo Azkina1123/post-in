@@ -20,7 +20,7 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void pageRefresh() {
+  void refreshPage() {
     notifyListeners();
   }
 

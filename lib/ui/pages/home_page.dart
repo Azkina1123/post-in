@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
           // konten halaman ===============================================================
           body: RefreshIndicator(
             onRefresh: () async {
-              Provider.of<PageData>(context, listen: false).pageRefresh();
+              Provider.of<PageData>(context, listen: false).refreshPage();
             },
             child: ListView(
               children: [

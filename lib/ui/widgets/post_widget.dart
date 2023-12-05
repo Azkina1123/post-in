@@ -207,13 +207,13 @@ class PostWidget extends StatelessWidget {
             title: const Text("Pemberitahuan!"),
             content: const Text("Apakah Anda yakin ingin menghapus post ini?"),
             actions: [
-              OutlinedButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: const Text("Batalkan"),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
                   Navigator.popAndPushNamed(context, "/");

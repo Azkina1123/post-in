@@ -52,6 +52,7 @@ class KomentarData extends ChangeNotifier {
       "komentars": komentars,
       "totalKomentar": komentars.length,
     });
+    notifyListeners();
   }
 
   final List<String> _selectedKomentar = [];
@@ -84,13 +85,15 @@ class KomentarData extends ChangeNotifier {
       // hapus komentar dari collection posts
       komentars.remove(_selectedKomentar[i]);
     }
-    postsCollection.doc(postId).update({"komentars": komentars, "totalKomentar": komentars.length});
+    postsCollection
+        .doc(postId)
+        .update({"komentars": komentars, "totalKomentar": komentars.length});
     _selectedKomentar.clear();
     notifyListeners();
   }
 
   void resetSelectedKomentar() {
-        _selectedKomentar.clear();
+    _selectedKomentar.clear();
     notifyListeners();
   }
 
@@ -138,9 +141,7 @@ class KomentarData extends ChangeNotifier {
 
   void toggleLike(String id) async {
     QuerySnapshot querySnapshot =
-        await komentarsCollection
-            .where("id", isEqualTo: id)
-            .get();
+        await komentarsCollection.where("id", isEqualTo: id).get();
 
     List<String> likes = List<String>.from(querySnapshot.docs[0].get("likes"));
 
@@ -155,6 +156,4 @@ class KomentarData extends ChangeNotifier {
         .doc(id)
         .update({"likes": likes, "totalLike": likes.length});
   }
-
-
 }
