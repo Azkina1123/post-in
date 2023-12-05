@@ -104,6 +104,7 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                             onPressed: onUserProfilePage
                                 ? null
                                 : () {
+                                    
                                     Navigator.pushNamed(
                                       context,
                                       "/profile",

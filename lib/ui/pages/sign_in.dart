@@ -51,6 +51,13 @@ class _SignInState extends State<SignIn> {
   }
 
   @override
+  void dispose() {
+    _ctrlEmail.dispose();
+    _ctrlPass.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
@@ -89,10 +96,9 @@ class _SignInState extends State<SignIn> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Email',
-                        labelText: "Email"
-                      ),
+                          border: OutlineInputBorder(),
+                          hintText: 'Email',
+                          labelText: "Email"),
                     ),
                     SizedBox(
                       height: 20,

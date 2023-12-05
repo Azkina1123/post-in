@@ -80,12 +80,7 @@ class _SignUpState extends State<SignUp> {
         .get();
 
     if (query.docs.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Username Sudah Ada, Harap Memilih Username Lain"),
-        ),
-      );
-      _ctrlUsername.text = user?.username ?? "";
+      // _ctrlUsername.text = user?.username ?? "";
       return false;
     } else {
       return true;
@@ -147,6 +142,17 @@ class _SignUpState extends State<SignUp> {
       _showSnackBar('Semua field harus diisi');
       return;
     }
+
+    if (!await cekUsername()) {
+      _showSnackBar('Username Sudah Ada, Harap Memilih Username Lain');
+      return;
+    }
+
+    if (!EmailValidator.validate(_ctrlEmail.text)) {
+      _showSnackBar('Email tidak valid');
+      return;
+    }
+
     if (password.length < 6) {
       _showSnackBar('Isi Password minimal 6 karakter');
 
@@ -155,13 +161,18 @@ class _SignUpState extends State<SignUp> {
 
       return;
     }
-    setState(() => _loading = true);
-    await AuthData().regis(nama, email, username, password, gender, nomor,
-        _profileImagePath, _coverImagePath);
-    _showSnackBar('Proses registrasi berhasil!');
-    Navigator.popAndPushNamed(context, "/sign-in");
 
-    setState(() => _loading = false);
+    setState(() => _loading = true);
+    try {
+      await AuthData().regis(nama, email, username, password, gender, nomor,
+          _profileImagePath, _coverImagePath);
+      _showSnackBar('Proses registrasi berhasil!');
+      Navigator.popAndPushNamed(context, "/sign-in");
+
+      setState(() => _loading = false);
+    } catch (e) {
+      _showSnackBar(e.toString());
+    }
   }
 
   Widget buttonUpload(
@@ -179,6 +190,16 @@ class _SignUpState extends State<SignUp> {
         const SizedBox(height: 20),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _ctrlEmail.dispose();
+    _ctrlNama.dispose();
+    _ctrlNomor.dispose();
+    _ctrlPass.dispose();
+    _ctrlUsername.dispose();
+    super.dispose();
   }
 
   @override
@@ -240,7 +261,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nama Lengkap',
-                          labelText: "Nama Lengkap",
+                            labelText: "Nama Lengkap",
                           ),
                         ),
                       ),
@@ -268,7 +289,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Username',
-                          labelText: "Username",
+                            labelText: "Username",
                           ),
                         ),
                       ),
@@ -287,7 +308,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Email',
-                          labelText: "Email",
+                            labelText: "Email",
                           ),
                         ),
                       ),
@@ -309,7 +330,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Gender',
-                          labelText: "Gender",
+                            labelText: "Gender",
                           ),
                         ),
                       ),
@@ -335,7 +356,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nomor Telepon',
-                          labelText: "Nomor Telepon",
+                            labelText: "Nomor Telepon",
                           ),
                         ),
                       ),
@@ -356,7 +377,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             hintText: 'Password',
-                          labelText: "Password",
+                            labelText: "Password",
                             suffixIcon: IconButton(
                               icon: Icon(_isObscure
                                   ? Icons.visibility
@@ -373,7 +394,14 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  _profileImagePath != null ? Image.file(File(_profileImagePath!), width: 100, height: 100, fit: BoxFit.cover, ) :  const SizedBox(
+                  _profileImagePath != null
+                      ? Image.file(
+                          File(_profileImagePath!),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(
                           height: 0,
                         ),
                   Row(
@@ -397,15 +425,16 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                                    _coverImagePath != null
+                  _coverImagePath != null
                       ? Image.file(
                           File(_coverImagePath!),
                           width: width(context),
                           height: 100,
                           fit: BoxFit.cover,
                         )
-                      : const SizedBox(height: 0,),
-
+                      : const SizedBox(
+                          height: 0,
+                        ),
                   Row(
                     children: [
                       Expanded(

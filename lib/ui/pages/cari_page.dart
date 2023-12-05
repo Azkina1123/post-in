@@ -15,6 +15,12 @@ class _CariPageState extends State<CariPage> {
   List<UserAcc> UserCari = [];
 
   @override
+  void dispose() {
+    _ctrlCari.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -92,33 +98,35 @@ class _CariPageState extends State<CariPage> {
             );
           } else if (snapshot.hasData) {
             final posts = snapshot.data!;
-            return posts.isEmpty ? const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text("Post tidak ditemukan."),
-            ): ListView(
-              children: [
-                for (int i = 0; i < posts.length; i++)
-                  Column(
+            return posts.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("Post tidak ditemukan."),
+                  )
+                : ListView(
                     children: [
-                      PostWidget(post: posts[i]),
-                      if (i != posts.length - 1)
-                        Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .tertiary
-                              .withOpacity(0.5),
-                          indent: 10,
-                          endIndent: 10,
-                        )
-                      else
-                        const SizedBox(
-                          height: 20,
-                        )
+                      for (int i = 0; i < posts.length; i++)
+                        Column(
+                          children: [
+                            PostWidget(post: posts[i]),
+                            if (i != posts.length - 1)
+                              Divider(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .tertiary
+                                    .withOpacity(0.5),
+                                indent: 10,
+                                endIndent: 10,
+                              )
+                            else
+                              const SizedBox(
+                                height: 20,
+                              )
+                          ],
+                        ),
                     ],
-                  ),
-              ],
-            );
-          } 
+                  );
+          }
           return const Text("Loading...");
         },
       ),
@@ -137,39 +145,41 @@ class _CariPageState extends State<CariPage> {
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             );
-          }  else if (snapshot.hasData) {
+          } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            return users.isEmpty ? const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text("Akun tidak ditemukan."),
-            ) :ListView(
-              children: [
-                for (int i = 0; i < users.length; i++)
-                  Column(
+            return users.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("Akun tidak ditemukan."),
+                  )
+                : ListView(
                     children: [
-                      AkunWidget(
-                        user: users[i],
-                      ),
+                      for (int i = 0; i < users.length; i++)
+                        Column(
+                          children: [
+                            AkunWidget(
+                              user: users[i],
+                            ),
 
-                      // kasih pembatas antar akun --------------------------------------
-                      if (i != users.length - 1)
-                        Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .tertiary
-                              .withOpacity(0.5),
-                          indent: 10,
-                          endIndent: 10,
-                        )
-                      // di akun terakhir tidak perlu pembatas -------------------------
-                      else
-                        const SizedBox(
-                          height: 20,
+                            // kasih pembatas antar akun --------------------------------------
+                            if (i != users.length - 1)
+                              Divider(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .tertiary
+                                    .withOpacity(0.5),
+                                indent: 10,
+                                endIndent: 10,
+                              )
+                            // di akun terakhir tidak perlu pembatas -------------------------
+                            else
+                              const SizedBox(
+                                height: 20,
+                              )
+                          ],
                         )
                     ],
-                  )
-              ],
-            );
+                  );
           }
           return const Text("Loading...");
         },

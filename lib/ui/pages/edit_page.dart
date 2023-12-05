@@ -50,6 +50,15 @@ class _EditPageState extends State<EditPage> {
   }
 
   @override
+  void dispose() {
+    _ctrlEmail.dispose();
+    _ctrlNama.dispose();
+    _ctrlNomor.dispose();
+    _ctrlUsername.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var lebar = MediaQuery.of(context).size.width;
     UserAcc user = ModalRoute.of(context)!.settings.arguments as UserAcc;
@@ -138,17 +147,14 @@ class _EditPageState extends State<EditPage> {
                     TextFormField(
                       controller: _ctrlNama,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: user.namaLengkap ?? "",
-                        labelText: "Nama Lengkap"
-                      ),
+                          border: const OutlineInputBorder(),
+                          hintText: user.namaLengkap ?? "",
+                          labelText: "Nama Lengkap"),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(40),
                       ],
                       onChanged: (value) {
-                        setState(() {
-                          
-                        });
+                        setState(() {});
                       },
                     ),
                     const SizedBox(height: 20.0),
@@ -156,10 +162,9 @@ class _EditPageState extends State<EditPage> {
                       controller: _ctrlEmail,
                       enabled: false,
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: user.email,
-                        labelText: "Email"
-                      ),
+                          border: const OutlineInputBorder(),
+                          hintText: user.email,
+                          labelText: "Email"),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
                       ],
@@ -195,8 +200,7 @@ class _EditPageState extends State<EditPage> {
                       }).toList(),
                       onChanged: (String? value) {
                         setState(() {
-                        _selectedGender = value;
-                          
+                          _selectedGender = value;
                         });
                       },
                       decoration: InputDecoration(
@@ -214,10 +218,9 @@ class _EditPageState extends State<EditPage> {
                         LengthLimitingTextInputFormatter(13),
                       ],
                       decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: user?.noTelp ?? "",
-                        labelText: "Nomor Telepon"
-                      ),
+                          border: const OutlineInputBorder(),
+                          hintText: user?.noTelp ?? "",
+                          labelText: "Nomor Telepon"),
                       onChanged: (value) {
                         setState(() {});
                       },

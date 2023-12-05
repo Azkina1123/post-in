@@ -5,6 +5,7 @@ class FollowPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserAcc? user;
     String userId = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(

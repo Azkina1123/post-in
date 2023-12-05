@@ -50,7 +50,7 @@ class AuthData extends ChangeNotifier {
     Future<void> uploadCoverImage(String imagePath) async {
       try {
         Reference storageReference =
-            FirebaseStorage.instance.ref().child('users/cover_$id_now.jpg');
+            FirebaseStorage.instance.ref().child('users/sampul_$id_now.jpg');
         UploadTask uploadTask = storageReference.putFile(File(imagePath));
         await uploadTask.whenComplete(() => print('Cover image uploaded'));
         url_cover = await storageReference.getDownloadURL();

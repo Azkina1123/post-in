@@ -9,12 +9,19 @@ class PengaturanPage extends StatefulWidget {
   State<PengaturanPage> createState() => _PengaturanPageState();
 }
 
-bool _isObscure = true;
-UserAcc? user;
-TextEditingController _ctrlOldPass = TextEditingController();
-TextEditingController _ctrlNewPass = TextEditingController();
-
 class _PengaturanPageState extends State<PengaturanPage> {
+  bool _isObscure = true;
+  UserAcc? user;
+  TextEditingController _ctrlOldPass = TextEditingController();
+  TextEditingController _ctrlNewPass = TextEditingController();
+
+  @override
+  void dispose() {
+    _ctrlNewPass.dispose();
+    _ctrlOldPass.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     UserAcc? user;
@@ -536,7 +543,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                   );
                   return;
                 }
-                
+
                 String id = FirebaseAuth.instance.currentUser!.uid;
                 await users.doc(id).update({
                   "password": _ctrlNewPass.text.toString(),
@@ -564,7 +571,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
   }
 
   Future<void> hapusDataAkun(BuildContext context, String id) async {
-
     return showDialog(
       context: context,
       builder: (context) {
