@@ -114,14 +114,12 @@ class HomePage extends StatelessWidget {
                       } else if (snapshot.hasData) {
                         final posts = snapshot.data!.docs;
 
-                        return (Provider.of<PageData>(context).homeTabIndex ==
-                                    2 &&
-                                posts.isEmpty)
+                        return posts.isEmpty
                             ? Container(
                                 height: height(context) / 2,
                                 alignment: Alignment.center,
                                 child: const Text(
-                                    "User yang Anda ikuti belum membuat post."),
+                                    "Belum ada post yang ditambahkan."),
                               )
                             : Column(
                                 children: [
@@ -153,7 +151,7 @@ class HomePage extends StatelessWidget {
                                 ],
                               );
                       }
-                      return const Text("Belum ada post yang ditambahkan.");
+                      return const Text("Tidak dapat mengambil data.");
                     })
               ],
             ),

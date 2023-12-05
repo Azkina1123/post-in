@@ -163,32 +163,49 @@ class _KomentarWidgetState extends State<KomentarWidget> {
                     ),
 
                     // like komentar ------------------------------------------------------
-                    Column(
-                      children: [
-                        IconButton(
-                          onPressed: () async {
-                            Provider.of<KomentarData>(context, listen: false)
-                                .toggleLike(widget.komentar.id);
-                          },
-                          icon: Icon(
-                            isLiked
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_outline,
-                            size: 20,
-                            color: isLiked
-                                ? colors["soft-pink"]
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                          padding: EdgeInsets.zero,
-                        ),
-                        Text(
-                          widget.komentar.likes.isNotEmpty
-                              ? widget.komentar.likes.length.toString()
-                              : "",
-                          style: const TextStyle(fontSize: 12),
-                          overflow: TextOverflow.visible,
-                        )
-                      ],
+                    StreamBuilder<QuerySnapshot>(
+                      stream: Provider.of<KomentarData>(context, listen: false)
+                            .komentarsCollection
+                            .where("id", isEqualTo: widget.komentar.id)
+                            .snapshots(),
+                      builder: (context, snapshot) {
+                        Komentar? getKomentar = !snapshot.hasData
+                              ? null
+                              : Komentar.fromJson(snapshot.data!.docs[0].data()
+                                  as Map<String, dynamic>);
+                          bool isLiked = getKomentar == null
+                              ? false
+                              : getKomentar.likes.contains(
+                                  FirebaseAuth.instance.currentUser!.uid);
+
+                        return Column(
+                          children: [
+                            IconButton(
+                              onPressed: () async {
+                                Provider.of<KomentarData>(context, listen: false)
+                                    .toggleLike(getKomentar!.id);
+                              },
+                              icon: Icon(
+                                isLiked
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_outline,
+                                size: 20,
+                                color: isLiked
+                                    ? colors["soft-pink"]
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                              padding: EdgeInsets.zero,
+                            ),
+                            Text(
+                              getKomentar!.likes.isNotEmpty
+                                  ? getKomentar.likes.length.toString()
+                                  : "",
+                              style: const TextStyle(fontSize: 12),
+                              overflow: TextOverflow.visible,
+                            )
+                          ],
+                        );
+                      }
                     ),
                   ],
                 );
