@@ -37,6 +37,7 @@ class _SignUpState extends State<SignUp> {
   void _getFromGalleryCover() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
+      imageQuality: 40,
     );
 
     if (pickedFile != null) {
@@ -50,6 +51,7 @@ class _SignUpState extends State<SignUp> {
   void _getFromGalleryProfile() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
+      imageQuality: 40
     );
 
     if (pickedFile != null) {

@@ -141,6 +141,7 @@ class _InputPostState extends State<InputPost> {
   void _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
+      imageQuality: 60,
     );
 
     if (pickedFile != null) {
