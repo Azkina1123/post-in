@@ -31,7 +31,7 @@ class UserData extends ChangeNotifier {
       "email": user.email,
       "gender": user.gender,
       "noTelp": user.noTelp,
-      "password": user.password,
+      // "password": user.password,
       "foto": user.foto,
       "sampul": user.sampul,
       "followings": user.followings,
