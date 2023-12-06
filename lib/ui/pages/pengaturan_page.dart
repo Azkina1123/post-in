@@ -535,11 +535,13 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         .getUser(FirebaseAuth.instance.currentUser!.uid);
                 String enteredPassword = _ctrlOldPass.text;
 
-                AuthCredential credential = EmailAuthProvider.credential(email: FirebaseAuth.instance.currentUser!.email!, password: enteredPassword);
-                
+                AuthCredential credential = EmailAuthProvider.credential(
+                    email: FirebaseAuth.instance.currentUser!.email!,
+                    password: enteredPassword);
+
                 try {
-                  
-                await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
+                  await FirebaseAuth.instance.currentUser!
+                      .reauthenticateWithCredential(credential);
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -547,7 +549,6 @@ class _PengaturanPageState extends State<PengaturanPage> {
                     ),
                   );
                   return;
-                  
                 }
                 // if (enteredPassword != FirebaseAuth.instance.currentUser!.) {
                 // }
@@ -565,6 +566,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                     content: Text("Ubah Password Berhasil !"),
                   ),
                 );
+                _ctrlNewPass.clear();
+                _ctrlOldPass.clear();
                 Navigator.of(context).pop();
               },
               child: Text(
@@ -617,7 +620,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
               onPressed: () async {
                 String userId = FirebaseAuth.instance.currentUser!.uid;
                 Provider.of<UserData>(context, listen: false).delete(userId);
-                Navigator.pushReplacementNamed(context, "/sign-in");
+                Navigator.popAndPushNamed(context, "/sign-in");
               },
               child: Text(
                 "Yakin",

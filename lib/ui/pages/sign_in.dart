@@ -99,6 +99,12 @@ class _SignInState extends State<SignIn> {
                           border: OutlineInputBorder(),
                           hintText: 'Email',
                           labelText: "Email"),
+                                                    onChanged: (value) {
+                        setState(() {
+                          _ctrlEmail.text = value.replaceAll(' ', '');
+                          _ctrlEmail.text = value.toLowerCase();
+                        });
+                      },
                     ),
                     SizedBox(
                       height: 20,

@@ -165,8 +165,7 @@ class _EditPageState extends State<EditPage> {
                       enabled: false,
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          hintText: user.email,
-                          labelText: "Email"),
+                          hintText: user.email,),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
                       ],

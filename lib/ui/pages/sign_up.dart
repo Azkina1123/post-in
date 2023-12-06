@@ -171,7 +171,9 @@ class _SignUpState extends State<SignUp> {
 
       setState(() => _loading = false);
     } catch (e) {
+
       _showSnackBar(e.toString());
+      setState(() => _loading = false);
     }
   }
 
@@ -310,6 +312,12 @@ class _SignUpState extends State<SignUp> {
                             hintText: 'Email',
                             labelText: "Email",
                           ),
+                          onChanged: (value) {
+                            setState(() {
+                              _ctrlEmail.text = value.replaceAll(' ', '');
+                              _ctrlEmail.text = value.toLowerCase();
+                            });
+                          },
                         ),
                       ),
                       const SizedBox(width: 20),
