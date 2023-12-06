@@ -8,8 +8,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getFollowedUserIds(context);
-
-    return Consumer<PostData>(builder: (ctx, postData, child) {
       return DefaultTabController(
         initialIndex: Provider.of<PageData>(context).homeTabIndex,
         length: 3,
@@ -25,7 +23,7 @@ class HomePage extends StatelessWidget {
               "Post.In",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(ctx).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
 
@@ -42,7 +40,7 @@ class HomePage extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(
-                              ctx,
+                              context,
                               "/profile",
                               arguments: authUser,
                             );
@@ -76,12 +74,12 @@ class HomePage extends StatelessWidget {
                 Tab(text: "Post Diikuti"),
               ],
               labelStyle: TextStyle(
-                color: Theme.of(ctx).colorScheme.primary,
-                fontSize: Theme.of(ctx).textTheme.titleMedium!.fontSize,
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: Theme.of(context).textTheme.titleMedium!.fontSize,
                 fontWeight: FontWeight.bold,
               ),
               labelPadding: EdgeInsets.only(left: 10, right: 10),
-              dividerColor: Theme.of(ctx).colorScheme.tertiary.withOpacity(0.5),
+              dividerColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.5),
               onTap: (i) {
                 Provider.of<PageData>(context, listen: false).changeHomeTab(i);
               },
@@ -134,7 +132,7 @@ class HomePage extends StatelessWidget {
                                         // kasih pembatas antar post --------------------------------------
                                         if (i != posts.length - 1)
                                           Divider(
-                                            color: Theme.of(ctx)
+                                            color: Theme.of(context)
                                                 .colorScheme
                                                 .tertiary
                                                 .withOpacity(0.5),
@@ -158,7 +156,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       );
-    });
+    
   }
 
   Future<QuerySnapshot<Object?>> _getSnapshot(BuildContext context) {

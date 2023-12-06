@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
       // Cobalah untuk melakukan login
       await AuthData().login(email, password);
       _showSnackBar("Proses login berhasil!");
-      Provider.of<PageData>(context, listen: false).changeMainPage(0);
+      Provider.of<PageData>(context, listen: false).resetIndexPage();
       Duration(seconds: 1);
       Navigator.popAndPushNamed(context, "/");
     } catch (e) {

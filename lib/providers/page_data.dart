@@ -24,6 +24,12 @@ class PageData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetIndexPage() {
+    mainIndex = 0;
+    homeTabIndex = 0;
+    followTabIndex = 0;
+  }
+
   String keywordCari = "";
   void cari(String keyword) {
     keywordCari = keyword;
