@@ -535,20 +535,31 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         .getUser(FirebaseAuth.instance.currentUser!.uid);
                 String enteredPassword = _ctrlOldPass.text;
 
-                if (enteredPassword != user.password) {
+                AuthCredential credential = EmailAuthProvider.credential(email: FirebaseAuth.instance.currentUser!.email!, password: enteredPassword);
+                
+                try {
+                  
+                await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
+                } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Konfirmasi Password Gagal !"),
                     ),
                   );
                   return;
+                  
                 }
+                // if (enteredPassword != FirebaseAuth.instance.currentUser!.) {
+                // }
 
                 String id = FirebaseAuth.instance.currentUser!.uid;
-                await users.doc(id).update({
-                  "password": _ctrlNewPass.text.toString(),
-                });
+
+                // await users.doc(id).update({
+                //   "password": _ctrlNewPass.text.toString(),
+                // });
+
                 await ubahPassAuth(users, id);
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("Ubah Password Berhasil !"),

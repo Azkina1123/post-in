@@ -78,7 +78,7 @@ class AuthData extends ChangeNotifier {
       email: email,
       noTelp: nomor,
       gender: gender,
-      password: password,
+      // password: password,
       foto: url_profile,
       sampul: url_cover,
     );

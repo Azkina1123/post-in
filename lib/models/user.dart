@@ -8,7 +8,7 @@ class UserAcc {
   String email;
   String noTelp;
   String gender;
-  String password;
+  // String password;
   String? foto;
   String? sampul;
 
@@ -23,7 +23,7 @@ class UserAcc {
     required this.email,
     required this.noTelp,
     required this.gender,
-    required this.password,
+    // required this.password,
     this.foto,
     this.sampul,
     String? profileImageUrl,
@@ -40,7 +40,7 @@ class UserAcc {
       gender: json["gender"],
       noTelp: json["noTelp"],
       sampul: json["sampul"],
-      password: json["password"],
+      // password: json["password"],
       foto: json["foto"],
     );
     user.followings = List<String>.from(json["followings"]);
