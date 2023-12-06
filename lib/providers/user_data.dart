@@ -115,10 +115,8 @@ class UserData extends ChangeNotifier {
       } else if (komentar.likes.contains(userId)) {
         komentar.likes.remove(userId);
 
-        KomentarData().komentarsCollection.doc(komentar.id).update({
-          "likes": komentar.likes,
-          "totalLike": komentar.likes.length
-        });
+        KomentarData().komentarsCollection.doc(komentar.id).update(
+            {"likes": komentar.likes, "totalLike": komentar.likes.length});
       }
     }
 
