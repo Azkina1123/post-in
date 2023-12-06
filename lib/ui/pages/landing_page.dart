@@ -55,7 +55,7 @@ class landingPage extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 50,
                     onPressed: () {
-                      Navigator.pushNamed(context, "/sign-in");
+                      Navigator.popAndPushNamed(context, "/sign-in");
                     },
                     color: Theme.of(context).colorScheme.primary,
                     elevation: 0,
@@ -87,7 +87,7 @@ class landingPage extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 50,
                     onPressed: () {
-                      Navigator.pushNamed(context, "/sign-up");
+                      Navigator.popAndPushNamed(context, "/sign-up");
                     },
                     color: Theme.of(context).colorScheme.primary,
                     elevation: 0,

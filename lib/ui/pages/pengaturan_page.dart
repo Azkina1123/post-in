@@ -393,6 +393,8 @@ class _PengaturanPageState extends State<PengaturanPage> {
                         onPressed: () async {
                           String id = FirebaseAuth.instance.currentUser!.uid;
                           hapusDataAkun(context, id);
+                          
+
                         },
                         child: Text(
                           "Hapus Akun",
@@ -620,7 +622,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
               onPressed: () async {
                 String userId = FirebaseAuth.instance.currentUser!.uid;
                 Provider.of<UserData>(context, listen: false).delete(userId);
-                Navigator.popAndPushNamed(context, "/sign-in");
+                Navigator.popAndPushNamed(context, "/landing");
               },
               child: Text(
                 "Yakin",

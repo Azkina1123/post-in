@@ -207,7 +207,6 @@ class _EditPageState extends State<EditPage> {
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
                         hintText: user.gender,
-                        labelText: "Gender",
                       ),
                     ),
                     const SizedBox(height: 20.0),
