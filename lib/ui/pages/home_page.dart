@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
               tabs: const [
                 Tab(text: "Post Terbaru"),
                 Tab(text: "Post Terpopuler"),
-                Tab(text: "Post Diikuti")
+                Tab(text: "Post Diikuti"),
               ],
               labelStyle: TextStyle(
                 color: Theme.of(ctx).colorScheme.primary,

@@ -19,7 +19,7 @@ class IkutiBtn extends StatelessWidget {
             UserAcc authUser = UserAcc.fromJson(
                 snapshot.data!.docs[0].data() as Map<String, dynamic>);
             return SizedBox(
-              width: 115,
+              width: 125,
               child: authUser.followings.contains(userId)
                   ? OutlinedButton(
                       onPressed: () {
