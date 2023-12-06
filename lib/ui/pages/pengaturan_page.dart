@@ -150,7 +150,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                   : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.phone_android_rounded,
+                          icon: Icon(CupertinoIcons.device_phone_portrait,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () {
@@ -194,7 +194,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                   : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.sunny,
+                          icon: Icon(CupertinoIcons.sun_max_fill,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () {
@@ -238,7 +238,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                                   : Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.nightlight_round,
+                          icon: Icon(CupertinoIcons.moon_stars_fill,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () {
@@ -294,7 +294,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           color: Theme.of(context).colorScheme.outline,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.lock,
+                          icon: Icon(CupertinoIcons.lock_fill,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () {
@@ -379,7 +379,7 @@ class _PengaturanPageState extends State<PengaturanPage> {
                           color: Theme.of(context).colorScheme.error,
                         ),
                         child: IconButton(
-                          icon: Icon(Icons.delete,
+                          icon: Icon(CupertinoIcons.delete_solid,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 30),
                           onPressed: () async {
