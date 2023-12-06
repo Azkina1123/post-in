@@ -104,7 +104,7 @@ class PostWidget extends StatelessWidget {
                           ),
                         ),
                       )
-                    : const Text(""),
+                    : const SizedBox(height:0),
 
                 ModalRoute.of(context)!.settings.name == "/post"
                     ? Text(
