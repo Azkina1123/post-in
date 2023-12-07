@@ -1,16 +1,22 @@
-# post_in
+<center>
+<h1> POST.IN</h1>
 
-A new Flutter project.
+Aplikasi Post.In merupakan sebuah aplikasi yang dibuat berdasarkan kebutuhan akan platform berbagi konten terkini yang efisien, inovatif, dan user-friendly.
+</center>
 
-## Getting Started
+<div align="center">
 
-This project is a starting point for a Flutter application.
+<h3 align="center"> 
+    Projek Akhir Praktikum <br>
+    Pemrograman Piranti Bergerak <br>
+</h3>
+    <h4> A1 - Kelompok 4 </h4>
 
-A few resources to get you started if this is your first Flutter project:
+| NIM | Nama |
+|:-----:|:---:|
+| 2109106004 | Aziizah Oki Shofrina (Ketua) |
+| 2109106007 | Aliya Irfani |
+| 2109106008 | Chintia Liu Wintin |
+| 2109106019 | Dimas Arya Nugraha |
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+</div>
