@@ -1,10 +1,7 @@
-<center>
+<div align="center">
 <h1> POST.IN</h1>
 
 <p>Aplikasi Post.In merupakan sebuah aplikasi yang dibuat berdasarkan kebutuhan akan platform berbagi konten terkini yang efisien, inovatif, dan user-friendly. </p>
-</center>
-
-<div align="center">
 
 <h3 align="center"> 
     Projek Akhir Praktikum <br>
